@@ -1278,7 +1278,7 @@ Copies `<source-file>` into `source-documents/` (or `source-documents/<subdir>/`
   "payload": {
     "documentId": "4c2d9057-3ef5-40ad-a7d0-0a791b1cc782",
     "contentPath": "brief.pdf",
-    "sidecarPath": "brief.meta.json",
+    "sidecarPath": "brief.pdf.meta.json",
     "sourceDocumentsPath": "source-documents",
     "contentChecksum": "sha256:4e4c5515...",
     "sidecarChecksum": "sha256:ba9cce92..."
@@ -1286,7 +1286,11 @@ Copies `<source-file>` into `source-documents/` (or `source-documents/<subdir>/`
 }
 ```
 
-The sidecar file (`brief.meta.json`) contains:
+The sidecar file name is the full content file name with `.meta.json` appended
+(`brief.pdf` → `brief.pdf.meta.json`, srs-rust#1329) — not the content file's stem,
+which would collide whenever two attachments share a stem with different
+extensions (e.g. `brief.md` and `brief.txt`). The sidecar file (`brief.pdf.meta.json`)
+contains:
 
 ```json
 {
