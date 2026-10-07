@@ -12,5 +12,8 @@
     "directory": "./docs",
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
-  }
+  },
+  // Required by `wrangler preview`, which Workers Builds runs for non-production branches. Empty:
+  // assets, routes and compatibility settings stay at the top level.
+  "previews": {}
 }
