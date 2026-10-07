@@ -2,8 +2,15 @@
 
 # RFC-048: Declared structural constraints on relation types
 
-**Status**: Draft (Revision 1)
-**Affects**: `RelationTypeDefinition` (three new constraint facets); `Blueprint` `RelationSpec` (`cardinality` and `required` removed); the core package's `precedes` and `contains` definitions (new definition version); `repo validate` and the relation-writing operations of conforming implementations (new warning diagnostics); `dataModelRevision` (next unassigned revision, for the Blueprint half only); `docs/schema/2.0/relation-type.json`, `docs/schema/2.0/blueprint.json`. Builds on **RFC-005 (Accepted)** (installed relation types, the effective package set), **RFC-029 (Accepted)** (the implicit core package), **RFC-033 (Accepted)** (`dataModelRevision`), **RFC-034 (Accepted)** (Containers; `childContainerIds` acyclic) and **RFC-042 (Accepted)** (the concept tree). Context only: RFC-038, RFC-043.
+**Status**: Draft (Revision 2)
+**Affects**: `RelationTypeDefinition` (three new constraint facets); `Blueprint` `RelationSpec` (`cardinality` and `required` removed); the core package's `precedes` and `contains` definitions (new definition version); `repo validate` and the relation-writing operations of conforming implementations (new warning diagnostics); `dataModelRevision` (one bump, covering both halves); `docs/schema/2.0/relation-type.json`, `docs/schema/2.0/blueprint.json`. Builds on **RFC-005 (Accepted)** (installed relation types, the effective package set), **RFC-029 (Accepted)** (the implicit core package), **RFC-033 (Accepted)** (`dataModelRevision`), **RFC-034 (Accepted)** (Containers; `childContainerIds` acyclic) and **RFC-042 (Accepted)** (the concept tree). Context only: RFC-038, RFC-043.
+**Amends (Door 3, same PR, each Accepted RFC takes a revision bump and a history row):**
+- **RFC-005 Change A** ("What is NOT added to the core shape", and "All seven are `many-to-many` cardinality (not enforced at core)"): cardinality, endpoint-type and acyclicity facets are now declarable on a definition; core `precedes` and `contains` gain `acyclic`.
+- **RFC-005 Change B**: states the resolution rule for a key the embedded core also defines (a repository's own definition governs; [R12]), which is what the shipped behaviour already is. Two non-core definitions of one key stay an installation conflict.
+- **RFC-009** (`blueprint.json` schema-changes row): `RelationSpec` loses `cardinality` and `required`.
+- **RFC-029**: the core package's relation-type contents become version 2 for `precedes` and `contains`; the package version moves 1.0.0 to 1.1.0.
+- **RFC-021** was checked and defines no `RelationSpec` cardinality or `required`; it is not amended.
+
 **Author**: design dialogue draft (owner rulings 2026-10-07 on the-greenman/srs#820)
 **Date**: 2026-10-07
 
@@ -11,9 +18,19 @@
 
 ## Revision history
 
+The seven owner rulings of 2026-10-07, numbered for citation:
+1. The relation type definition holds the constraints; Blueprint does not.
+2. Exactly three facets: endpoint-type restriction, cardinality, acyclicity. Symmetry, transitivity, inverse and uniqueness-within-scope are deferred.
+3. Violations are warnings first; a path to errors only at a declared boundary, via a new definition version.
+4. Core defaults only for what is genuinely global: `precedes` and `contains` acyclic. No cardinality on core `contains`. `depends-on` is not acyclic.
+5. No overlay or refinement of core relation types and no relation inheritance now; relational inheritance is a named future RFC.
+6. The `contains` single-parent rule is relocated to the authoring guide (srs#818 / #819) and is not held here; the held-rules table is rewritten accordingly.
+7. Enforcement lives once in the core service (`capability-layering.md`) behind CLI, WASM and MCP; the RFC carries no implementation detail beyond that.
+
 | Rev | Date | Summary |
 |---|---|---|
-| 1 | 2026-10-07 | Initial draft. Seven owner rulings of 2026-10-07 are applied as given (the relation type is the one home; exactly three facets; warnings first; core defaults only for `precedes` and `contains` acyclicity; no overlay or relation inheritance; the `contains` single-parent rule is not held here; enforcement lives once in the core service). |
+| 1 | 2026-10-07 | Initial draft applying rulings 1 to 7. |
+| 2 | 2026-10-07 | Review round 1 (8 blocking, 11 should-fix). **B1** counting sentence in [R3]. **B2** `min` population stated in [R3]/[R4]. **B3** diagnostic payload table with sort keys; [R15] names the fields. **B4** self-loop gap closed: `acyclic` reports self-loops unless `irreflexive` is also declared ([R6], [R9]). **B5** exact write-time evaluation ([R8]). **B6** the actual resolution rule, read from the shipped merge, stated in Change D and [R12]: a repository's own definition of a key always wins, so local copies of `precedes` are ungoverned by core version 2; the by-key alternative is Open Question 1. **B7** the Amends list. **B8** embedding, the revision gate in the same release, a testable revision rule, and the unmigrated-corpus behaviour; one bump (old Open Question 2 closed). **S1** to **S11** applied as noted in the text; declined: RFC-021 amendment (nothing to amend). |
 
 ---
 
@@ -27,7 +44,7 @@
 - **Containment: declaration over location** (`rfc-decision-cce3c00e`, `rfc-decision-8948e43f`). Aligned: `contains` is declared acyclic as data on its definition. Single-parent is deliberately not declared on the core `contains` (see the consequence map).
 - **Reference: declared strength over convenient reach** (`rfc-decision-cce3c00e`, `rfc-decision-c8704763`). Aligned: an endpoint restriction names a Type by a declared reference strength (LINEAGE, a bare `typeId`), not by an unresolved string.
 - **Assertion: statement over side-effect** (`rfc-decision-cce3c00e`). Aligned: a violating relation is reported, never altered, dropped or silently repaired.
-- **Governance: migration over drift** (`rfc-decision-cce3c00e`, `rfc-decision-628cf6c4`). Aligned: removing two Blueprint properties is a registered migration with a revision stamp, not an edit.
+- **Governance: migration over drift** (`rfc-decision-cce3c00e`, `rfc-decision-628cf6c4`). Aligned: removing two Blueprint properties is a registered migration, and one revision stamp covers both halves of this RFC (Change G).
 - **Portability: preserve over recognize** (`rfc-decision-cce3c00e`, `rfc-decision-8948e43f`). Aligned: constraints are properties of the definition and travel with the package that carries it.
 
 **Axis preference:**
@@ -40,12 +57,12 @@
 **Decisions consulted:** `rfc-decision-c20fcff8` (level test), `rfc-decision-1e7c0c8e` (a generic tool defines what is possible), `rfc-decision-cce3c00e` (grid; one way over many), `rfc-decision-9ee14517` (layer rules), `rfc-decision-0118e938` (one layer per construct), `rfc-decision-7caca3a1` (decision modes), `rfc-decision-e99a9437` (doors), `rfc-decision-8aed3412` (reusable parts; relations are global claims), `rfc-decision-0df19d60` (context order on the Container), `rfc-decision-0750c62f` (a Container is a declared selection), `rfc-decision-628cf6c4` (a rename is a migration), `rfc-decision-5f8204bc` (retirement has one way per layer), `rfc-decision-43249f53` (one state mechanism; the rejected two-tier boundary), `rfc-decision-c8704763` (the Reference taxonomy), `rfc-decision-2e0cd70a` (carry meaning you do not recognise), `rfc-decision-4431046e` (how a decision record changes).
 
 **Contradictions found:** None overridden. Three tensions are named and resolved inside existing rulings.
-- `rfc-decision-5f8204bc` says relation type definitions are SUBSTRATE ENTRIES that retire by status because instance data addresses them by string key and cannot pin a version. A "new definition version" of core `precedes` (Change D) is therefore a new version of a definition that no relation pins. That is consistent: nothing pins version 1, so version 2 reaches every relation that resolves the key. It is also why the safety of the change rests on warnings, not on pinning ([R14]).
+- `rfc-decision-5f8204bc` says relation type definitions are SUBSTRATE ENTRIES that retire by status because instance data addresses them by string key and cannot pin a version. A "new definition version" of core `precedes` (Change D) is therefore a new version of a definition that no relation pins. That is consistent: nothing pins version 1, so version 2 reaches every relation whose key resolves to the core definition (not those resolving to a repository's own copy, Change D). It is also why the safety of the change rests on warnings, not on pinning ([R14]).
 - `rfc-decision-43249f53` rejected a two-tier boundary as a drift seam. This RFC keeps `irreflexive` beside the new `acyclic`. They overlap on exactly one case, a self-loop, and the overlap is named and given one resolution ([R9]); the severity difference (an existing error versus a new warning) is the reason they are not collapsed. Whether to collapse them anyway is Open Question 4.
 - `rfc-decision-8aed3412` and `rfc-decision-0df19d60` refuse context carried on an edge and refuse to let a shared record take one parent from an edge. Declaring single-parent on core `contains` would do exactly that, so it is not declared. This is a reason in the RFC, not a contradiction.
 
 **One-way-per-goal:** The goal is "declare the shape of the relation graph". Four things touch it today:
-- **`RelationTypeDefinition.irreflexive` and `requireSameType`** declare a self-loop ban and a same-Type requirement. They stay, and the three new facets sit beside them on the same object. One home: the relation type.
+- **`RelationTypeDefinition.irreflexive` and `requireSameType`** declare a self-loop ban and a same-Type requirement. They stay, and the three new facets sit beside them on the same object. One home: the relation type. This is where `rfc-decision-43249f53`'s objection to a two-tier boundary bites: `irreflexive` and the new `acyclic` overlap on exactly one case, a self-loop. The overlap is named and resolved once ([R9]: `irreflexive` alone reports it when both are declared) and they are kept apart because their strength differs (an existing error versus a new warning); collapsing them is a reversible adopted choice (Open Question 3).
 - **Blueprint `RelationSpec.cardinality` and `required`** declare cardinality and presence. They are inert (no validation reads them). This RFC **collapses them onto the relation type** and removes them (Change C). Without that, two vocabularies would declare multiplicity.
 - **`Type.validationRules`** is intra-record only and is not a mechanism for this goal (Alternatives, Alt B).
 - **Invariants I-150 / RFC-034 [R7]** declare acyclicity of the `childContainerIds` graph. That is a different graph (Containers, which are not relation endpoints). It is untouched, and the possible future unification is noted in Change F, not decided.
@@ -74,7 +91,7 @@ Column coherence. Earth (structure is declared, never inferred) holds: shape is 
 
 Emergence. Two effects the single-cell reading would miss. First, `repo validate` becomes a consumer of relation type definitions beyond lookup, which invites a growing constraint language; the guard is the closed list of three facets and the Not In Scope list, so any further facet needs its own RFC. Second, removing pair-scoped cardinality from Blueprint pushes authors who need "an argument has exactly one conclusion" toward a dedicated, namespaced relation type with endpoint restrictions. That proliferation of narrow relation types is a real cost of ruling 1, and it is stated rather than hidden (Consequences of Change C).
 
-This decision yields rulings for the owner, not guard compliance. Rulings 1 to 7 are given and stated as such below; the questions that remain are in Open Questions.
+This decision yields rulings for the owner, not guard compliance. Rulings 1 to 7 are given (numbered in the revision history); the two owner decisions that remain are Open Questions 1 and 2.
 
 ---
 
@@ -98,14 +115,14 @@ The cost is visible. `precedes` cycles degrade silently: the tree service prunes
 
 ### Problem 3 — The held-rules queue on srs#820 needs rewriting
 
-srs#820 held four rules as debts. Applying the rulings of 2026-10-07, their dispositions are:
+srs#820 held several rules as debts. Under the rulings, the two that concern this RFC are re-dispositioned here; the rest are not this RFC's business and are recorded on srs#820 and srs#236.
 
 | Held rule (as filed on srs#820) | Disposition now |
 |---|---|
-| `contains` has one parent; a leaf's parent is a `concept` (RFC-042 [R2]) | **Not held.** Relocated to the authoring guide (srs#818 / #819). Single parent is RFC-042's choice for the spec's concept tree, not a global rule. This RFC promises nothing about it. |
+| `contains` has one parent; a leaf's parent is a `concept` (RFC-042 [R2]) | **Not held** (ruling 6). Relocated to the authoring guide (srs#818 / #819). Single parent is RFC-042's choice for the spec's concept tree, not a global rule. This RFC promises nothing about it. |
 | `precedes` forms no cycles | **Core, this RFC** (Change D). |
-| `mechanism-b3c293f9`, naming grammar: snake_case `name`, namespace grammar | **Related, not in scope.** A `pattern` on `name` / `namespace` in `field.json` is srs#236, a separate one-line change. It is not one of this RFC's three facets. |
-| `mechanism-b3c293f9`, the version-bump table | **Not mechanisable.** SRS cannot observe whether a meaning changed. It stays an authoring rule. |
+
+The naming-grammar `pattern` on Field `name` / `namespace` (srs#236) and the version-bump table of `mechanism-b3c293f9` (not mechanisable, an authoring rule) are unrelated to the three facets and stay on srs#820 and srs#236.
 
 ---
 
@@ -115,119 +132,139 @@ srs#820 held four rules as debts. Applying the rulings of 2026-10-07, their disp
 
 `RelationTypeDefinition` gains four optional properties that together express three facets. A definition that sets none of them constrains nothing, exactly as today.
 
-**Endpoint-type restriction** is two optional lists, `sourceTypeIds` and `targetTypeIds`, each a list of bare Type UUIDs. When a list is present, the instance at that end of every relation of this type must be a Record bound to one of the listed Types. The reference form is LINEAGE (`rfc-decision-c8704763`): it names the Type's identity and matches whatever version a Record is bound to. A Type moving from version 1 to version 2 therefore does not turn existing relations into violations, and no relation type definition needs a new version because a Type did. (A pinned form would require exactly that, and every Type version bump would become a definition edit.) The match is on the Record's `typeId` only: it does not follow `ext:type-inheritance`, so a Record of a subtype does not satisfy a restriction naming its parent (Open Question 5). A Note has no Type, so it satisfies no non-empty list. The new names are deliberate: the retired `allowedSourceTypes` / `allowedTargetTypes` held strings of a retired kind, and reusing a retired name for a different shape would break `rfc-decision-628cf6c4`. It composes with the existing `requireSameType`: all declared conditions must hold.
+**Endpoint-type restriction** is two optional lists, `sourceTypeIds` and `targetTypeIds`, each a list of bare Type UUIDs. When a list is present, the instance at that end of every relation of this type must be a Record bound to one of the listed Types. The reference form is LINEAGE (`rfc-decision-c8704763`): it names the Type's identity and matches whatever version a Record is bound to. A Type moving from version 1 to version 2 therefore does not turn existing relations into violations, and no definition needs a new version because a Type did. The match is on the Record's `typeId` only and does not follow `ext:type-inheritance` (Open Question 4). The new names are deliberate: the retired `allowedSourceTypes` / `allowedTargetTypes` held strings of a retired kind, and reusing a retired name for a different shape would break `rfc-decision-628cf6c4`. The facet composes with the existing `requireSameType`: all declared conditions must hold.
 
-**Cardinality** is one optional object, `cardinality`, with two optional sides, `perSource` and `perTarget`. Each side holds an optional `min` and an optional `max` (integers; `max` at least 1; `min` at most `max`). `perSource` bounds how many relations of this type may leave one source instance. `perTarget` bounds how many may arrive at one target instance. An absent `max` is unbounded and an absent `min` is 0. This replaces the four-valued `one-to-many` style enum, which cannot say "at most 3" or "at least 1".
+Edge cases. A Note has no Type, so it satisfies no non-empty list; core declares no restriction, so this bites only a custom type. Graduating a Note to a Record can therefore change the outcome of the next validation, in either direction. A Record whose `typeId` no longer resolves is reported by the existing Type-resolution check and is not also reported as `relation-endpoint-type`. An endpoint instance id that does not resolve, or that is a `containerId`, is left to the existing relation checks (E1, E2) and is not also reported as `relation-endpoint-type`.
 
-The meaning of a violation depends on which bound it is. A `max` is violated by an instance that has more edges than allowed, and an instance with zero edges can never violate it. A `min` is violated by an instance in the *population* that has too few edges, and a zero-edge instance is exactly the case it catches. The population is the set of Records bound to a listed Type on that side, so a `min` is only meaningful where an endpoint restriction names that side: `perSource.min` needs `sourceTypeIds`, and `perTarget.min` needs `targetTypeIds`. A definition that sets a `min` on a side with no restriction is malformed ([R5]); without a population, "every instance in the repository" would have to carry the edge, which is never what an author means.
+**Cardinality** is one optional object, `cardinality`, with two optional sides, `perSource` and `perTarget`. Each side holds an optional `min` and an optional `max`. `perSource` bounds how many relations of this type may leave one source instance; `perTarget` bounds how many may arrive at one target instance. An absent `max` is unbounded and an absent `min` is 0. This replaces the four-valued `one-to-many` style enum, which cannot say "at most 3" or "at least 1".
 
-**Acyclicity** is one optional boolean, `acyclic`. When true, the directed graph formed by the edges of this relation type alone, read source to target as stored, must contain no cycle. Cycles formed by mixing relation types are out of scope. A cycle is any closed directed path of one or more edges, so a self-loop is a cycle. `irreflexive` (E3) already rejects self-loops as an error and is unchanged. When a type declares both and a self-loop is present, only E3 reports it ([R9]); `acyclic` reports cycles of two or more edges. Reporting is one diagnostic per strongly connected component (or per self-loop), naming its instances and relation ids, so a cycle is one finding and not one per edge.
+Counting is deliberately plain. Every relation of the type whose both endpoints resolve counts toward the instance at its source (for `perSource`) or target (for `perTarget`), whether or not it also passes the endpoint restriction (a failing edge is reported separately and still counts). Two relations with the same source and target are two relations and count twice; uniqueness is Not In Scope. A Note or any other instance counts like a Record for `max`.
 
-*Consequences.* A repository can now state "no loops", "at most one", "at least one of these" and "only between these Types" as data and have it checked. It cannot yet state symmetry, transitivity, inverse or uniqueness (Not In Scope). A definition that names a Type that does not resolve in the effective package set is malformed ([R5]), the same standing as an unresolved `fieldId` in a Type.
+A `max` is violated by an instance with more relations than allowed; an instance with zero relations never violates a `max`. A `min` is violated by a member of the *population* with too few relations, and a zero-relation member is exactly the case it catches. The population is every Record in the loaded repository whose `typeId` is in the corresponding list, whatever its lifecycle state: an archived Record that matches is still counted, which is the price of a rule an implementation can check without reading lifecycle definitions. A `min` is therefore only meaningful where an endpoint restriction names that side (`perSource.min` needs `sourceTypeIds`, `perTarget.min` needs `targetTypeIds`), and a definition setting one without it is malformed ([R5]). Without a population, "every instance in the repository" would have to carry the edge.
 
-An illustration of a custom type using all three facets (the prose above is the specification):
+**Acyclicity** is one optional boolean, `acyclic`. When true, the directed graph formed by the relations of this relation type alone, read source to target as stored, must contain no cycle. A cycle is any closed directed path of one or more relations, so a self-loop is a cycle. Cycles that mix relation types are out of scope. `irreflexive` (E3) rejects self-loops as an error and is unchanged. When a type declares both, a self-loop is reported by E3 only; when it declares `acyclic` without `irreflexive`, a self-loop is reported as `relation-cycle`. The core `precedes` and `contains` declare `irreflexive`, so on them `acyclic` in effect reports cycles of two or more relations. Reporting is one diagnostic per strongly connected component of more than one instance, and one per self-loop where `irreflexive` is absent. A component report names every instance in the component and every relation of the type between them, not one representative cycle.
 
-```
-"key": "org.example/concludes",   "acyclic": true,
-"sourceTypeIds": ["<argument typeId>"],  "targetTypeIds": ["<claim typeId>"],
-"cardinality": { "perSource": { "min": 1, "max": 1 } }
+*Consequences.* A repository can now state "no loops", "at most one", "at least one of these" and "only between these Types" as data and have it checked. It cannot yet state symmetry, transitivity, inverse or uniqueness (Not In Scope). A `min` fixed on the archived population can warn about a Record nobody will relate again; that is accepted and visible rather than silently skipped.
+
+The meaning of the example below is in the prose: `perSource.min: 1` together with `sourceTypeIds` says "every Record of the argument Type has at least one `concludes` relation", and the restriction is what defines which Records that is. The illustration is a fragment of a custom definition with placeholder ids.
+
+```json
+{
+  "key": "org.example/concludes",
+  "acyclic": true,
+  "sourceTypeIds": ["00000000-0000-4000-8000-0000000000a1"],
+  "targetTypeIds": ["00000000-0000-4000-8000-0000000000c1"],
+  "cardinality": { "perSource": { "min": 1, "max": 1 } }
+}
 ```
 
 ### Change B — Diagnostics and severity
 
-A violation of any instance-level facet is a **warning** in `repo validate`'s `payload.diagnostics`, never an error and never a refusal to load. Four stable codes:
+A violation of any instance-level facet is a **warning** in `repo validate`'s `payload.diagnostics`, never an error and never a refusal to load. The stable codes and the payload every diagnostic carries:
 
-| Code | Raised when |
-|---|---|
-| `relation-endpoint-type` | A relation's source or target is not bound to a listed Type (or is a Note). One per relation. |
-| `relation-cardinality-exceeded` | An instance has more edges of the type than a declared `max`. One per instance and side. |
-| `relation-cardinality-unmet` | An instance in the declared population has fewer edges than a declared `min`. One per instance and side. |
-| `relation-cycle` | A relation type declared `acyclic` has a directed cycle of two or more edges. One per strongly connected component. |
+| Code | Severity | Raised when | Payload beyond the common fields |
+|---|---|---|---|
+| `relation-endpoint-type` | warning | A relation's source or target is not a Record bound to a listed Type. One per relation per failing end. | `end` (`source` or `target`) |
+| `relation-cardinality-exceeded` | warning | An instance has more relations than a declared `max`. One per instance and side. | `side`, `limit`, `count` |
+| `relation-cardinality-unmet` | warning | A member of the population has fewer relations than a declared `min`. One per instance and side. | `side`, `limit`, `count` |
+| `relation-cycle` | warning | A relation type declared `acyclic` has a cycle (Change A). One per component or self-loop. | none |
+| `relation-type-constraint-unresolved-type` | warning | A listed Type UUID does not resolve in the effective package set (for example because the Type was later retired). The facet that names it is not evaluated. | `typeId` |
+| `relation-type-constraint-invalid` | error | A definition's new properties are malformed ([R5]). The offending facet is not evaluated; the definition and the corpus still load. | `definitionId`, `reason` |
 
-Each diagnostic carries the relation type key, the instance ids and, where an edge is at fault, the relation ids, in a deterministic order. A malformed definition (Change A) is the one error: `relation-type-constraint-invalid`, because definitions are the trust boundary and reject what they cannot interpret (`rfc-decision-2e0cd70a`).
+Common fields on every diagnostic: `code`, `severity`, `relationType` (the definition's key), `instanceIds` (array), `relationIds` (array) and a human-readable `message` that carries no normative content. `instanceIds` and `relationIds` are empty where not applicable (a definition-level code has both empty).
 
-The relation-writing operations of an implementation (create, move, delete of a relation; creation of a Record that creates relations) evaluate the endpoint, `max` and acyclicity facets for the edge they add and return the same diagnostics in their result. They do not refuse the write: a violation is a warning there too. A `min` is only ever reported by `repo validate`, because a node must exist before its edge can, so refusing creation on an unmet minimum would make the data impossible to author.
+Order is deterministic. Diagnostics sort by `code`, then `relationType`, then by a per-code key: `relationIds[0]` ascending for `relation-endpoint-type`; the instance id ascending, then `side` (`source` before `target`), for the two cardinality codes; the smallest member instance id for `relation-cycle`. Inside one diagnostic `instanceIds` and `relationIds` are sorted ascending.
 
-This extends what the MCP write tools already do. They enforce the type and relation contracts, so a structurally invalid edge is rejected at the door. Graph shape joins that contract at warning strength, which is a structural defence for agent-authored data: an agent that closes a `precedes` loop is told at the moment it writes, not at the next full validation. It also fits srs-rust#557's planned cycle diagnostics: `relation-cycle` is the cycle half of that issue, driven by the declaration instead of a hard-wired type name. Its fan-out half is a cardinality fact that a definition may declare for its own sequence type; core `precedes` declares none (below). Its duplicate-edge and container-endpoint halves are not graph-shape facets of the kind declared here and are outside this RFC. srs-rust#558 (ordering keyed off the definition, not the `precedes` string) is the same move at read time.
+Write-time behaviour is exact. The operations that persist a new relation (relation create, and any operation that creates relations as part of creating a Record) evaluate, for the added relation only: its endpoint restriction; the `max` of each side, counting the relations that already exist plus the new one; and acyclicity, by asking whether the new relation's target already reaches its source over existing relations of the type (or whether source equals target where `irreflexive` is absent). They return the same diagnostics in their result and do not refuse the write. Operations that delete or move a relation or a Record evaluate nothing, because removing an edge can newly break only a `min`, and a `min` is reported by `repo validate` alone: a node must exist before its edge can, so refusing creation on an unmet minimum would make the data impossible to author.
 
-*Consequences.* Authors see graph faults that were silent. A corpus is never rejected for them. The cost is that the standard promises nothing stronger than a warning yet, and an author who ignores warnings keeps a broken chain.
+This extends what the MCP write tools already do. They enforce the type and relation contracts, so a structurally invalid edge is rejected at the door. Graph shape joins that contract at warning strength, a structural defence for agent-authored data: an agent that closes a `precedes` loop is told at the moment it writes. It also fits srs-rust#557's planned cycle diagnostics: `relation-cycle` is that issue's cycle half, driven by the declaration instead of a hard-wired type name. Its fan-out half is a cardinality fact a definition may declare for its own sequence type; core `precedes` declares none. Its duplicate-edge and container-endpoint halves are not graph-shape facets of the kind declared here and are outside this RFC. srs-rust#558 (ordering keyed off the definition, not the `precedes` string) is the same move at read time.
+
+*Consequences.* Authors see graph faults that were silent, and a corpus is never rejected for them. The cost is that the standard promises nothing stronger than a warning yet, and an author who ignores warnings keeps a broken chain. The one error, `relation-type-constraint-invalid`, applies only to definitions that declare the new properties, so no existing definition can trigger it. It is an error because definitions are the trust boundary and reject what they cannot interpret (`rfc-decision-2e0cd70a`), but it does not stop the load, and it is exempt from the no-raising rule of [R7]. Some malformed cases (`min` above `max`, a `min` without its population) are validator rules, not JSON Schema rules, because JSON Schema cannot compare two properties of an object.
 
 ### Change C — Blueprint no longer declares cardinality or presence
 
-`RelationSpec.cardinality` and `RelationSpec.required` are **removed** from `blueprint.json`. `RelationSpec` keeps `relationType`, `sourceType` and `targetType`: what a Blueprint still declares is *which* relations make up the structure, and the relation type named there is the reference to that type's constraints. A reduced form that kept `cardinality` as a reference would only restate `relationType`, which already names the definition, so removal is the single-home answer and "reference" adds nothing.
+`RelationSpec.cardinality` and `RelationSpec.required` are **removed** from `blueprint.json`, and the `structure` description that says it "declares cardinality and required constraints" is rewritten. `RelationSpec` keeps `relationType`, `sourceType` and `targetType`: what a Blueprint still declares is *which* relations make up the structure, and the relation type named there is the reference to that type's constraints. A reduced form that kept `cardinality` as a reference would only restate `relationType`, so removal is the single-home answer.
 
-Removing a property that stored definitions carry is a data-shape change. Blueprints are definitions and definitions reject unknown properties, so every existing Blueprint that sets either property becomes invalid until it is migrated. The migration (Change G) deletes the two properties, reports every value it removes, and does not translate them. They cannot be translated mechanically: a Blueprint value is scoped to a pair of Types inside one structure ("a `decision` has exactly one `outcome`"), while a relation type's cardinality is global to the type.
+Removing a property that stored definitions carry is a data-shape change. Blueprints are definitions and definitions reject unknown properties, so every existing Blueprint that sets either property becomes invalid until it is migrated. The migration (Change G) deletes the two properties, lists every value it removes, and does not translate them. They cannot be translated mechanically: a Blueprint value is scoped to a pair of Types inside one structure ("a `decision` has exactly one `outcome`"), while a relation type's cardinality is global to the type. Keeping the four-value enum on the relation type would make the values translatable in form but not in scope (Alt H).
 
-*Consequences.* One home for multiplicity. An author who needs a pair-scoped rule now defines a dedicated, namespaced relation type with endpoint restrictions and a cardinality, and the Blueprint names it. That is more definitions and is an accepted cost (see the emergence note above). `required` ("this relation must be present for the Blueprint to be complete") has no direct successor: its closest form is a `min` on a dedicated relation type. A Blueprint that wants presence-completeness checks has to say it through such a type. The generative consumers that read these properties today (brief and schema generation) lose the hint; that is a follow-on for the implementation, not a change to the standard.
+*Consequences.* One home for multiplicity. An author who needs a pair-scoped rule defines a dedicated, namespaced relation type with endpoint restrictions and a cardinality, and the Blueprint names it. That is more definitions and is an accepted cost (see the emergence note). `required` ("this relation must be present for the Blueprint to be complete") has no direct successor: the closest form is a `min` on a dedicated relation type. The generative consumers that read these properties today (brief and schema generation) lose the hint; that is a follow-on for the implementation, not a change to the standard.
 
-### Change D — Core defaults: `precedes` and `contains` are acyclic
+### Change D — Core defaults, and which definition governs
 
-The core package's `precedes` and `contains` definitions each gain `acyclic: true` as definition version 2 (same `id`, `version` 1 to 2; the core package's own version moves 1.0.0 to 1.1.0). They gain nothing else.
+The core package's `precedes` and `contains` definitions each gain `acyclic: true` as definition version 2 (same `id`, `version` 1 to 2; the core package version moves 1.0.0 to 1.1.0). They gain nothing else.
 
 Only what is genuinely global is declared:
-- **`precedes` acyclic.** A sequence that loops has no order. The cycle is a defect in any corpus.
+- **`precedes` acyclic.** A sequence that loops has no order.
 - **`contains` acyclic.** Part-of with a cycle makes a thing its own ancestor, and navigation and tree walks already have to prune it.
 
 Everything else is deliberately not declared:
-- **No cardinality on core `contains`.** Single parent is RFC-042's choice for the spec's concept tree: a leaf has exactly one `contains` parent, which is a concept, and a concept has at most one. It is not a global rule. RFC-034 refuses single parent for Containers, and `rfc-decision-8aed3412` and `rfc-decision-0df19d60` refuse to let a shared record take one parent from an edge, because a relation is a global claim and a shared part legitimately sits in several places. In practice, no corpus I surveyed has a `contains` target with two parents (567 edges in `srs/srs`, 191 in srs-programme, 626 in muSrs), but that is practice, and practice is not law.
-- **No cardinality on core `precedes`.** Chains branch. `srs/srs` has one `precedes` source with two outgoing edges and muSrs has one target with two incoming ones, so a linked-list rule would flag real data.
-- **`depends-on` is not acyclic.** srs#608 measured three irreducible 2-cycles in the concept graph of `srs/srs`, and muSrs has a fourth. Declaring `depends-on` acyclic would make intended data invalid and would be one repository's rule leaking into the standard.
+- **No cardinality on core `contains`.** Single parent is RFC-042's choice for the spec's concept tree: a leaf has exactly one `contains` parent, which is a concept, and a concept at most one. It is not a global rule. RFC-034 refuses single parent for Containers, and `rfc-decision-8aed3412` and `rfc-decision-0df19d60` refuse to let a shared record take one parent from an edge, because a relation is a global claim and a shared part legitimately sits in several places. No surveyed corpus has a `contains` target with two parents (Counts), but that is practice, not law.
+- **No cardinality on core `precedes`.** Chains branch: the measurements show a branching `precedes` in two repositories.
+- **`depends-on` is not acyclic.** srs#608 measured three irreducible 2-cycles in the concept graph of `srs/srs`, and muSrs has a fourth. Declaring it acyclic would make intended data invalid and put one repository's rule into the standard.
 
-A repository that wants a stricter rule for its own types declares it on its own relation type. There is no overlay and no inheritance of core relation types (ruling 5): a repository cannot add facets to core `contains`, and the spec package manages its own choice with its own relation type or the authoring-guide rule (srs#818 / #819). Relation inheritance, by analogy to `ext:type-inheritance`, is a named future RFC and is not designed here.
+A repository that wants a stricter rule for its own types declares it on its own relation type. There is no overlay and no inheritance of core relation types (ruling 5). Relation inheritance, by analogy to `ext:type-inheritance`, is a named future RFC and is not designed here.
 
-Which definition governs a key is still decided by RFC-005 Change B and this RFC does not change that. A package that carries its own copy of `precedes` has its own definition and receives no inherited facet. The surveyed corpora carry local `precedes` copies in one place that matters: muSrs defines its own (`com.mudemocracy`). The governance package carries one in each of its 4 releases under `packages/`, and the gallery example carries one. None declares `acyclic`. They keep resolving as before and add the facet by publishing a new version of their own definition (Open Question 1).
+**Which definition governs a key (the actual rule).** The core package is embedded in the implementation, not carried by the corpus (RFC-029): each implementation ships its own copy of the core relation types. When it loads a repository it merges them in, and **a repository's own definition of the same key always wins**: the embedded core definition is skipped whenever the repository's package already defines that key, whatever the other definition's `id`, namespace or content. Relation types resolve by key, not by id. This is the shipped behaviour (it was fixed for repositories that declared their own canonical types, srs-rust#685), and it differs from the wording of RFC-005 Change B, which calls any two differing definitions of one key an installation conflict. This RFC resolves the difference by amending Change B to state the shipped rule for core keys ([R12]); two non-core definitions of one key remain a conflict.
 
-*Consequences.* A cycle in any `precedes` or `contains` graph that resolves to the core definition now produces a warning. None exists in the corpora measured (below). The core package gains a version; every implementation embedding the core package must carry version 2.
+The consequence is the largest of this RFC and is stated plainly. **Core version 2 reaches only repositories that have no definition of that key of their own.** Every repository that carries its own `precedes` is ungoverned by core version 2 until it publishes its own `acyclic`: muSrs defines its own (`com.mudemocracy`), the `com.mudemocracy.governance` package carries one in each of its 4 releases (1.0.0, 1.1.0, 1.2.0, 1.2.1), and the gallery example carries one; each has a different `id` from the core definition and none declares `acyclic`. `srs/srs` itself carries its own copies of `precedes` and `contains` in `package/core` and publishes version 2 in the same change that folds this RFC. The same holds for `contains` wherever a package copies it. Such a copy keeps resolving exactly as before and produces no cycle warning.
+
+*Owner decision (Open Question 1).* Should core's `acyclic` instead apply by key, to whichever definition wins? That would make `precedes` and `contains` acyclic everywhere, with no republication. It is the overlay that ruling 5 defers: a repository's definition would silently gain a facet it did not write, and "own definition wins" would stop being true. This draft adopts the by-winning-definition rule and records the by-key rule as the alternative.
 
 ### Change E — Path to errors
 
-Version 2 of the constraint surface is a warning contract. This RFC adds no severity property. When the standard wants a facet to fail validation, that is a standing-contract change under axis 5–11: a later RFC introduces an explicit enforcement property whose first appearance is in a new definition version, and it takes effect only for a repository whose effective package set carries that version, at a boundary the RFC declares. The candidate boundary is the first full public release, where axis 2–8 is already precommitted to flip to Continuity. The boundary and the property are not designed here (Open Question 3). Until then a corpus that violates a facet is valid.
+Version 2 of the core definitions is a warning contract. This RFC adds no severity property. When the standard wants a facet to fail validation, that is a standing-contract change under axis 5–11: a later RFC introduces an explicit enforcement property whose first appearance is in a new definition version, and it takes effect only for a repository whose effective package set carries that version, at a boundary the RFC declares. The candidate boundary is the first full public release, where axis 2–8 is already precommitted to flip to Continuity. The boundary and the property are not designed here (Open Question 2). Until then a corpus that violates a facet is valid.
 
 ### Change F — Containers are untouched
 
-I-150 and RFC-034 [R7] already require the `childContainerIds` graph to be acyclic and treat a cycle as a validation error. That declares acyclicity for a graph of Containers, and Containers are not Relation endpoints (a `containerId` never appears as a Relation source or target). This RFC does not touch that invariant, does not change its severity and does not route it through the new facet. If Containers ever become relation endpoints, or the container graph is expressed through a relation type, I-150 could be restated as `acyclic` on that type; that unification is noted, not proposed.
+I-150 and RFC-034 [R7] already require the `childContainerIds` graph to be acyclic and treat a cycle as a validation error. That declares acyclicity for a graph of Containers, and Containers are not Relation endpoints (a `containerId` never appears as a Relation source or target). This RFC does not touch that invariant, its severity, or route it through the new facet. If Containers ever become relation endpoints, I-150 could be restated as `acyclic` on a relation type; that unification is noted, not proposed.
 
-### Change G — Revision and migration
+### Change G — Revision, embedding and migration
 
-The additive half needs no bump. Adding optional properties to `relation-type.json` changes no stored instance or relation, so there is nothing to migrate. An older binary that meets a definition with the new properties rejects it as an unknown property (the definition layer is reject-unknown), which is a loud refusal and not a silent drop, so nothing is lost or rewritten behind the owner's back. The version it needs is the release that implements this RFC; its embedded core package carries version 2.
+One `dataModelRevision` bump covers both halves. Adding the facets alone would need none: it changes no stored instance or relation. Removing the two Blueprint properties changes the shape of stored definitions, and RFC-033 defines `dataModelRevision` as the migration generation for exactly such a delta. Stamping both halves under one revision keeps a single gate.
 
-The Blueprint half does need a bump. Removing `cardinality` and `required` is a change to the shape of stored definitions that existing corpora carry, and RFC-033 defines `dataModelRevision` as exactly the migration generation for such deltas: a newer corpus is refused by an older binary and never silently downgraded. Changes C and A therefore ship together under one `dataModelRevision` bump, **the next unassigned revision** after the highest accepted one when this RFC lands (10 if RFC-046's revision 9 has landed first). One registry migration deletes the two Blueprint properties, lists every removed value by Blueprint and `RelationSpec`, and stamps the new revision. Per `rfc-decision-628cf6c4` it is a registered migration, not an edit.
+Who decides. The revision is a property of the corpus; the embedded core package is a property of the binary. A binary decides at the corpus level, per RFC-033: it refuses a corpus stamped above the revision it supports and never silently downgrades it. A binary from before this RFC embeds core version 1, so it never sees version 2 and its `precedes` stays unconstrained; it does reject a definition that declares `acyclic` or the other new properties as an unknown property, because the relation-type schema and the implementation's definition type are both closed. To make that refusal happen at the corpus level instead of definition by definition, a repository whose package declares any new property MUST carry the new revision ([R13]).
+
+The gate. The revision bump lands in the **same implementation release** that embeds core version 2 and accepts the new properties, following the choreography in `CLAUDE.md`: (1) implementation support lands (supported-revision constant, migration-registry entry, fixture test); (2) the release is cut with the corpus gate green; (3) the spec-side PR merges; (4) one pin advance in each pinned client.
+
+The revision number is a rule, not a literal: it is the revision after the highest revision assigned when this RFC is accepted. At drafting, RFC-046 holds 9 and RFC-043 holds 8.
+
+An unmigrated corpus. A binary supporting the new revision, given a corpus at the prior revision, reports it as needing the registry migration; it does not strip anything silently. Until migrated, every Blueprint that sets a removed property fails definition validation (42 RelationSpecs across 7 live Blueprints today, Counts). One registry migration deletes the two properties, lists every removed value by Blueprint and `RelationSpec`, and stamps the new revision (`rfc-decision-628cf6c4`).
 
 ---
 
 ## Conformance Rules
 
-> **[R1]** `RelationTypeDefinition` MAY declare `sourceTypeIds` and `targetTypeIds`, each a list of Type UUIDs. When present, a relation of that type MUST have, at that end, a Record bound to a Type whose `typeId` is in the list, matched on `typeId` regardless of `typeVersion`.
+> **[R1]** `RelationTypeDefinition` MAY declare `sourceTypeIds` and `targetTypeIds`, each a list of Type UUIDs. When present and non-empty, a relation of that type MUST have, at that end, a Record bound to a Type whose `typeId` is in the list, matched on `typeId` regardless of `typeVersion`. A Note MUST NOT satisfy a non-empty list. An absent or empty list MUST impose no restriction.
 >
-> **[R2]** A Note MUST NOT satisfy a non-empty `sourceTypeIds` or `targetTypeIds`. An empty list, or an absent property, MUST impose no restriction.
+> **[R2]** A relation whose endpoint does not resolve, is a `containerId`, or is a Record whose `typeId` does not resolve MUST NOT also be reported as `relation-endpoint-type`.
 >
-> **[R3]** `RelationTypeDefinition` MAY declare `cardinality` with optional `perSource` and `perTarget` sides, each with optional integer `min` (at least 0) and `max` (at least 1). An absent `max` MUST mean unbounded and an absent `min` MUST mean 0. `perSource` MUST count the relations of that type leaving one source instance and `perTarget` the relations arriving at one target instance.
+> **[R3]** `RelationTypeDefinition` MAY declare `cardinality` with optional `perSource` and `perTarget` sides, each with optional integer `min` (at least 0) and `max` (at least 1); an absent `max` means unbounded and an absent `min` means 0. For an instance, `perSource` MUST count every relation of the type, whose endpoints both resolve, that has the instance as its source, and `perTarget` every such relation that has it as its target, whether or not the relation passes the endpoint restriction. Two relations with the same source and target MUST count as two.
 >
-> **[R4]** An instance with more relations than a declared `max` MUST be reported once per instance and side. An instance in the population with fewer relations than a declared `min` MUST be reported once per instance and side. An instance with zero relations MUST NOT be reported for a `max`.
+> **[R4]** An instance with more relations than a declared `max` MUST be reported once per instance and side. A member of the *population* with fewer relations than a declared `min` MUST be reported once per instance and side, where the population is every Record in the loaded repository whose `typeId` is in the corresponding list (`sourceTypeIds` for `perSource`, `targetTypeIds` for `perTarget`), whatever its lifecycle state. An instance with zero relations MUST NOT be reported for a `max`.
 >
-> **[R5]** A definition MUST be reported as `relation-type-constraint-invalid` (error) when: `min` exceeds `max`; a `perSource.min` is declared without `sourceTypeIds`, or a `perTarget.min` without `targetTypeIds`; a listed Type UUID does not resolve in the effective package set; or a facet property has the wrong kind.
+> **[R5]** A definition MUST be reported as `relation-type-constraint-invalid` (error) only when it declares one of the new properties and: `min` exceeds `max`; a `perSource.min` is declared without `sourceTypeIds`, or a `perTarget.min` without `targetTypeIds`; or a facet property has the wrong kind. A listed Type UUID that does not resolve in the effective package set MUST be reported as `relation-type-constraint-unresolved-type` (warning), not as an error. Neither report MUST stop the load of the definition or the corpus, and the affected facet MUST NOT be evaluated. A definition that declares none of the new properties MUST NOT be reported under either code.
 >
-> **[R6]** `RelationTypeDefinition` MAY declare `acyclic: true`. When true, the directed graph formed only by relations of that type, source to target as stored, MUST contain no cycle of two or more edges, and an implementation MUST report each strongly connected component once as `relation-cycle`. Cycles mixing relation types MUST NOT be reported under this facet.
+> **[R6]** `RelationTypeDefinition` MAY declare `acyclic: true`. When true, the directed graph formed only by relations of that type, source to target as stored, MUST contain no cycle of one or more relations. A strongly connected component of more than one instance MUST be reported once as `relation-cycle`, naming every instance in it and every relation of the type between them. A self-loop MUST be reported as `relation-cycle` unless the definition also declares `irreflexive: true` ([R9]). Cycles mixing relation types MUST NOT be reported under this facet.
 >
-> **[R7]** A violation of [R1], [R4] or [R6] MUST be reported with severity `warning`, with the stable code `relation-endpoint-type`, `relation-cardinality-exceeded`, `relation-cardinality-unmet` or `relation-cycle` respectively, the relation type key, the instance ids and, where an edge is at fault, the relation ids. An implementation MUST NOT report these at a higher severity, and MUST NOT refuse to load or write a corpus because of them.
+> **[R7]** A violation of [R1], [R4] or [R6] MUST be reported with severity `warning` and the code `relation-endpoint-type`, `relation-cardinality-exceeded`, `relation-cardinality-unmet` or `relation-cycle` respectively, carrying the fields and in the order listed in Change B. An implementation MUST NOT report these at a higher severity and MUST NOT refuse to load or write a corpus because of them. The code `relation-type-constraint-invalid` is the one error and is exempt from this rule.
 >
-> **[R8]** The operations that add a relation MUST evaluate [R1], the `max` of [R4] and [R6] for the added edge and MUST return the diagnostics in their result without refusing the write. A `min` MUST be reported by `repo validate` only.
+> **[R8]** The operations that persist a new relation MUST evaluate, for the added relation only, [R1], the `max` of [R4] counting existing relations plus the new one, and [R6] (by asking whether the target already reaches the source over existing relations of the type), MUST return the resulting diagnostics in their result, and MUST NOT refuse the write because of them. Operations that delete or move a relation or Record MUST NOT evaluate these. A `min` MUST be reported by `repo validate` only.
 >
 > **[R9]** Where a definition declares both `irreflexive` and `acyclic`, a self-loop MUST be reported by E3 only and MUST NOT also be reported as `relation-cycle`. `irreflexive` and `requireSameType` MUST retain their present meaning and severity.
 >
 > **[R10]** Enforcement of [R1] to [R9] MUST be implemented once in the repository core service and exposed identically through the CLI, the WASM binding and the MCP write tools. An adapter MUST NOT add, relax or reinterpret a constraint.
 >
-> **[R11]** The core package's `precedes` and `contains` definitions MUST each be published as version 2 (same `id`) declaring `acyclic: true` and no other facet. The core package's `depends-on` definition MUST NOT declare `acyclic`. No core definition MUST declare `cardinality`.
+> **[R11]** The core package's `precedes` and `contains` definitions MUST each be published as version 2 (same `id`) declaring `acyclic: true` and no other new facet. The core `precedes`, `contains` and `depends-on` definitions MUST NOT declare `cardinality`, and `depends-on` MUST NOT declare `acyclic`. An implementation that embeds the core package MUST embed version 2 in the same release that implements this RFC.
 >
-> **[R12]** A repository's own definition of a relation type key MUST NOT inherit a facet from a core definition of the same key; the definition RFC-005 Change B resolves for a key is the only definition whose facets apply.
+> **[R12]** Where a repository's own package defines a relation type key that the embedded core package also defines, the repository's definition MUST govern and the core definition MUST NOT be merged for that key; facets of the core definition MUST NOT be applied to it. Any other two definitions of one key remain an installation conflict (RFC-005 Change B).
 >
-> **[R13]** `RelationSpec` in a Blueprint MUST NOT carry `cardinality` or `required`. The migration MUST delete both from every stored Blueprint, MUST list each removed value, and MUST stamp the new `dataModelRevision`.
+> **[R13]** `RelationSpec` in a Blueprint MUST NOT carry `cardinality` or `required`. The migration MUST delete both from every stored Blueprint, MUST list each removed value, and MUST stamp the new `dataModelRevision`. A repository whose package declares any new relation-type property MUST carry that revision, and an implementation MUST NOT write such a property into a corpus stamped below it.
 >
-> **[R14]** Promotion of any facet to error severity MUST be made by a later RFC that introduces an explicit enforcement property, first appearing in a new definition version, and effective only for a repository whose effective package set carries that version. No implementation MUST raise severity on its own.
+> **[R14]** Promotion of any facet to error severity MUST be made by a later RFC that introduces an explicit enforcement property, first appearing in a new definition version, and effective only for a repository whose effective package set carries that version. An implementation MUST NOT raise severity on its own.
 >
-> **[R15]** The addition of the four new properties to `relation-type.json` MUST be accompanied by a conformance fixture that fails when any of [R1], [R3], [R6] or [R7] is not implemented identically by the CLI, MCP and WASM paths.
+> **[R15]** A conformance fixture MUST fail unless the CLI, MCP and WASM paths return, for each case, the same `code`, `severity`, `relationType`, `instanceIds`, `relationIds` and per-code fields, in the same order. The cases MUST include one violating edge for each of [R1], [R3], [R4] and [R6], a self-loop with and without `irreflexive`, and a **local shadow of `precedes` without `acyclic`** over a graph containing a cycle, which MUST produce no `relation-cycle` ([R12]).
 
-Each rule is testable: [R1] to [R6] and [R9] by a fixture with one violating edge each; [R7] and [R8] by reading the diagnostic and checking the write succeeded; [R10] and [R15] by the three-path fixture; [R11] to [R13] by inspecting the shipped definitions and migrated Blueprints; [R12] by a fixture with a local copy; [R14] by inspection of any later RFC.
+Each rule is testable by fixture ([R1] to [R6], [R9], [R15]), by reading the diagnostic and confirming the write succeeded ([R7], [R8]), or by inspecting shipped definitions, migrated Blueprints and later RFCs ([R11] to [R14]).
 
 ---
 
@@ -235,23 +272,27 @@ Each rule is testable: [R1] to [R6] and [R9] by a fixture with one violating edg
 
 | Schema file | Change |
 |---|---|
-| `relation-type.json` | add optional `sourceTypeIds`, `targetTypeIds` (arrays of UUID), `cardinality` (`perSource` / `perTarget`, each `min` / `max`) and `acyclic` (boolean); update the `requireSameType` description, whose text still says `allowedSourceTypes` / `allowedTargetTypes` were "retired with no successor". |
-| `blueprint.json` | remove `cardinality` and `required` from `$defs/RelationSpec`; update its description. |
-| `package/core/relation-types/precedes.json`, `contains.json` | these are package data, not schema: version 2 with `acyclic: true`; `package/core/package.json` version 1.1.0. |
-| `package/metamodel/**` | generated from the schemas by `scripts/gen-metamodel-package.mjs`, not hand-edited: the relation-type Type gains the new fields and the `relation_spec_cardinality` Field and its `required` counterpart leave the Blueprint RelationSpec Type. |
-| `manifest.json`, `protocol.json` and all other schemas | None. (`protocol.json` mentions Blueprint by reference only.) |
+| `relation-type.json` | add optional `sourceTypeIds` and `targetTypeIds` (array of strings with `format: uuid`, `minItems` 1, `uniqueItems` true); `cardinality` (object, `additionalProperties` false, with optional `perSource` and `perTarget`, each an object, `additionalProperties` false, with optional integer `min` at least 0 and integer `max` at least 1); `acyclic` (boolean). Update the `requireSameType` description, whose text still says `allowedSourceTypes` / `allowedTargetTypes` were "retired with no successor". The cross-property rules (`min` not above `max`, `min` needs its population) are validator rules, not schema rules. |
+| `blueprint.json` | remove `cardinality` and `required` from `$defs/RelationSpec`; rewrite the `RelationSpec` description and the `structure` property description (currently "Declares cardinality and required constraints."). |
+| `package/core/relation-types/precedes.json`, `contains.json` | package data, not schema: version 2 with `acyclic: true`; `package/core/package.json` version 1.1.0. The `srs/srs` copies of `precedes` and `contains` are the same files. |
+| `package/metamodel/**` | generated from the schemas by `scripts/gen-metamodel-package.mjs`, never hand-edited: the relation-type Type gains the new fields and the Blueprint RelationSpec Type loses its two. |
+| `manifest.json`, `protocol.json` and all other schemas | None. |
 
 Schema changes must be synced to:
 - `srs-rust/crates/srs-schema/schemas/2.0/` (via `scripts/check-schema-sync.sh`)
 - `srs-vscode/schemas/2.0/` (manual copy)
 
+The closed definition types in the implementation (the relation-type definition and the Blueprint `RelationSpec`) must follow the same shape change; that sync is a note for the implementation, not specified here.
+
 ---
 
 ## What breaks
 
-**Instance data: nothing.** All four instance-level facets report at warning strength and are absent from every existing definition except the two core ones. Measured with a read-only pass over `relations/` in five repositories:
+All counts are as of 2026-10-07 and are not part of the normative text. They come from a read-only pass over each repository's `relations/` and Blueprint files: group relations by `relationType`, then, for `precedes`, `contains` and `depends-on`, count edges, self-loops, strongly connected components of more than one instance (Tarjan) and targets with two or more incoming edges; separately, load every JSON file with `rootTypes` and `structure` and count its `RelationSpec`s and which carry `cardinality` or `required`. Blueprint counts are unique by definition `id` and version.
 
-| Repository | `precedes` edges | `contains` edges | `precedes` or `contains` cycles (incl. self-loops) | `contains` targets with 2+ parents |
+**Instance data: nothing breaks.** Every new instance-level report is a warning and is absent from every existing definition except the two core ones.
+
+| Repository | `precedes` edges | `contains` edges | Cycles incl. self-loops | `contains` targets with 2+ parents |
 |---|---|---|---|---|
 | `srs/srs` | 263 | 567 | 0 | 0 |
 | srs-programme | 32 | 191 | 0 | 0 |
@@ -260,42 +301,51 @@ Schema changes must be synced to:
 | semanticops.com source | 0 | 0 | 0 | 0 |
 | **Total** | **519** | **1,384** | **0** | **0** |
 
-So declaring the two core defaults produces 0 warnings across 1,903 edges. For the record: `depends-on` has 4 two-cycles across these corpora (3 in `srs/srs`, 1 in muSrs) and would have produced 4 warnings, which is the evidence against declaring it acyclic. Branching `precedes` occurs twice (one source with two outgoing edges in `srs/srs`, one target with two incoming in muSrs).
+Declaring the two core defaults would produce 0 warnings across 1,903 edges, if they governed. They govern only repositories without their own definition (Change D): of these five, `srs/srs` and muSrs define their own `precedes`, and `srs/srs` its own `contains`. `depends-on` has 4 two-cycles (3 in `srs/srs`, 1 in muSrs), which is the evidence against declaring it acyclic. `precedes` branches twice (one source with two outgoing relations in `srs/srs`, one target with two incoming in muSrs).
 
-**Blueprints: 7 live files and 42 `RelationSpec`s are invalid until migrated.** srs-programme has 1 Blueprint (3 `RelationSpec`s, all 3 with `cardinality` and `required`). muSrs has 6 Blueprint files (39 `RelationSpec`s, all 39 with `cardinality`, 22 with `required`); some may be copies of one another across its `packages/` directory, which I did not de-duplicate. In this repository, the `com.mudemocracy.governance` package ships 4 releases (1.0.0, 1.1.0, 1.2.0, 1.2.1) each carrying the decision-log Blueprint, plus 1 gallery example, all with both properties (10 `RelationSpec`s in total). The `srs/srs`, srs-context and semanticops.com repositories have no Blueprint. The migration deletes the properties mechanically; the 42 values are listed and not carried over.
+**Blueprints: 42 RelationSpecs in 7 live Blueprints are invalid until migrated.**
 
-**Pinned binaries.** A binary from before this RFC's implementation refuses a migrated corpus as newer ([R13]). A repository that writes the new facets into its own package, with no corpus migration, is refused only at that definition and loudly. Every currently pinned build predates this RFC; the cost is the usual one implementation release and one pin advance per client. `rfc-decision-2e0cd70a`'s carry-what-you-do-not-recognise contract covers instance data and does not cover definitions, which stay reject-unknown.
+| Repository | Blueprint files | Unique Blueprints | RelationSpecs | With `cardinality` | With `required` |
+|---|---|---|---|---|---|
+| muSrs | 6 | 6 | 39 | 39 | 22 |
+| srs-programme | 1 | 1 | 3 | 3 | 3 |
+| `srs/srs`, srs-context, semanticops.com | 0 | 0 | 0 | 0 | 0 |
+| **Live total** | **7** | **7** | **42** | **42** | **25** |
 
-**Migrations needed:** the one Blueprint migration above. No relation, record or container is rewritten.
+Separately, this repository's `com.mudemocracy.governance` package ships the decision-log Blueprint in 4 releases and the gallery example carries it once: 5 files, one unique Blueprint with 2 RelationSpecs, both properties set on both. It shares its id with a Blueprint in muSrs, so it adds no new unique definition to the live total. The migration deletes the properties mechanically; the values are listed and not carried over.
+
+**Binaries.** A binary from before the implementing release refuses a migrated corpus as newer (Change G). Every currently pinned client predates it; the cost is the usual one implementation release and one pin advance per client. The migrations needed are the one Blueprint migration; no relation, Record or Container is rewritten.
 
 ---
 
 ## Rationale
 
-**Why the relation type is the home.** A relation's shape is a property of what the relation means, and a relation is a global claim about its endpoints (`rfc-decision-8aed3412`). A constraint that varies by document belongs to the document's selection or structure, not to the claim. Putting shape on the relation type means one place, travelling with the definition that already travels in packages.
+**Why the relation type is the home.** A relation's shape is a property of what the relation means, and a relation is a global claim about its endpoints (`rfc-decision-8aed3412`). A constraint that varies by document belongs to the document's selection or structure, not to the claim. Putting shape on the relation type gives one place, travelling with the definition that already travels in packages (ruling 1).
 
-**Why exactly three facets.** They are the ones with a demonstrated consumer: acyclicity (srs-rust#557, #558), cardinality (the RFC-005-deferred facet and the Blueprint vocabulary), and endpoint types (the retired `allowedSourceTypes` / `allowedTargetTypes`, no successor). Each is checkable from the edges and Types alone, without a query language.
+**Why exactly three facets.** They are the ones with a demonstrated consumer: acyclicity (srs-rust#557, #558), cardinality (the RFC-005-deferred facet and the Blueprint vocabulary), and endpoint types (the retired `allowedSourceTypes` / `allowedTargetTypes`, no successor). Each is checkable from the edges and Types alone, without a query language (ruling 2).
 
-**Why LINEAGE type references.** A relation constraint should keep holding when a Type gains a version. Pinning would make every Type version bump an edit to every relation type that names it, with violations in between. This follows `rfc-decision-c8704763`: strength is declared where the reference is defined, and a constraint on identity is lineage.
+**Why LINEAGE type references.** A constraint should keep holding when a Type gains a version. Pinning would make every Type version bump an edit to every relation type naming it, with violations in between. Strength is declared where the reference is defined (`rfc-decision-c8704763`).
 
-**Why warnings, and why no severity property now.** A standing corpus must not become invalid on upgrade (axis 5–11). A severity property would be a second knob that every author has to choose before there is evidence for the right default; the honest path to errors is a later, explicit definition version at a declared boundary ([R14]).
+**Why warnings, and why no severity property now.** A standing corpus must not become invalid on upgrade (axis 5–11, ruling 3). A severity property would be a second knob every author must set before there is evidence for the right default; the honest path to errors is a later, explicit definition version at a declared boundary ([R14]).
 
-**Why min needs a population.** "At least one edge" has to be asked of something. Naming the population through the endpoint restriction keeps the rule checkable and stops it from meaning "every instance in the repository".
+**Why `min` needs a population.** "At least one edge" has to be asked of something. Naming the population through the endpoint restriction keeps the rule checkable.
 
-**Why remove, not reference, the Blueprint properties.** A `relationType` already names the definition; a "reference" to its constraints would restate it. Keeping the inert properties would leave two multiplicity vocabularies, one enforced and one not. The cost is that pair-scoped rules need a dedicated relation type.
+**Why remove, not reference, the Blueprint properties.** A `relationType` already names the definition; a "reference" to its constraints would restate it. Keeping the inert properties would leave two multiplicity vocabularies, one enforced and one not.
+
+**Why the winning definition, not the key, carries core's facets.** Applying core's facets to every definition of a key is an overlay, which ruling 5 defers; it would also make "a repository's own definition wins" false for exactly the keys the standard cares most about. The cost, that today's copies are ungoverned, is real and is made visible in Change D and What breaks.
 
 ---
 
 ## Not In Scope
 
 - **Symmetry, transitivity, inverse (as an enforceable property) and uniqueness-within-scope.** Each is deferred. `inverseType` stays a display key. The duplicate-edge diagnostic of srs-rust#557 is a uniqueness fact and is not delivered here.
-- **Overlay or refinement of core relation types, and relation inheritance.** Named as a future RFC (the relational analogue of `ext:type-inheritance`). Not designed here.
+- **Overlay or refinement of core relation types, and relation inheritance.** A named future RFC, the relational analogue of `ext:type-inheritance`. Not designed here.
 - **A severity or enforcement property, and any error-level violation.** Path only ([R14]).
 - **A single-parent rule on core `contains`.** An authoring-guide rule for the spec's concept tree (srs#818 / #819).
-- **The naming grammar `pattern` on Field `name` / `namespace`.** srs#236, separate from these three facets.
+- **The naming grammar `pattern` on Field `name` / `namespace`.** srs#236.
 - **The version-bump half of `mechanism-b3c293f9`.** Not mechanisable; an authoring rule.
-- **Constraints across relation types** (a cycle mixing `precedes` and `depends-on`) and **Container graphs** (I-150 stands as it is).
-- **srs-rust implementation detail.** Beyond the layering statement of [R10], how the core service computes cycles and counts is not part of the standard.
+- **Constraints across relation types** and **Container graphs** (I-150 stands as it is).
+- **Implementation detail.** Beyond the layering statement of [R10], how the core service computes cycles and counts is not part of the standard.
 
 ---
 
@@ -303,15 +353,15 @@ So declaring the two core defaults produces 0 warnings across 1,903 edges. For t
 
 ### Alt A — Constraints on the Blueprint
 
-Keep `RelationSpec.cardinality` and `required`, and make validation read them. Rejected (ruling 1): a Blueprint is a per-structure template, so the constraint would be contextual to a document while the relation is a global claim, and the relation type would still need its own home for the cases with no Blueprint. Two homes for one goal.
+Keep `RelationSpec.cardinality` and `required`, and make validation read them. Rejected (ruling 1): a Blueprint is a per-structure template, so the constraint would be contextual to a document while the relation is a global claim, and the relation type would still need its own home for cases with no Blueprint. Two homes for one goal.
 
 ### Alt B — Constraints on `Type.validationRules`
 
-Rejected. Rules there are intra-record by construction (`rfc-decision-c20fcff8` notes this) and cannot see another record's edges. It would be a third home.
+Rejected. Rules there are intra-record by construction and cannot see another record's edges. It would be a third home.
 
 ### Alt C — Overlay or refinement of core relation types; relation inheritance
 
-Let a repository add facets to core `contains` or `precedes`, or have a relation type extend another. Deferred, not adopted (ruling 5). It needs a conflict rule between base and overlay, a new reference strength, and a story for how overlays travel. The need is not demonstrated: the spec package can declare its own relation type or keep the authoring-guide rule. The future RFC is recorded as a named deferral.
+Let a repository add facets to core `contains` or `precedes`, or have a relation type extend another. Deferred (ruling 5). It needs a conflict rule between base and overlay, a new reference strength, and a story for how overlays travel. The by-key application of core facets (Open Question 1) is the same thing in miniature.
 
 ### Alt D — Single-parent as a global `contains` rule
 
@@ -319,23 +369,38 @@ Rejected (ruling 4). RFC-034 refuses it for Containers, and `rfc-decision-8aed34
 
 ### Alt E — Errors first
 
-Rejected (ruling 3). It would make any existing violation an invalid corpus on upgrade and put a binary-version cost on every corpus. Warnings are the standing-contract-preserving step; errors come by a declared boundary ([R14]).
+Rejected (ruling 3). It would make any existing violation an invalid corpus on upgrade. Errors come by a declared boundary ([R14]).
 
 ### Alt F — Keep Blueprint `required` and drop only `cardinality`
 
-Rejected. `required` is the one property with no successor in the relation type, so keeping it would leave exactly the second home this RFC removes. The cost of dropping it (a dedicated relation type with a `min`) is stated in Change C.
+Rejected. `required` has no successor in the relation type, so keeping it would leave exactly the second home this RFC removes. The cost of dropping it is stated in Change C.
 
 ### Alt G — Declare `depends-on` acyclic
 
 Rejected. srs#608 shows 3 irreducible 2-cycles in the concept graph, and muSrs has a fourth. It would make intended data invalid and put a one-repository rule into the standard.
 
+### Alt H — Keep the existing four-value cardinality enum
+
+Reuse `one-to-one | one-to-many | many-to-one | many-to-many` on the relation type, which would make the 42 Blueprint values translatable in form. Rejected: the enum cannot say "at most 3" or "at least 1", has no population for a minimum, and the Blueprint values are pair-scoped while a type's cardinality is global, so form-level translation would silently widen their scope.
+
+### Alt I — One discriminated `constraints[]` list
+
+A single list of `{kind, ...}` entries instead of four named properties. Rejected for now: it admits a fourth kind without an RFC (against the closed list of three), and a list of discriminated objects is harder for the closed definition schema to validate than named properties with their own shapes.
+
+### Alt J — Pinned or mixed endpoint references
+
+Name the endpoint Types as `ExactTypeRef` (pinned), or allow either form. Rejected: pinned makes every Type version an edit to the definition, and a mixed form is two spellings of one thing (`rfc-decision-628cf6c4`).
+
+### Alt K — A severity property now
+
+Add `enforcement: warning | error` on the definition immediately. Rejected: it hands every author a knob with no evidence for the default and lets a package raise a violation to an error on a repository that did not choose it; the path is [R14].
+
 ---
 
 ## Open Questions
 
-1. **How a core version 2 coexists with packages that carry their own copy of a core key.** RFC-005 Change B says two definitions with the same key that differ in `id`, `version` or content are an installation conflict. Yet the corpora already hold such copies: muSrs defines its own `precedes` (`com.mudemocracy`), and each governance package release carries one with a different `id` from the core one. I could not confirm from the specification alone how the shipped implementation resolves these, and the answer decides whether those copies are conflicts, shadow the core definition, or are ignored. *Options:* (a) leave RFC-005 as is and let each such package publish its own `acyclic` version, as written in [R12]; (b) amend RFC-005 so a higher version of the same `id` supersedes a lower one; (c) have the implementation treat a local copy of a core key as the core definition. *Recommendation:* (a) for this RFC, plus a confirmation from the implementation of what happens today, so that the muSrs and governance copies are not left silently ungoverned.
-2. **Do Blueprint and relation-type changes ship under one revision or two?** They are written as one bump (Change G). *Options:* one bump covering both, or the additive facets first with no bump and the Blueprint removal in a second RFC. *Recommendation:* one bump. The additive half needs none, and splitting leaves the inert Blueprint vocabulary for another release.
-3. **What boundary, if any, promotes a facet to error, and does the first public release count?** *Options:* the first full public release (the axis 2–8 precommitted flip); a named `dataModelRevision`; per-package opt-in only. *Recommendation:* per-package opt-in first, since it needs no repository-wide boundary and fits [R14]. The public-release flip is the natural point to revisit the default.
-4. **Collapse `irreflexive` into `acyclic`?** They overlap on a self-loop and differ in strength (E3 error versus new warning). *Options:* keep both ([R9]); retire `irreflexive` as a successor-version migration of all 15 definitions in `srs/srs` and the 34 in muSrs. *Recommendation:* keep both. Retiring it would turn a standing error into a warning, which contradicts axis 5–11.
-5. **Do endpoint restrictions follow `ext:type-inheritance`?** As written, a Record of a subtype does not satisfy a restriction naming its parent. *Options:* exact `typeId` only; also accept subtypes. *Recommendation:* exact `typeId` only for now, since inheritance resolution would add a second reference-resolution rule; revisit with the relation-inheritance RFC.
-6. **Should a Blueprint's `required` have a successor outside the relation type?** Change C leaves a Blueprint with no way to say a relation is required for completeness other than a dedicated relation type with a `min`. *Options:* accept that; or later add a completeness check on the Blueprint itself. *Recommendation:* accept it now; a Blueprint-level check would be a new RFC with its own justification.
+1. **Owner decision: does core's `acyclic` apply by the winning definition (adopted) or by key?** Context: a repository's own definition of a core key always wins (Change D), so muSrs, the 4 governance releases and the gallery example, each with its own `precedes`, are ungoverned. *Options:* (a) by the winning definition: no overlay, ungoverned copies stay so until their owners publish `acyclic`; (b) by key: the core facets apply to any definition of that key, reaching every copy at once but making a definition gain a facet it did not write, which is the overlay of ruling 5; (c) (a) plus an informational diagnostic on a local copy of a core key that lacks the core facets. *Recommendation:* (a) now; (c) is a cheap follow-up if ungoverned copies prove a problem; (b) belongs to the relation-inheritance RFC.
+2. **Owner decision: the path to errors.** Which boundary promotes a facet to an error and by what mechanism? *Options:* per-package opt-in through an explicit enforcement property (new definition version); a named `dataModelRevision`; the first full public release (the axis 2–8 flip). *Recommendation:* per-package opt-in first, since it needs no repository-wide boundary; revisit the default at the public-release flip. [R14] holds the path and designs nothing.
+3. **Adopted in this draft, owner may reverse: keep `irreflexive` beside `acyclic`.** They overlap on a self-loop and differ in strength (E3 error versus new warning). The alternative is to retire `irreflexive`, a migration of every definition that declares it (15 definitions in `srs/srs`'s packages and 34 in muSrs's, counting relation-type definition files), turning a standing error into a warning against axis 5–11. Recommendation: keep both.
+4. **Adopted in this draft, owner may reverse: endpoint restrictions match `typeId` exactly and do not follow `ext:type-inheritance`.** The alternative also accepts subtypes, at the cost of a second reference-resolution rule. Recommendation: exact for now; revisit with the relation-inheritance RFC.
+5. **Adopted in this draft, owner may reverse: a Blueprint's `required` has no successor outside a dedicated relation type with a `min`.** The alternative is a later completeness check on the Blueprint, which would be its own RFC. Recommendation: accept the gap now.
