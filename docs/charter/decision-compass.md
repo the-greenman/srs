@@ -8,6 +8,7 @@ Adding a charter-class ruling: add its id here AND write the section that cites 
 change — the guard fails on either half done alone.
 cce3c00e 9ee14517 7caca3a1 8f5aca2c b9d7096e 0750c62f 4431046e 0118e938 e99a9437
 c8704763 2a1e1590 53635966 628cf6c4 16b20c56 5f8204bc 8948e43f 1e7c0c8e c20fcff8
+b2ff7c91
 -->
 
 The charter's ambient surface — one hop from every session start, for the rule the charter itself
@@ -64,7 +65,7 @@ This-over-that, one line each (kind: **default**). Full principle and machinery:
 | Cell | This over that | Cites |
 |---|---|---|
 | Versioning | increment over edit | `rfc-decision-cce3c00e`, `rfc-decision-2a1e1590` |
-| Identity | identifier over label | `rfc-decision-cce3c00e`, `rfc-decision-53635966` |
+| Identity | identifier over label (outputs too) | `rfc-decision-cce3c00e`, `rfc-decision-53635966`, `rfc-decision-b2ff7c91` |
 | Description | one name over many | `rfc-decision-cce3c00e`, `rfc-decision-628cf6c4` |
 | Attribution | stated over assumed | `rfc-decision-cce3c00e`, `rfc-decision-16b20c56` |
 | Succession | successor over overwrite | `rfc-decision-cce3c00e` |
