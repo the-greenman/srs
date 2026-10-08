@@ -2,8 +2,8 @@
 
 # RFC-048: Repository addressing — the boundary directory and `srs://` addresses
 
-**Status**: Draft (Revision 2)
-**Affects**: the Repository group (repository-id segment of `srs://` strings, boundary directory conformance); `ext:addressability` is cited but not edited, a new boundary directory shape (`docs/schema/2.0/boundary.json`, proposed), the Repository group's identity statements; conforming implementations that serve more than one repository. Builds on **RFC-038 (Accepted)** (tree-authoritative repositories), **RFC-045 (Accepted)** (self-describing artifacts) and `rfc-decision-5f18603e` (federation's return is committed). Adjacent to, and deliberately not part of, **RFC-047 (Draft)** (definition distribution).
+**Status**: Draft (Revision 3)
+**Affects**: the Repository group (repository-id segment of `srs://` strings, boundary directory conformance); `ext:addressability` (the `Address` gains one optional `repositoryId` component), a new boundary directory shape (`docs/schema/2.0/boundary.json`, proposed), the Repository group's identity statements; conforming implementations that serve more than one repository. Builds on **RFC-038 (Accepted)** (tree-authoritative repositories), **RFC-045 (Accepted)** (self-describing artifacts) and `rfc-decision-5f18603e` (federation's return is committed). Adjacent to, and deliberately not part of, **RFC-047 (Draft)** (definition distribution).
 **Author**: Owner direction on the-greenman/srs-rust#683 (2026-10-08); drafted by Claude Code for owner review
 **Date**: 2026-10-08
 
@@ -13,6 +13,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 3 | 2026-10-08 | Owner review comment on PR #917: `Address` gains an optional `repositoryId` component and `srs://<repositoryId>/…` is one serialization of it (Change A, [R1], Affects, One-way-per-goal, Conformance class). Referral and R6 noted in Rationale. Number clash with #916 left for the owner to resolve. |
 | 2 | 2026-10-08 | Review round 1 (both reviews posted on #913). Repository id defined as `manifest.repositoryId`; Change A narrowed to the repository segment only (the path grammar stays implementation-defined); self-address and existing-MCP behaviour stated; Open Questions split into an acceptance gate and genuine questions; relationship to RFC-038/045/047, forecloses list and integration tokens added. |
 | 1 | 2026-10-08 | Initial draft. Frames the repository directory first asked for as MCP multi-repo serving (srs-rust#683) as the first, addressing-only step of federation's committed return. No implementation work before acceptance. |
 
@@ -92,11 +93,11 @@ A `--repo id=path` flag gives the server a map from id to path. That map is exac
 
 ## Proposed Changes
 
-### Change A — the repository segment of an `srs://` address
+### Change A — a `repositoryId` component on `Address`, and the `srs://` serialization of it
 
-The spec's Address today (`ext:addressability`, Invariant 34) is a set of optional components — `containerId`, `recordId`, `fieldId`, `protocolRunId`, `stageId` — and defines no string form. The MCP server separately emits `srs://<repositoryId>/<path>` strings (for example `srs://<repositoryId>/record/<instanceId>`), whose paths are not the Address components. This RFC does not reconcile those two and does not standardize the path.
+The spec's Address today (`ext:addressability`, Invariant 34) is a set of optional components — `containerId`, `recordId`, `fieldId`, `protocolRunId`, `stageId` — and defines no string form. The MCP server separately emits `srs://<repositoryId>/<path>` strings (for example `srs://<repositoryId>/record/<instanceId>`), whose paths are not the Address components. This RFC adds one optional component to the `Address`, **`repositoryId`**, defined in Change B. Absent means "this repository", so every existing Address keeps its meaning. The `srs://<repositoryId>/<path>` string is one serialization of that component, so there is a single way to say which repository is meant and the URI form is a projection of the Address, not a parallel mechanism. The path after the repository segment stays implementation-defined and is not reconciled with the other Address components here.
 
-It standardizes one thing: in any `srs://` string, the first segment after `srs://` is a **repository id** (defined in Change B), and a string whose first segment is not a repository id is not a conforming `srs://` address. In ABNF: `address = "srs://" repository-id "/" path`, `repository-id = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG` (lower-case canonical UUID text), and `path` is implementation-defined and opaque to this RFC.
+It standardizes, for the string form: in any `srs://` string, the first segment after `srs://` is a **repository id** (defined in Change B), and a string whose first segment is not a repository id is not a conforming `srs://` address. In ABNF: `address = "srs://" repository-id "/" path`, `repository-id = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG` (lower-case canonical UUID text), and `path` is implementation-defined and opaque to this RFC.
 
 Consequences. What becomes possible: any tool can tell which repository an `srs://` string names without knowing the rest of its grammar. What becomes forbidden: a conforming tool minting an `srs://` string whose first segment is anything else (a label, a path, a host). What it costs later: the path vocabulary stays tooling's, so the question parked as srs#218 (canonical Address serialization) is **narrowed, not answered**; a later RFC owns the path (Open Question 1). Under this scope the strings RFC-045 describes (the readme "beside `srs://<repositoryId>/map`") conform without change: their first segment is already a repository id.
 
@@ -132,6 +133,8 @@ The directory is exportable as a single deterministic JSON document so that a bo
 
 ## Conformance Rules
 
+> **[R0]** The `Address` MAY carry one optional `repositoryId` component, a repository id (Change B). An Address without it names a thing in the repository that holds or resolves it.
+>
 > **[R1]** The first segment after `srs://` in any `srs://` string an implementation emits MUST be a repository id (a lower-case canonical UUID); the grammar of the remaining path is not constrained by this RFC.
 >
 > **[R2]** A repository's manifest, records, containers and relations MUST NOT name any other repository's id or locator as a neighbour, member of a boundary, or resolution target. A slice's recorded origin repository id (provenance, RFC-026) is not such a naming and is unaffected.
@@ -165,7 +168,7 @@ Shape of `boundary.json`, in words: a top-level object with required `$schema`, 
 
 Because `boundary.json` is a new hand-authored file in the frozen-seed set, acceptance also adds its generation-ledger entry and schema-README listing, and `check-ledger-completeness` must pass; it is outside the metamodel emitter's closure and says so in `metamodel-fidelity.md`. Records changed on acceptance: the Repository group and `ext:repository` conformance text (to cite the directory), and the compass source-of-truth map. `locator` is checkable only for non-emptiness; its meaning is the holding implementation's, so [R5]'s `locator-unusable` is the one rule that depends on private semantics, and the level test (`rfc-decision-c20fcff8`) is met by the id, uniqueness and shape rules, which any implementation can check.
 
-No existing schema file is modified. `boundary.json` would be mirrored into `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/` by the release-asset sync after acceptance (the existing schema-drift checks cover mirror alignment). There is no change to the Address component set, so `ext:addressability` itself is not edited; [R1] is a rule on `srs://` strings.
+No existing schema file is modified. `boundary.json` would be mirrored into `srs-rust/crates/srs-schema/schemas/2.0/` and `srs-vscode/schemas/2.0/` by the release-asset sync after acceptance (the existing schema-drift checks cover mirror alignment). The `Address` shape in `ext:addressability` gains the optional `repositoryId` component; no schema file carries `Address`, so the change is to the extension's records and prose. [R1] is the rule on `srs://` strings.
 
 ---
 
@@ -184,7 +187,7 @@ No existing schema file is modified. `boundary.json` would be mirrored into `srs
 
 ## Conformance class
 
-Extension `ext:addressability` is required only for live facilitation, so it is the wrong home for rules that every multi-repository server must follow. This draft places [R1]–[R10] in the Repository group, binding only an implementation that serves more than one repository or emits `srs://` strings; Open Question 6 asks whether a new extension is wanted instead.
+`ext:addressability` is required only for live facilitation, so it is the wrong home for the *rules* that every multi-repository server must follow, even though the component itself is added to its `Address`. This draft places [R0]–[R10] in the Repository group, binding only an implementation that serves more than one repository or emits `srs://` strings; Open Question 6 asks whether a new extension is wanted instead.
 
 ## Integration on acceptance (Door 2)
 
@@ -195,6 +198,8 @@ On acceptance the fold would declare: `schema:boundary.json`, the Repository gro
 ## Rationale
 
 **Why addressing before relations or writes.** Every later federation feature needs to say which repository it means. Nothing else is needed to deliver the multi-repository server (srs-rust#683), so addressing is the smallest slice that is both useful and forecloses little (see *What this forecloses*): a later RFC can add cross-repository relations, verification, or sharing rules on top without re-opening what an address is.
+
+**Referral stays possible.** Locators are opaque, so a later rule can let an entry's locator name another directory, and `not-in-boundary` is where "ask the next directory" would attach. [R6] assumes every entry locates a repository that reports its own id; a referral entry would not, and that later RFC would relax [R6] for it. No domain is introduced now: repository ids are UUIDs, so a domain adds nothing to uniqueness, and a named domain is needed only for routing or authority, which arrive with referral.
 
 **Why a directory outside the repositories.** A repository that lists its neighbours has stopped being complete on its own, and every repository would carry a copy of facts that belong to whoever assembled the boundary. The directory is the one place those facts are stated once.
 
