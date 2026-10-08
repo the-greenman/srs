@@ -9,7 +9,10 @@
   "name": "namespace",
   "namespace": "com.semanticops.srs",
   "fieldType": {
-    "datatype": "string"
+    "datatype": "string",
+    "constraints": {
+      "pattern": "^[a-z0-9][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*$"
+    }
   },
   "version": 1
 }
