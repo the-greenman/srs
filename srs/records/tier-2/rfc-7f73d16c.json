@@ -1,0 +1,22 @@
+{
+  "instanceId": "7f73d16c-fb0e-4d44-aa4a-f26f910ef69a",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-048: Compositions name no content — remove container-id literals from section sources",
+    "rfc_number": "048",
+    "author": "Design draft for the-greenman/srs#851",
+    "dependency_refs": "Builds on RFC-043 (Accepted: rulings E, M, P, Q), RFC-034 (Accepted: childContainerIds), RFC-042 Revision 5 (Accepted: containerScope).",
+    "proposal_artifact_path": "rfcs/rfc-048-compositions-name-no-content.md",
+    "content": "Draft: a package artifact names no instance or container id (validator check, no allowlist); every container-subset section may omit containerId and bind to the rendered container; a new containerScope value, children, renders the declared child containers of the rendered container so one section replaces the per-Part literal sections. Executes RFC-043 ruling P (the 24-literal allowlist, expiry srs#851). Binds nothing until accepted. Full text: rfcs/rfc-048-compositions-name-no-content.md."
+  },
+  "lifecycleState": "draft",
+  "tags": [
+    "topic:rfc"
+  ],
+  "createdAt": "2026-10-08T13:18:25.280256035+00:00",
+  "updatedAt": "2026-10-08T13:18:25.280277398+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
