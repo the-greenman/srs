@@ -1251,9 +1251,9 @@ mechanism:package
 **Content**: Draft: the parts of RFC-003 Revision 5 that are not whole-package export, carried unchanged when RFC-003 was narrowed and accepted (the-greenman/srs#857): Package as the distribution unit, entryRefs, subset export (a new package with a newly minted packageId), ext:registry distribution (downloadUrl, sha256), import semantics and ConflictRecord, ext:binding, and distribution workflow guidance. Not yet re-reviewed against the current model and binds nothing until accepted. Tracked in the-greenman/srs#871. Full text: rfcs/rfc-047-definition-distribution-registry-binding.md.
 
 
-**Title**: RFC-048: Compositions name no content — remove container-id literals from section sources
+**Title**: RFC-050: Compositions name no content — remove container-id literals from section sources
 
-**RFC Number**: 048
+**RFC Number**: 050
 
 **Status**: Draft
 
@@ -1261,8 +1261,8 @@ mechanism:package
 
 **Dependency Refs**: Builds on RFC-043 (Accepted: rulings E, M, P, Q), RFC-034 (Accepted: childContainerIds), RFC-042 Revision 5 (Accepted: containerScope).
 
-**Proposal Artifact Path**: rfcs/rfc-048-compositions-name-no-content.md
+**Proposal Artifact Path**: rfcs/rfc-050-compositions-name-no-content.md
 
-**Content**: Draft: a package artifact names no instance or container id (validator check, no allowlist); every container-subset section may omit containerId and bind to the rendered container; a new containerScope value, children, renders the declared child containers of the rendered container so one section replaces the per-Part literal sections. Executes RFC-043 ruling P (the 24-literal allowlist, expiry srs#851). Binds nothing until accepted. Full text: rfcs/rfc-048-compositions-name-no-content.md.
+**Content**: Draft: a package artifact names no instance or container id (validator check, no allowlist); every container-subset section may omit containerId and bind to the rendered container; a new containerScope value, children, renders the declared child containers of the rendered container so one section replaces the per-Part literal sections. Executes RFC-043 ruling P (the 24-literal allowlist, expiry srs#851). Binds nothing until accepted. Full text: rfcs/rfc-050-compositions-name-no-content.md.
 
 

@@ -1,6 +1,6 @@
 > **GitHub issue**: [the-greenman/srs#851](https://github.com/the-greenman/srs/issues/851)
 
-# RFC-048: Compositions name no content — remove container-id literals from section sources
+# RFC-050: Compositions name no content — remove container-id literals from section sources
 
 **Status**: Draft (Revision 3)
 **Affects**: `Composition` / `DocumentSection` / `SectionSource` (`container-subset` and `discovery-query` variants); `Container.childContainerIds` (read by a renderer scope; its meaning and unordered status are unchanged); `docs/schema/2.0/composition.json`; package validation (a new content-id check); the spec-authoring Compositions `spec-document-view` and `unified-document-view`; the gallery example package and `gallery.srsj`; downstream Compositions in `muDemocracy.org`. Builds on **RFC-043 (Accepted)** (rulings E, M, P, Q), **RFC-034 (Accepted)** (declared child containers), **RFC-042 Revision 5 (Accepted)** (`containerScope`, nested-section placement). It amends RFC-043 [R9] and [R10] (Door 3, Revision 12) and adds a third `containerScope` value to RFC-042 Revision 5 [R20]-[R23] (Door 3, RFC-042 Revision 6): [R22] and [R23] apply to `subtree` only, and a `children` section renders each child as a top-level section at `2 + depthOffset` with no lead-content treatment, its anchor appearing as an ordinary member of its child. It executes RFC-043 ruling P; it supersedes no recorded decision.
