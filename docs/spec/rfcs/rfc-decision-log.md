@@ -2012,3 +2012,38 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 **Review Trigger**: Review at the first full public release, when axis 2-8 flips to Continuity and the overwrite becomes a refusal; or earlier if an upgrade overwrites a definition that had been edited without being detected as local-ahead.
 
 
+**Title**: Identifier over label governs machine-facing outputs
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-08
+
+**Decision Rationale**: Motivating case, 2026-10-08 (srs#907, srs-rust#1264). The engine computed diagnostic codes (CatalogDiagnostic.code, the srs-core *DiagnosticCode enums) and then flattened them into message text (format!("{}: {}", code, message) in validation.rs and catalog.rs). srs-web's groupDiagnostics was forced to group on raw message text, so 188 warnings could not be grouped into families. The codes already existed in seven spellings, and RFC-038 [R24] already required stable identifiers. The owner ruled that codes become a typed `code` field, in kebab case, with legacy schemes renamed and the prefix stripped from the message (srs-rust#1264). The preference was always meant to cover this; stating it on the operation plane closes the gap the case exposed. The owner approved recording it on 2026-10-08 as a small governance clarification.
+
+**Decision**: The Identity cell preference "identifier over label" (rfc-decision-cce3c00e) applies on the OPERATION plane (core service -> adapters -> clients; rfc-decision-9ee14517), not only to stored data on the MEANING plane. Any fact a consumer acts on in a machine-facing output - to group, filter, suppress, branch, or link to documentation - is carried as a typed field with a stable identifier. Machine-facing outputs include diagnostics, CLI, WASM and MCP payloads, and errors. Human-readable text (message, notes, titles) is presentation: it may change freely and no consumer parses it. An identifier computed in the core and then interpolated into prose is a violation in the emitting layer; a client that matches on prose is a violation in the client. This is a clarification of the existing Identity preference, not a new cell preference: a thirteenth preference would duplicate "identifier over label" (Conformance: one way over many). The Description preference "one name over many" applies alongside it: one spelling per identifier.
+
+**Scope**: Every machine-facing output of the core and its adapters (CLI, WASM, MCP), and every client that consumes them. Stored data on the meaning plane is unchanged: it was already governed by the Identity preference. The implementation-side rule is srs-rust ADR-048 (docs/adr/048-implementation-decision-rules.md), amended on branch adr/048-identifier-over-label-outputs. Refinable by successor decision per rfc-decision-4431046e.
+
+**Governing Values**:
+- semantic-integrity
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: A thirteenth cell preference for outputs (rejected: it would duplicate "identifier over label" and break one way over many). Leaving it as implementation practice in ADR-048 alone (rejected: clients outside srs-rust, such as srs-web, need the charter rule to judge prose matching as a violation).
+
+**Accepted Costs**: Existing outputs that carry identifiers only in prose must be migrated to typed fields, and legacy code spellings renamed - a breaking change for any consumer that matched on the old text.
+
+**Evidence**:
+- srs#907 (2026-10-08)
+- srs-rust#1264 (owner ruling: typed kebab-case `code` field, legacy schemes renamed, prefix stripped from the message)
+- srs-rust validation.rs and catalog.rs: format!("{}: {}", code, message)
+- srs-web groupDiagnostics grouping on message text (188 warnings ungroupable)
+- RFC-038 [R24] (stable identifiers already required)
+- rfc-decision-cce3c00e (the Identity preference this clarifies)
+- rfc-decision-9ee14517 (the operation plane)
+- srs-rust ADR-048 (implementation-side rule)
+
+**Review Trigger**: A machine-facing output where a consumer genuinely needs to act on free text, or a second identifier spelling scheme appearing for one concept.
+
+
