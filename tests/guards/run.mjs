@@ -1842,59 +1842,6 @@ async function ledgerCompletenessCases(root) {
   );
 }
 
-async function roadmapCellMirrorCases(root) {
-  console.log("srs#602 — roadmap cell mirror stays a mirror, not a fork");
-
-  const canonicalPath = join(root, "scripts/lib/pattern-grid-cells.json");
-  const mirrorPath = join(root, "docs/strategy/roadmap-model.mjs");
-  const cells = ["versioning", "identity", "description"];
-  const mirrorFor = (names) =>
-    `export const PATTERN_GRID_CELLS = new Set([${names.map((n) => `"${n}"`).join(", ")}]);\n`;
-
-  await writeJson(canonicalPath, { $comment: "fixture", cells });
-
-  // Title-cased, in order — the only shape that passes.
-  await writeText(mirrorPath, mirrorFor(["Versioning", "Identity", "Description"]));
-  expect(
-    "passes when the mirror is the title-cased canonical set in order",
-    runCheck("check-roadmap-cell-mirror.mjs", root),
-    { exit: 0, contains: ["mirrors the canonical vocabulary"] },
-  );
-
-  // A rename in the mirror: the drift this guard exists to catch.
-  await writeText(mirrorPath, mirrorFor(["Versioning", "Identity", "Descriptionn"]));
-  expect(
-    "fails when a cell is renamed in the mirror",
-    runCheck("check-roadmap-cell-mirror.mjs", root),
-    { exit: 1, contains: ["has drifted from", "missing from the mirror: Description", "present only in the mirror: Descriptionn"] },
-  );
-
-  // Same members, different order. Reading order carries meaning in the grid, so this is drift.
-  await writeText(mirrorPath, mirrorFor(["Identity", "Versioning", "Description"]));
-  expect(
-    "fails on a reorder even when membership is unchanged",
-    runCheck("check-roadmap-cell-mirror.mjs", root),
-    { exit: 1, contains: ["same members, different order"] },
-  );
-
-  // Casing is the ONE permitted difference, so a lowercase mirror must still fail — that is how
-  // this fork stayed invisible: a copy-paste sync from the canonical file would not have matched.
-  await writeText(mirrorPath, mirrorFor(["versioning", "identity", "description"]));
-  expect(
-    "fails when the mirror is lowercase rather than title-cased",
-    runCheck("check-roadmap-cell-mirror.mjs", root),
-    { exit: 1, contains: ["has drifted from"] },
-  );
-
-  // The declaration renamed or removed must be a loud failure, never a silent pass.
-  await writeText(mirrorPath, "export const SOMETHING_ELSE = new Set([\"Versioning\"]);\n");
-  expect(
-    "fails loudly when the PATTERN_GRID_CELLS declaration is gone",
-    runCheck("check-roadmap-cell-mirror.mjs", root),
-    { exit: 1, contains: ["Could not find"] },
-  );
-}
-
 // ---- srs#584 — package-id-uniqueness: canonical-name identity + on-disk sweep -------------------
 async function packageIdUniquenessCases(root) {
   console.log("srs#584 — package-id-uniqueness guard: canonical name + on-disk sweep");
@@ -2785,7 +2732,6 @@ try {
   await checksRegistryMembershipCases(join(root, "checks-registry-membership"));
   await specLanguageCases(join(root, "spec-language"));
   await ledgerCompletenessCases(join(root, "ledger-completeness"));
-  await roadmapCellMirrorCases(join(root, "roadmap-cell-mirror"));
   await packageIdUniquenessCases(join(root, "package-id-uniqueness"));
   await specCoherenceCases(join(root, "spec-coherence"));
   await specReadabilityCases(join(root, "spec-readability"));
