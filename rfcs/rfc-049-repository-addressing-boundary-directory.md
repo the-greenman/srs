@@ -1,6 +1,6 @@
 > **GitHub issue**: [the-greenman/srs#913](https://github.com/the-greenman/srs/issues/913)
 
-# RFC-048: Repository addressing — the boundary directory and `srs://` addresses
+# RFC-049: Repository addressing — the boundary directory and `srs://` addresses
 
 **Status**: Draft (Revision 3)
 **Affects**: the Repository group (repository-id segment of `srs://` strings, boundary directory conformance); `ext:addressability` (the `Address` gains one optional `repositoryId` component), a new boundary directory shape (`docs/schema/2.0/boundary.json`, proposed), the Repository group's identity statements; conforming implementations that serve more than one repository. Builds on **RFC-038 (Accepted)** (tree-authoritative repositories), **RFC-045 (Accepted)** (self-describing artifacts) and `rfc-decision-5f18603e` (federation's return is committed). Adjacent to, and deliberately not part of, **RFC-047 (Draft)** (definition distribution).
