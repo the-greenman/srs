@@ -1253,7 +1253,8 @@ All three commands return the standard error envelope when the record or revisio
 {
   "ok": false,
   "command": "context field",
-  "errors": ["Not found: records/<record-id>"]
+  "diagnostics": ["not found: \"<record-id>\""],
+  "errors": [{ "code": "not-found", "message": "not found: \"<record-id>\"", "details": { "path": "<record-id>" } }]
 }
 ```
 
@@ -2069,7 +2070,21 @@ All commands return a JSON envelope:
 { "ok": true, "command": "...", "version": "...", "payload": { ... } }
 ```
 
-Always check `ok` before reading `payload`. On failure: `ok: false`, details in top-level `diagnostics[]`.
+Always check `ok` before reading `payload`. On failure, the envelope has `ok: false` and two parallel arrays (srs-rust ADR-053):
+
+```json
+{ "ok": false, "command": "relation-type delete", "version": "...",
+  "diagnostics": ["cannot delete relation-type '<rt-id>': still referenced by [<relation-id>]"],
+  "errors": [{ "code": "cannot-delete-in-use",
+               "message": "cannot delete relation-type '<rt-id>': still referenced by [<relation-id>]",
+               "details": { "entityType": "relation-type", "id": "<rt-id>", "usedBy": ["<relation-id>"] } }] }
+```
+
+- **Branch on `errors[i].code`**: a stable kebab-case identifier such as `lifecycle-not-defined`, `cannot-delete-in-use`, `instance-not-found`, `invalid-input`, or the RFC-046 `actor-supplied`. Read the variant's structured fields from `errors[i].details`.
+- **Never parse the message.** `message` and `diagnostics[i]` hold the same human text, and it may change. `errors` and `diagnostics` have the same length and order.
+- **`unclassified`** marks a failure with no code assigned yet (srs-rust#1343). Treat it as an opaque failure.
+- **WASM bindings** throw a JS `Error` with the same `.code` and `.details`.
+- **MCP tool errors** carry the same object as `structuredContent`, with `isError: true`.
 
 Exit code `0` means the command ran. It does not mean the data is valid. Check `payload.diagnostics` (for `repo validate`) separately.
 
