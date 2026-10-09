@@ -78,24 +78,29 @@ async function download(tag, asset, intoDir) {
   await rm(target, { force: true });
 
   if (await haveGh()) {
-    await run("gh", [
-      "release",
-      "download",
-      tag,
-      "--repo",
-      REPO,
-      "--pattern",
-      asset,
-      "--dir",
-      intoDir,
-      "--clobber",
-    ]);
-    return target;
+    try {
+      await run("gh", [
+        "release",
+        "download",
+        tag,
+        "--repo",
+        REPO,
+        "--pattern",
+        asset,
+        "--dir",
+        intoDir,
+        "--clobber",
+      ]);
+      return target;
+    } catch (error) {
+      // Cloud sessions have `gh` but block GraphQL (403), which `release download` uses.
+      console.error(`gh release download failed (${error.message}); falling back to https`);
+    }
   }
 
-  // No `gh` — fall back to the public release URL. Proxy-restricted sessions
+  // No working `gh` — fall back to the public release URL. Proxy-restricted sessions
   // and bare containers land here.
-  console.error("gh not found; downloading over https");
+  console.error("downloading over https");
   await run("curl", [
     "--fail",
     "--location",
