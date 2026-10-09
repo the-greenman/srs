@@ -693,7 +693,7 @@ srs protocol delete <protocolId> --repo <path> --pretty
 
 Payload: `{ "protocolId": "<deleted-id>" }`.
 
-**`protocol create`** reads a bare Protocol JSON object from stdin and writes it as a package definition, like `import`, but with the schema's own unprefixed field names (`id`, `namespace`, `name`, `version`, `targetType`, `stages`, `createdAt`; `description` and `tags` optional):
+**`protocol create`** reads a bare Protocol JSON object from stdin and writes it as a package definition. It uses the schema's own unprefixed field names (`id`, `namespace`, `name`, `version`, `targetType`, `stages`, `createdAt`; `description` and `tags` optional):
 
 ```bash
 srs protocol create --repo <path> <<'EOF'
@@ -714,6 +714,8 @@ EOF
 Use `--package <sub-path>` to create in a sub-package (e.g. `--package package/ext`); defaults to the primary package. A missing required field is rejected with `invalid-input` (for example "invalid Protocol JSON: missing field `id`").
 
 Payload: `{ "protocol": { ... } }`, the stored Protocol JSON with the same field names as the input.
+
+`protocol import` is an alias for `protocol create` in the current CLI and takes this same unprefixed body.
 
 ### Validate After Every Write Batch
 
