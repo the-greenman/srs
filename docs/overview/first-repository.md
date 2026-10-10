@@ -207,8 +207,8 @@ not in an application someone else controls.
 ## Step 5 — Graduate the note (the ladder in one command)
 
 April's note contains a real decision, still trapped in prose. `note graduate` promotes it
-in one atomic step: a typed Record is created, the Note is stamped `graduatedAt`, and both
-survive.
+in one atomic step: a typed Record is created, a `derived-from` Relation links it back to the Note, and
+both survive. The Note itself is left unchanged.
 
 ```bash
 srs note graduate --repo ./garden a6395283-f4f9-4727-a09e-220faa5f5858 \
@@ -227,8 +227,8 @@ EOF
 {
   "ok": true,
   "payload": {
-    "record": { "instanceId": "815822eb-48cc-4390-9def-f06f296b3086", … },
-    "note":   { "instanceId": "a6395283-…", "graduatedAt": "2026-07-31T12:16:44Z", … }
+    "note":   { "instanceId": "a6395283-f4f9-4727-a09e-220faa5f5858", "title": "April meeting — watering rota argument", … },
+    "record": { "instanceId": "815822eb-48cc-4390-9def-f06f296b3086", "typeName": "decision", "fieldValues": { … }, … }
   }
 }
 ```

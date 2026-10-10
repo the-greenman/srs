@@ -1,7 +1,7 @@
 # SRS — How It Works
 
 This page shows how the constructs from [concepts.md](concepts.md) come together into a
-working repository, how data is loaded and validated, and how the three repositories of the
+working repository, how data is loaded and validated, and how the four repositories of the
 project are built. For normative rules, see the [specification](../spec/srs-spec.md).
 
 ## A repository on disk
@@ -82,7 +82,7 @@ endpoints must be instances listed in the index.
 > **not** cause a non-zero exit code. **Exit code `0` means "the command ran", not "the
 > data is valid".** Always check `payload.diagnostics` separately.
 
-## The three repositories, and how data flows
+## The four repositories, and how data flows
 
 The project is split so the **specification can stand entirely on its own** — it must
 remain valid with no Rust or JavaScript present. The implementation consumes the spec as
@@ -110,10 +110,15 @@ flowchart TD
         BRIDGE --> UI
     end
 
+    subgraph web["srs-web/ — web editor"]
+        WASM["WASM bindings<br/><i>no re-implemented SRS logic</i>"]
+    end
+
     SCHEMA -. "mirrored into srs-schema" .-> rust
     SCHEMA -. "mirrored into schemas/2.0" .-> code
     RECS -- "consumed as external fixture data" --> rust
     CLI == "every operation delegated via subprocess" ==> BRIDGE
+    rust == "engine compiled to WASM" ==> WASM
 ```
 
 - **`srs-core`** holds the canonical Rust types, ID resolution, and validation — and does
@@ -124,6 +129,8 @@ flowchart TD
   handling; it carries no business logic of its own.
 - **`srs-vscode`** is a thin client: `cli-bridge.ts` shells out to the `srs` binary for
   everything, so the extension and any other consumer share one source of behavior.
+- **`srs-web`** is the web editor. It is a thin client too: it calls the Rust engine
+  through WASM bindings and adds presentation only.
 
 ## The CLI contract
 
