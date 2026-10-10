@@ -178,7 +178,10 @@ const mapRef = (typeName) => ({ datatype: 'map', valueRange: 'ref', rangeType: {
 const FIELD_SPECS = [
   // -- common identity/lineage-agnostic fields, shared across entities --
   [1, 'id', { datatype: 'string', format: 'uuid' }, 'Globally unique, stable UUID identity of this entity.'],
-  [2, 'namespace', { datatype: 'string' }, 'Reverse-DNS logical grouping.'],
+  // srs#236: namespace grammar per docs/spec/srs-spec.md — dot-separated components each
+  // matching [a-z0-9][a-z0-9-]*, which also forbids the reserved `/`/`@` separators. Corpus-audited
+  // 2026-10-08 (every namespace value in the repo, any entity, any nesting depth): 0 violations.
+  [2, 'namespace', { datatype: 'string', constraints: { pattern: '^[a-z0-9][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*$' } }, 'Reverse-DNS logical grouping.'],
   [3, 'name', { datatype: 'string' }, 'Machine-readable name within the namespace; snake_case.'],
   [4, 'version', { datatype: 'integer', constraints: { minimum: 1 } }, 'Positive integer version within the UUID lineage.'],
   [5, 'description', { datatype: 'string' }, 'Human-readable description of this entity.'],

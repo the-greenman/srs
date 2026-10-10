@@ -1133,7 +1133,7 @@ The Foundation group is required for all conforming implementations.
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
@@ -1180,7 +1180,7 @@ field {
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
@@ -1491,7 +1491,7 @@ relation {
 |---|---|---|---|---|---|
 | `containerId` | string | yes | format: uuid | core | Stable UUID for this Container. Must not appear in Relation.sourceInstanceId or targetInstanceId. |
 | `title` | string | yes | — | core | Human-readable title. |
-| `namespace` | string | no | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | no | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | no | — | core | Machine-readable name within the namespace; snake_case. |
 | `description` | string | no | — | core | Human-readable description of this entity. |
 | `memberInstanceIds` | ref → `container-entry` (inline)[] | no | — | core | RFC-043 [R1]: the ordered outline of entries. Entry ids are direct(C), list order is the sequence, depth is nesting. |
@@ -1534,7 +1534,7 @@ container {
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `mode` | string | yes | enum: "open" \| "closed" | core | open: values not in any Term are valid. closed: values MUST resolve to a Term. |
 | `terms` | ref → `term` (inline)[] | yes | — | core | The Vocabulary's Term entries. |
@@ -1579,7 +1579,7 @@ vocabulary {
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `key` | string | yes | — | core | Machine-readable state key. Unified substrate field (was name pre-RFC-006). |
 | `label` | string | no | — | core | Human-readable display label for this lifecycle state. |
 | `description` | string | no | — | core | Human-readable description of this entity. |
@@ -1624,7 +1624,7 @@ term {
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `states` | ref → `lifecycle-state` (inline)[] | yes | minItems: 1 | core | The lifecycle's states; at least one, exactly one marked isInitial (Invariant 4). |
 | `transitions` | ref → `lifecycle-transition` (inline)[] | yes | — | core | The lifecycle's named state-to-state edges. |
@@ -1670,7 +1670,7 @@ lifecycle {
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `key` | string | yes | — | core | Machine-readable state key. Unified substrate field (was name pre-RFC-006). |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `label` | string | yes | — | core | Human-readable display label for this lifecycle state. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
 | `category` | string | yes | enum: "composition" \| "refinement" \| "dependency" \| "sequence" \| "derivation" \| "evidence" \| "governance" \| "association" \| "lifecycle" \| "provenance" \| "other" | core | Structural category of a relation type. |
@@ -5710,7 +5710,7 @@ source-document-meta {
 | `srsVersion` | string | yes | — | core | SRS spec version this repository conforms to, e.g. '2.0' or '2.0-draft'. |
 | `dataModelRevision` | integer | no | minimum: 0 | core | RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0. |
 | `repositoryId` | string | yes | format: uuid | core | Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export. |
-| `namespace` | string | no | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | no | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `title` | string | yes | — | core | Human-readable title. |
 | `description` | string | no | — | core | Human-readable description of this entity. |
 | `declaredExtensions` | string[] | no | — | core | SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1']. |
@@ -5763,7 +5763,7 @@ manifest {
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
@@ -5901,7 +5901,7 @@ export-config {
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
@@ -6082,7 +6082,7 @@ conformance-scenario {
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
@@ -6228,7 +6228,7 @@ protocol-stage {
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | no | — | core | Human-readable description of this entity. |
@@ -6298,7 +6298,7 @@ relation-spec {
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
 | `id` | string | yes | format: uuid | core | Globally unique, stable UUID identity of this entity. |
-| `namespace` | string | yes | — | core | Reverse-DNS logical grouping. |
+| `namespace` | string | yes | pattern: ^[a-z0-9][a-z0-9-]*(\.[a-z0-9][a-z0-9-]*)*$ | core | Reverse-DNS logical grouping. |
 | `name` | string | yes | — | core | Machine-readable name within the namespace; snake_case. |
 | `version` | integer | yes | minimum: 1 | core | Positive integer version within the UUID lineage. |
 | `description` | string | yes | — | core | Human-readable description of this entity. |
