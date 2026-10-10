@@ -71,9 +71,9 @@ be validated and shared (**Record**) — linked back to the originating Note by 
 Type binding — was tried and removed: zero instances in any corpus, ever. Tier numbering
 keeps the gap at 1 rather than renumbering.)
 
-## How the project is built (three repositories)
+## How the project is built (four repositories)
 
-The SemanticOps monorepo is three independent git repositories that play distinct roles:
+The SemanticOps ecosystem is four independent git repositories that play distinct roles:
 
 ```mermaid
 flowchart TD
@@ -97,6 +97,12 @@ flowchart TD
 
     SCH -. "schemas mirrored into" .-> rust
     SCH -. "schemas mirrored into" .-> code
+
+    subgraph web["srs-web — web editor"]
+        WB["WASM bindings<br/>thin client, no SRS logic"]
+    end
+
+    rust == "engine compiled to WASM" ==> WB
     spec -- "consumed as external data by" --> rust
     CLI == "every semantic operation<br/>delegated to the CLI" ==> BR
 ```
@@ -110,9 +116,11 @@ flowchart TD
   reference resolution) → `srs-cli` (the binary, JSON output).
 - **`srs-vscode/`** — a thin TypeScript client. It re-implements no SRS logic; it shells
   out to the `srs` CLI for every operation.
+- **`srs-web/`** — the web editor for governance work. Also a thin client: it delegates all
+  SRS semantics to the Rust engine through WASM bindings.
 
-The JSON Schemas are authored once in `srs/` and mirrored into the other two repos so all
-three agree on the data shapes.
+The JSON Schemas are authored once in `srs/` and mirrored into `srs-rust/` and
+`srs-vscode/`, so the specification and both implementations agree on the data shapes.
 
 ## Where to go next
 
