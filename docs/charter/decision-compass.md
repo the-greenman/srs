@@ -362,7 +362,7 @@ bite first.
 | 1–7 Semantic Integrity over Practical Expression | A cell citation is present in the RFC/decision text | Whether the citation is honored, not just present |
 | 2–8 Evolution over Continuity | Whether a Continuity-flip precommitment exists in the text | Whether "evidence-led" evolution was actually evidence-led |
 | 3–9 Shared Coherence over Local Autonomy | Whether a rename shipped with a migration artifact | Whether the migration's naming is coherent, not just present |
-| 4–10 Office over Testimony | Whether attribution/provenance fields are absent from the schema (the machinery is removed) | Whether a testimony source was quietly treated as authoritative in review |
+| 4–10 Office over Testimony | Whether `createdBy` (RFC-046) is stamped from the session actor, never supplied by a request, and carried as testimony only. *Correction (2026-10-17, `rfc-decision-4431046e`, srs#936): this row said attribution fields are absent from the schema; RFC-046 (accepted) adds `createdBy`.* | Whether a testimony source was quietly treated as authoritative in review |
 | 5–11 Reliability over Renewal | Which retirement mechanism (deletion / status / supersession) a layer uses | Whether a "renewal" silently broke a standing contract instead of superseding it |
 | 6–12 Portability over Possession | Whether a bundle/archive form exists for a held construct | Whether the travelling form is actually exercised, or exists unused |
 | Rule 1 One home | A construct's plane/layer is named in its RFC | Whether a concern quietly grew a second home elsewhere |
