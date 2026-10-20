@@ -2,7 +2,7 @@
 
 # RFC-051: Per-entry container storage — one file per entry, so concurrent membership edits merge cleanly
 
-**Status**: Accepted (Revision 13)
+**Status**: Accepted (Revision 14)
 **Affects**:
 - **Storage:** container storage under `containers/` (`ext:repository`).
 - **Schemas:** new `stored-container-entry.json`; `container.json` (description); `manifest.json` (revision description). Both existing files are generated, through the metamodel package, generation ledger and closure tests.
@@ -25,6 +25,7 @@ Answers SP-30 (srs-programme: "Several writers can overwrite each other").
 |---|---|---|
 | 1–5 | 2026-10-20 | Draft and four review rounds (#940 comments) |
 | 6–9 | 2026-10-20 | Owner rulings applied (#940); three more review rounds; the last found no blocking findings |
+| 14 | 2026-10-20 | **Correction** (rfc-decision-4431046e's correction class; no position changes): the merge counts in Motivation were per conflicted file, not per merge. Corrected to merges: srs 22 (0 on a container), srs-context 4, muSrs 7; total 40, of which 12 on a container (was 62 and 13). |
 | 13 | 2026-10-20 | **Accepted by the owner** (2026-10-20, the-greenman/srs#940). Two-phase landing, as RFC-043 and RFC-052: now, this text, the Door 3 amendment notes, the gated records, the key-algorithm mechanism record (the Appendix) and the successor decision record, with the schemas staged under `docs/schema/staged/rfc-051/`; later, in one PR after srs-rust#1414 ships revision 11 (and after RFC-052's promotion), the corpus migration, the schema promotion and the pin advance. No normative rule changes. |
 | 12 | 2026-10-20 | Final check (#940): no blocking findings. The re-attached entries join [R8]'s write set; [R13] names every pending migration, and converts a stray flat file at revision 11; [R10] covers a path added on one side; two wording nits. |
 | 11 | 2026-10-20 | Review of Revision 10 (#940). Normative content that the simplification had left only in the Changes is restored to the rules. **Blocking, fixed:** [R10] now defines the per-path merge and the never-silent property. **Should-fix, fixed:** RFC-010 coordination; the dangling-pointer row and the withdrawn [R14] pointer clause; repair keys re-attached entries in turn; the decoding definitions move into [R5]; [R13] states the registry entry, pre-load transformer, gate and revision-10 handling; the complex-mode consequence map is restored; create, delete, head `$schema` and classification are in the rules; RFC-043 [R13]'s flattening exception is extended; the Appendix gains the fallback vector; the fixture case names are listed. |
@@ -103,14 +104,14 @@ The logical Container (RFC-043's outline of `{instanceId, depth?}`) and the beha
 | Repository | Containers / entries | Member edits: appends / middle inserts / removals / moves / depth changes | Merges with a real conflict / on a container | PR pairs open at once on one container |
 |---|---|---|---|---|
 | srs-programme | 18 / 850 | 121 / 7 / 0 / 2 / 0 | 7 / 6 | 18 |
-| srs (`srs/`) | 19 / 536 | 1 / 5 / 0 / 0 / 0 | 39 / 1 | 1 |
-| srs-context | 8 / 176 | 34 / 0 / 4 / 0 / 0 | 5 / 4 | 4 |
-| muSrs | 56 / 1,430 | 16 / 0 / 0 / 0 / 0 | 11 / 2 | 3 |
-| **Total** | **101 / 2,992** | **172 / 12 / 4 / 2 / 0** | **62 / 13** | **26** |
+| srs (`srs/`) | 19 / 536 | 1 / 5 / 0 / 0 / 0 | 22 / 0 | 1 |
+| srs-context | 8 / 176 | 34 / 0 / 4 / 0 / 0 | 4 / 4 | 4 |
+| muSrs | 56 / 1,430 | 16 / 0 / 0 / 0 / 0 | 7 / 2 | 3 |
+| **Total** | **101 / 2,992** | **172 / 12 / 4 / 2 / 0** | **40 / 12** | **26** |
 
 - **Appends:** 91% of member edits are appends.
 - **What the conflicts were:** every container conflict was two appends colliding, each resolved by hand in the same way. On 2026-10-20 alone, four PRs were re-resolved six times.
-- **Out of scope:** in `srs`, 38 of 39 conflicts were in generated renders.
+- **Out of scope:** in `srs`, none of its 22 conflicting merges was on a container; 11 touched generated renders and 8 hand-maintained registries (clerk#103, srs#944).
 
 **The window.** Every corpus is first-party, and every reader goes through the srs core apart from three `srs` scripts and one srs-vscode schema glob. Past the Continuity flip (axis 2–8), the shared-array layout becomes permanent.
 
