@@ -506,6 +506,15 @@
       "description": "The governance-seed-drift check demonstrably fails on a perturbed committed seed (red) and passes both on the real, unmodified corpus and once the perturbation is undone (green) — the guards-bite discipline (srs#308/#311/#391) applied to a pinned-cli check, which guards-bite itself (Node-pipeline-only) cannot reach."
     },
     {
+      "id": "governance-seed-root-container",
+      "script": "check-governance-seed-root-container.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "identity",
+      "governing": "RFC-025 [R1]; srs#947",
+      "description": "The CURRENT com.mudemocracy.governance seed (packages/com.mudemocracy.governance's highest semver directory, scripts/lib/governance-versions.mjs) ships manifest.container.containerId and manifest.repositoryId equal to RFC-025 [R1]'s ruled 54432eb2-7961-4538-ac16-9e25dcfa2f42 — no engine call needed, pure JSON read, so this runs under validate-all.mjs unlike governance-seed-drift. Historical versions (1.0.0/1.1.0/1.2.0/1.2.1, all published non-conformant before this check existed) are exempt as immutable published history, same discipline as governance-seed-drift's exemption."
+    },
+    {
       "id": "versioning-cell",
       "script": "check-versioning-cell.mjs",
       "args": [],

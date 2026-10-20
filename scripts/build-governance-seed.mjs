@@ -56,7 +56,12 @@ const SEED_PATH = join(SEED_DIR, 'empty-governance-document.srsj');
 const PACKAGE_ID = '1cd9622e-3d05-4214-a683-4cb81d0c44d9';
 const PACKAGE_NAMESPACE = 'com.mudemocracy.governance';
 const PACKAGE_NAME = 'governance';
-const SEED_REPOSITORY_ID = 'e2e8489a-5ada-4309-9b26-90ccc263146d';
+// RFC-025 [R1]: the seed MUST ship manifest.container.containerId (and, since this id also
+// becomes the scaffolded repo's repositoryId, manifest.repositoryId) equal to this fixed,
+// provenance-anchored UUID. srs#947: this constant previously carried a different UUID
+// (e2e8489a-5ada-4309-9b26-90ccc263146d), so every seed published before the fix is
+// non-conformant history — see check-governance-seed-root-container.mjs.
+const SEED_REPOSITORY_ID = '54432eb2-7961-4538-ac16-9e25dcfa2f42';
 const STAMP_TIME = '2026-01-01T00:00:00Z';
 // RFC-033/#265 generation stamp for the scaffolded seed repo itself — kept at
 // the current data-model generation (docs/schema/2.0/manifest.json's
