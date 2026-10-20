@@ -34,7 +34,7 @@ Before making or reviewing any design or spec decision, read **[`docs/charter/de
 
 **Bundled readme** — a package bundle and a `.srsj` may carry one optional `readme: {path, content}` (the file's actual path within the artifact and its UTF-8 text), restored at that path on unpack without overwriting and kept on every rewrite; opaque, never required, no default name in the spec (RFC-045, mechanism *Bundled readme*). Both schemas keep their `$defs.BundledReadme` copies deep-equal (`check-package-bundle-alignment.mjs`).
 
-**Repository** — directory with `.srs/` marker + `manifest.json`. Membership is tree-authoritative: the repository's catalog, enumerated from the tree under the reserved instance roots, is the authoritative member list (RFC-038 [R1]). There is no `instanceIndex` in the manifest; it is retired (RFC-038 [R2]), except the root container, which the manifest carries inline at `manifest.container` (RFC-038 [R1]).
+**Repository** — directory with `.srs/` marker + `manifest.json`. Membership is tree-authoritative: the repository's catalog, enumerated from the tree under the reserved instance roots, is the authoritative member list (RFC-038 [R1]). There is no `instanceIndex` in the manifest; it is retired (RFC-038 [R2]), except the root container, which the manifest carries inline at `manifest.container` (RFC-038 [R1]). From `dataModelRevision` 10 (RFC-052, accepted 2026-10-20; lands after srs-rust#1417) the manifest instead names the root by `rootContainerId`, and the root container is stored in `containers/` like every other container.
 
 ## Git commit signing (local CLI use)
 
