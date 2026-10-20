@@ -1,0 +1,8 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+  "relationId": "86827da8-1ebc-4f1b-890d-5c7989d37546",
+  "relationType": "supersedes",
+  "sourceInstanceId": "bed7a41a-32fe-467d-a92f-097d1484cf6b",
+  "targetInstanceId": "2fb87c1e-dc5f-442d-ade0-67ee71979627",
+  "notes": "Partial supersession: the inline-root exception clause of 2fb87c1e only (RFC-052, srs#941). Its position, that authoritative content is what the store reports, stands."
+}

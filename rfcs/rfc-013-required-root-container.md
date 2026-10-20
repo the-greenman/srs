@@ -2,7 +2,7 @@
 
 # RFC-013: Required Root Container & Structural Navigation
 
-**Status**: Accepted (Revision 8)
+**Status**: Accepted (Revision 9)
 **Affects**: `manifest.json` (`container` required, root-container semantics), `Container` (new `identityInstanceId` pointer), `ext:repository`, `ext:views-l2` (top-level DocumentView binding), `precedes` relation (nav ordering), schemas `manifest.json` + `container.json`
 **Author**: Peter Brownell (from epic the-greenman/srs#95, Phase 0 / Gate 0)
 **Date**: 2026-06-28
@@ -22,6 +22,7 @@
 | 3 | 2026-06-28 | Address Rev 2 re-review. **Blocking:** the Rev-2 order-derivation algorithm invented an ascending-`instanceId` tiebreak that conflicted with the existing Rule [N+12] (`ext:views-l2`, reaffirmed by RFC-008), which orders container members by `precedes` topological sort with a `createdAt`-ascending tiebreak. Rewrote Change C to *reuse* [N+12] — nav order is now defined as the [N+12] order restricted to non-identity root-container members (with `instanceId` as a secondary tiebreak only for equal `createdAt`), so navigation and root-container DocumentView rendering agree by construction; R5 updated to reference [N+12]. Collapsed the four prose order cases into one deterministic procedure (closes integrity F1/F2). **Nits:** clarified that "section" means "non-identity member" and may lack a section container (F3); stated that a reassignment target must be a member before the pointer moves so the repo is never transiently invalid (F4); removed the stray "I-82-adjacent" reference. |
 | 2 | 2026-06-28 | Address review findings. **Blocking:** reframe Change D as requirement + ordering rule only — no schema field added this revision; downgrade R7 to a forward-looking SHOULD that becomes testable when the OQ-1 binding is specified (Phase 3, #97). Fully specify the `precedes` nav-order derivation (point-to-point edges → linear total order; deterministic cycle/fork/disconnected handling with ascending-`instanceId` tiebreak) in new Change C "Order derivation"; R5 now references it. **Should-fix:** correct the "Builds on" RFC-009 invariant attribution (I-66 = `containers_for_instance`, not membership def); align I-80/R2 with RFC-012's authority model (authoritative instance set, `instanceIndex` is a cache); state the `manifest.container` ↔ `containerIndex` relationship (R9); call out that both Container schemas are closed (`additionalProperties: false`) so the field must be added to both; add a Non-Goals section; reconcile the Change C `⊇` diagram with R4 (non-identity members ≡ sections). **Nits:** Migration now requires the identity note in the membership set and notes author-chosen order; scope I-82 to a non-empty `containerIndex`; define consumer behavior for a section root with no section container (R10); note OQ-1 is not bound by the identity-pointer rationale. |
 | 8 | 2026-10-01 | Door 3 amendment executing RFC-043 (the-greenman/srs#849, accepted): Change B (Membership and distinct-from-sections bullets), Change C (the ordering-ownership row, order derivation and the "Agreement with DocumentView rendering" paragraph), [R2] to [R6], I-79 to I-82 and the Migration text are amended: navigation order is the order of the root container's `memberInstanceIds` entries ([R12]), entry ids must resolve, identity and typing pointers must be entry ids, [R5] is replaced, and [R6] reads "anchor of some Container" ([R19]). Effective at `dataModelRevision` 8; the text above stays in force for revision-7 corpora until then. |
+| 9 | 2026-10-20 | Door 3 amendment executing RFC-052 (the-greenman/srs#941, accepted): [R1] (the manifest names the root by `rootContainerId`), [R9] withdrawn, and every mention of `manifest.container` read by RFC-052's reading rule. Effective at `dataModelRevision` 10. |
 
 ---
 
@@ -142,6 +143,9 @@ Because the root container's root may be a Tier 0 note (no Type), RFC-009 `rootT
 ## Conformance Rules
 
 > **[R1]** A conforming SRS repository manifest MUST include a `container` member. A manifest without `container` is invalid.
+
+> **Amended by RFC-052 (effective at `dataModelRevision` 10).** **[R1]** At `dataModelRevision` 10 a manifest MUST carry `rootContainerId`, naming a container of the container set, and MUST NOT carry `container` (RFC-052 [R1]). The root container keeps every role this RFC gives it; it is stored in `containers/` like every other container.
+
 >
 > **[R2]** The root container (`manifest.container`) MUST satisfy core Container invariants 20 and 21 — its `containerId` MUST NOT appear as any instance id or relation endpoint, and every id in `rootInstanceIds`/`memberInstanceIds` MUST resolve to a member of the repository's authoritative instance set (the union of the instance files declared by the repository; `instanceIndex` in `manifest.json` is the cache of that set per RFC-012 R6, not an independent authority).
 >
@@ -166,6 +170,9 @@ Because the root container's root may be a Tier 0 note (no Type), RFC-009 `rootT
 > **[R8]** `identityInstanceId` MUST be reassignable: changing its value to a different member of the root container MUST NOT change the `repositoryId`, the root container's `containerId`, or any instance id, and MUST NOT require rewriting relations.
 >
 > **[R9]** *(Amended by RFC-038 [R25] — resolves against the container set, not `containerIndex`; further amended by srs#446.)* The root container is identified solely by `manifest.container`; it MUST NOT be required to appear elsewhere in the repository's container set. A Container entry elsewhere in the container set declaring the same `containerId` as `manifest.container` is a **duplicate logical identifier in the same authoritative set** — this is FATAL under RFC-038 [R12] (no precedence resolution). An implementation MUST NOT silently treat `manifest.container` as authoritative over such a duplicate; the repository is invalid until reconciled to a single root-container representation (as the `muSrs` migration in RFC-038 required in practice).
+
+> **Amended by RFC-052 (effective at `dataModelRevision` 10).** **[R9]** is withdrawn (RFC-052 [R5]): the root container has exactly one representation, in the container set; two containers declaring one `containerId` are a duplicate under RFC-038 [R12].
+
 >
 > **[R10]** When a non-identity section root has no corresponding section container (R6 unmet), a consumer MUST still render it as a navigation entry (a leaf) and MUST NOT drop it from navigation.
 

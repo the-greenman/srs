@@ -1,0 +1,8 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/relation.json",
+  "relationId": "98530343-a905-4e3f-9912-3ac9a0c4bdc3",
+  "relationType": "supersedes",
+  "sourceInstanceId": "be253dd6-eabe-4d71-af65-92c3bcd117de",
+  "targetInstanceId": "0df19d60-a862-4e2d-a518-d12851fa6de1",
+  "notes": "Partial supersession: the merge-cost clause of 0df19d60 only (RFC-051, srs#940). Its position, that context order is declared on the Container, stands."
+}

@@ -2174,6 +2174,8 @@ A grouping boundary over a collection of instances, answering the scoping questi
 
 Every entry in `Container.memberInstanceIds` MUST have an `instanceId` that references a valid SRS instance ID (`Note.instanceId` or `Record.instanceId`), appearing exactly once and resolving to an instance ([R2]). This is required of every container, not only the root container; a dangling entry is a validation error, and the repair operation removes it ([R20]). `rootInstanceIds` is removed ([R4]).
 
+Amended by RFC-051 (the-greenman/srs#940; effective at dataModelRevision 11): a stored container's entries are one file each, and the depth conditions hold by construction because the outline is decoded from each entry's parent and key; an orphan or a loop is a warning, not a violation of this invariant.
+
 
 ##### Why Containers and Relations are complementary
 
@@ -2306,6 +2308,23 @@ Relations do not define membership (I-148). `contains` remains the part-of tree 
 One definition serves every membership question: `containers_for_instance` (I-66), member listing and view resolution, RFC-012 `containerId` discovery (I-118), RFC-011 `containerScope` with `"explicit"` as `direct(C)` and `"subtree"` as `effective(C)` (I-144), and the RFC-026 slice closure (I-151). `memberInstanceIds` is the one membership list and it is ordered: the list order is the Container's sequence and each entry's `depth` its nesting (RFC-043 [R1]); `precedes` states only a sequence the content requires. A query is a separate, read-only selection and never changes membership by itself (I-149).
 
 `memberInstanceIds` is a flat ordered outline of entries `{instanceId, depth?}` and `rootInstanceIds` is removed ([R1], [R4]). Membership is the entry ids read flat ([R3]); each id appears once and resolves ([R2]); an entry's parent is the nearest preceding entry with a smaller depth ([R5]). Removing an entry promotes its descendants one level ([R7]).
+
+From dataModelRevision 11 (RFC-051) membership and nesting are stored per entry: each entry file names its container, its parent and an order key (mechanism "Container entry order keys"), and the outline readers see is decoded from those files.
+
+
+##### Container entry order keys
+
+Effective at `dataModelRevision` 11 (RFC-051). Each stored container entry carries a `key`, compared byte-wise, placing it among its siblings. Keys follow fractional indexing (Greenspan, 2020), so one edit always writes the same bytes.
+
+The digits are `0`–`9`, `A`–`Z`, `a`–`z`, valued 0 to 61; their byte order is their value order. A key is an integer part and an optional fraction. The integer part is a head and digits: heads `a` to `z` take 1 to 26 digits, heads `Z` to `A` take 1 to 26 digits (negative). The fraction MUST NOT end in `0`. The key `A` followed by 26 `0`s is reserved and never written.
+
+To increment an integer part, add one in base 62 keeping the head; on overflow `Z` becomes `a0`, `z` has no successor, and any other head moves to the next letter with all-`0` digits, one more for a lowercase head and one fewer for an uppercase one. Decrement mirrors this: `a` becomes `Zz`, `A` has no predecessor.
+
+The midpoint of fractions x < y, with y possibly the end: when y is present and shares a longest common prefix of n > 0 digits with x (padded with `0`s), keep the prefix and take the midpoint of the remainders. Otherwise let dx be x's first digit (0 if empty) and dy be y's (62 at the end). If dy − dx > 1 the result is the digit ⌈(dx+dy)/2⌉; else, if y has more than one digit, it is y's first digit; else it is x's first digit followed by the midpoint of x's remainder and the end.
+
+The key between a and b: with neither, `a0`. Before b: b's integer part with the midpoint of the empty fraction and b's fraction when that part is reserved; b's integer part when b has a fraction; otherwise b's integer part decremented, or the reserved part followed by `V` if decrementing would reach it. After a: a's integer part incremented, or with no successor a's integer part and the midpoint of its fraction and the end. Between a and b with equal integer parts: that part and the midpoint of the fractions; with different parts: a's part incremented when that is below b, else a's part and the midpoint of its fraction and the end.
+
+Vectors: first `a0`; then `a1`; after `az`, `b00`; between `a0` and `a1`, `a0V`; before `a0`, `Zz`; the 850th append, `bCh`.
 
 
 
@@ -2677,7 +2696,7 @@ A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sid
 
 **Number**: I-79
 
-The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]).
+The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants.
 
 
 ##### Root container membership ids resolve in the authoritative instance set
@@ -2691,7 +2710,7 @@ Every entry `instanceId` in the root container's `memberInstanceIds` MUST resolv
 
 **Number**: I-87
 
-`manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately.
+`manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately. Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
 
 **Rationale**: RFC-013 I-81 left the type of the identity record unconstrained, requiring only membership in the root container. This made the identity record un-navigable by the SRS type system: a consumer could not use `resolve_type`/`record_get` without a special code path for the missing-type case. By requiring a `com.semanticops.core/purpose` Record, identity resolution becomes an ordinary typed record lookup, and the RFC-013 Tier-0-note default is formally superseded.
 
@@ -2801,7 +2820,7 @@ Every repository declares its manifest at `manifest.json`, the one file a reader
 
 The manifest's `container` field is the repository's required root Container (RFC-013): its `identityInstanceId` names the repository's identity Record, and every other member is a navigation section.
 
-The root Container's order is navigation order: navigation is the order of the entries of `manifest.container.memberInstanceIds`, excluding the entry named by `identityInstanceId`, with depth-0 entries as the navigation sections and deeper entries nested under their derived parent ([R12]). Navigation is not derived from the `precedes` chain or Rule [N+12], and the identity entry is at depth 0 with no descendants ([R2]). At dataModelRevision 8 the manifest's `dataModelRevision` is 8 ([R16]).
+The root Container's order is navigation order: navigation is the order of the entries of `manifest.container.memberInstanceIds`, excluding the entry named by `identityInstanceId`, with depth-0 entries as the navigation sections and deeper entries nested under their derived parent ([R12]). Navigation is not derived from the `precedes` chain or Rule [N+12], and the identity entry is at depth 0 with no descendants ([R2]). At dataModelRevision 8 the manifest's `dataModelRevision` is 8 ([R16]). Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
 
 ###### `RepositoryManifest`
 
@@ -3237,6 +3256,8 @@ Example: the top-level shape of a `.srsj` file.
 
 The `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version.
 
+Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
+
 
 ###### Path conventions in `data`
 
@@ -3319,7 +3340,7 @@ Closure and membership read the `instanceId` values of `memberInstanceIds` entri
 
 The closure root becomes the slice's root container, so RFC-043 [R2]'s root rule applies to it. At revision 8 and later, when the closure root's `identityInstanceId` entry is at a depth above 0 or has descendants, export MUST be refused before anything is written, with the error `slice-root-identity-invalid` naming the container, the entry and the reason. The outline and `identityInstanceId` are never rewritten to fit (RFC-026 [R16]).
 
-A Container that is not the closure root or one of its declared `childContainerIds` descendants is never carried, whatever its entries. An empty Container therefore cannot join a slice through a subset test that it passes vacuously (RFC-026 Revision 9 spec finding). A declared descendant with no entries is carried with its edge (RFC-034 [R7], I-151).
+A Container that is not the closure root or one of its declared `childContainerIds` descendants is never carried, whatever its entries. An empty Container therefore cannot join a slice through a subset test that it passes vacuously (RFC-026 Revision 9 spec finding). A declared descendant with no entries is carried with its edge (RFC-034 [R7], I-151). Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
 
 ###### Slice package closure
 

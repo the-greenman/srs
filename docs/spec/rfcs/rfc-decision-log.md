@@ -2047,3 +2047,68 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 **Review Trigger**: A machine-facing output where a consumer genuinely needs to act on free text, or a second identifier spelling scheme appearing for one concept.
 
 
+**Title**: The root container is stored in the container set; the manifest names it and holds no content
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-20
+
+**Decision Rationale**: Keeping the root inline left two storage encodings of one construct: every container reader handled two forms, and every navigation edit was a write to manifest.json. Past the Continuity flip (axis 2-8) both encodings would be permanent. Tested against the decision compass, keeping the root inline passed only Reliability over Renewal, and only on cost; moving it passes Conformance (one way over many), Repository (catalog over circumstance: the manifest becomes a pure descriptor) and axis 2-8. It also removes RFC-051's only root special case.
+
+**Decision**: The repository's root container is stored in the container set like every other container, and manifest.json names it by a required rootContainerId instead of carrying it inline. The root container keeps every role it has: it is the repository's identity object, and its entry order is the navigation order. manifest.json is authoritative for no content set. This supersedes, in part, rfc-decision-2fb87c1e: its exception "except for its inline root container" is withdrawn, and its position, that a repository's authoritative content is what its authoritative store reports, stands unchanged.
+
+**Scope**: Where the root container is stored and how the manifest refers to it: manifest.json's container property (replaced by rootContainerId), RFC-013 [R1] and [R9], RFC-038 [R1], [R22], Change F and Change K, and every accepted rule naming manifest.container (read by RFC-052's reading rule). Does not change the root container's roles, its identity rule, or navigation order.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keep the root inline in manifest.json. Rejected by the owner: two encodings, made permanent at the Continuity flip. Keep the property name container holding only an id. Rejected: one name with two shapes across revisions, and a rename is a migration either way (rfc-decision-628cf6c4). Compose with RFC-051 at one revision (precedent rfc-decision-86f49083). Rejected: the changes are independent and one combined migration is larger and harder to gate.
+
+**Accepted Costs**: A breaking change at dataModelRevision 10: every manifest in every corpus changes (four first-party corpora, three fixtures, gallery.srsj; the four published governance seeds are migrated on load by the pre-load transformer), five srs scripts, a guard test, the metamodel generator (a new root_container_id Field, Field 165 retired) and clerk's render-handbook read manifest.container and change, and every implementation's manifest loader changes. Concurrent root edits now merge like any container's instead of conflicting by ruling.
+
+**Evidence**:
+- the-greenman/srs#941 (RFC-052, accepted by the owner 2026-10-20)
+- the-greenman/srs#940 ruling 2 (owner, 2026-10-20: "worth the cost as long as this happens soon and is not lost")
+- rfcs/rfc-052-root-container-in-container-set.md, Revision 4
+- rfc-decision-2fb87c1e (superseded in part: the inline-root exception)
+- the-greenman/srs-rust#1417 (the implementation)
+
+**Review Trigger**: Review if a corpus needs repository identity to be readable from manifest.json alone, without the container set (for example a tool that reads only the manifest), which would be evidence for carrying a copy of the identity pointer in the manifest.
+
+
+**Title**: A Container is stored as a directory of one-line entry files, so concurrent membership edits merge per entry
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-20
+
+**Decision Rationale**: Under RFC-043 [R14] two branches that each add a member merge cleanly, but git merges the container file line by line and both appends collide at the end of one array. Measured over all four first-party corpora since 2026-08-21, 172 of 190 member edits were appends and 13 merges conflicted on a container file. RFC-038 ruled for elimination in storage over mitigation in tools; this applies that ruling to the last shared array, before the Continuity flip (axis 2-8) makes the layout permanent. One-line files make every rename-paired merge a visible conflict rather than a silent misapplied edit.
+
+**Decision**: At dataModelRevision 11 every Container is stored as a directory: a one-line head carrying its own fields, and one one-line file per entry naming the entry's container, its parent and a fractional-index key. The logical memberInstanceIds outline and every member operation's behaviour are unchanged; storage decides only what is written. A three-way merge is per path, and its result is the decoding of the merged files. Orphans and loops left by a clean merge are warnings with a deterministic decode, re-attached by repair. Keys come from one shared algorithm. This supersedes, in part, rfc-decision-0df19d60: its accepted cost that two writers who reorder one container conflict as a whole no longer holds, since conflicts are per entry; its position, that context order is declared on the Container, stands.
+
+**Scope**: How a Container is stored and merged at revision 11: the directory layout, the entry file, the decoding, the write set of each member operation, the key algorithm, the per-path merge and the migration. Does not change the logical Container, the member operations' behaviour or inputs, or how conflicts are reported (RFC-010).
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+- portability
+
+**Project Phase**: formation
+
+**Alternatives Considered**: A merge driver implementing RFC-043 [R14] as tooling only: conforming, kept as the fallback, but conflict-freedom would depend on tool configuration and GitHub's server-side merge ignores it. Per-entry files keeping depth: a clean merge can break the outline. Order kept in the head: the shared file again. Records declaring their containers: two ways to declare membership. Sharding the array: reduces conflicts rather than eliminating them. git merge=union: produces invalid JSON. A sequence CRDT or LSEQ/Logoot: site identifiers solve ties that the instanceId tie-break already makes harmless. Detached entries as fatal errors (rejected: a routine merge would leave an unloadable repository) or tombstones (rejected: a second way to remove). Writer-chosen keys (rejected: the same edit would conflict across branches).
+
+**Accepted Costs**: A breaking change at dataModelRevision 11: 101 container files holding 2,992 entries in the four first-party corpora, the four root containers, six fixture containers and two .srsj artifacts change shape, carried by a registry migration with deterministic keys; three srs scripts, one srs-vscode schema glob and one srs-web e2e test change. Any two concurrent edits to one container's head conflict, because a head is one line. A text merge can conflict where a per-path reading is clean (rename/delete, rename/rename), and three clean merges leave reported states (detached entries, a dangling pointer, a headless directory).
+
+**Evidence**:
+- the-greenman/srs#940 (RFC-051, accepted by the owner 2026-10-20; rulings 1-4 and seven review rounds in its comments)
+- rfcs/rfc-051-per-entry-container-storage.md, Revision 13
+- rfc-decision-0df19d60 (superseded in part: its merge-cost clause)
+- the-greenman/srs-rust#1414 (the implementation)
+- the-greenman/clerk#91 (the bridge, and the cutover replay)
+
+**Review Trigger**: Review if detached entries (orphans, loops) are reported in more than occasional merges, which would be evidence for a merge driver or tombstones; or if container heads are edited concurrently often enough that one-line heads conflict in practice.
+
+

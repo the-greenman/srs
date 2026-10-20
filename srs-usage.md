@@ -884,7 +884,7 @@ The payload reports each rename performed and the count of already-canonical pat
 
 ### Migrating Repository Identity
 
-`repo migrate-identity` ensures a repository has a `com.semanticops.core/purpose` record and that `manifest.container.identityInstanceId` points to it. Two cases are handled:
+`repo migrate-identity` ensures a repository has a `com.semanticops.core/purpose` record and that `manifest.container.identityInstanceId` (from revision 10: the root container named by `manifest.rootContainerId`, RFC-052) points to it. Two cases are handled:
 
 **Case 1 — repo already has an `identityInstanceId` pointing to a Tier-0 note** (pre-dates the `purpose` type): the command promotes the note to a `com.semanticops.core/purpose` record, writes the new record, updates `identityInstanceId` in the manifest, and swaps the container membership.
 
@@ -1770,7 +1770,7 @@ Writes the container named by the global `--container` flag as a standalone slic
 
 What the slice carries:
 
-- **Records:** the boundary container's entries, which become the slice's root container (`manifest.container`) with the outline unchanged.
+- **Records:** the boundary container's entries, which become the slice's root container (`manifest.container`; from revision 10 the container `manifest.rootContainerId` names, RFC-052) with the outline unchanged.
 - **Relations:** those whose both endpoints are included. Relations with exactly one endpoint inside go to `slice.externalRelationRefs`; relations with both endpoints outside are omitted.
 - **Sub-containers:** exactly the boundary's declared `childContainerIds` descendants, transitively, each with its members (RFC-034 [R9], I-151). A declared child with no entries is carried; an undeclared container is never carried, even when all its entries are included. `childContainerIds` are copied as-is.
 - **Source documents:** those cited by included records or included relations, with their content unless tombstoned.
@@ -1940,7 +1940,7 @@ type: <namespace>/<typeName>    # or "note" for Tier-0 Notes
 ## 6. Common Traps
 
 ### The direct-write trap
-Repository membership is tree-authoritative: a record file discovered under a reserved instance root is a member of the repository simply by being there — the repository's catalog, enumerated from the tree, is the authoritative membership list (RFC-038 [R1]). There is no `manifest.json → instanceIndex` to consult; it is retired (RFC-038 [R2]), with the sole carve-out that the manifest still carries the root container inline at `manifest.container` (RFC-038 [R1]). The CLI enumerates and validates as it writes. A direct file write reaches the tree — and so becomes a member — without going through that validation, so a malformed or invalid file can enter the repository silently. The CLI manages this automatically. Direct file writes do not.
+Repository membership is tree-authoritative: a record file discovered under a reserved instance root is a member of the repository simply by being there — the repository's catalog, enumerated from the tree, is the authoritative membership list (RFC-038 [R1]). There is no `manifest.json → instanceIndex` to consult; it is retired (RFC-038 [R2]), with the sole carve-out that the manifest still carries the root container inline at `manifest.container` (RFC-038 [R1]). From `dataModelRevision` 10 (RFC-052, accepted 2026-10-20; lands after srs-rust#1417) the manifest instead names the root by `rootContainerId`, and the root container is stored in `containers/` like every other container. From `dataModelRevision` 11 (RFC-051, accepted; lands after srs-rust#1414) each container is a directory of a one-line head and one one-line entry file per member: membership edits touch only the entries they change, so two agents adding to one container no longer conflict. Write them through `srs container members add/remove/move` as before; never hand-edit entry keys. The CLI enumerates and validates as it writes. A direct file write reaches the tree — and so becomes a member — without going through that validation, so a malformed or invalid file can enter the repository silently. The CLI manages this automatically. Direct file writes do not.
 
 ### The typeId-wins rule
 A Record carries both `typeId`/`typeVersion` (authoritative) and `typeNamespace`/`typeName` (denormalized hints). If they conflict, `typeId` wins and the Record is invalid. Do not try to fix a broken Record by patching the name fields — fix the `typeId` or recreate the Record.

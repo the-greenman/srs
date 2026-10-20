@@ -1,0 +1,20 @@
+{
+  "instanceId": "da5a51e9-0c46-4748-82f1-a9d24702d520",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-052: The root container is stored in the container set",
+    "rfc_number": "052",
+    "author": "Peter Brownell (owner ruling 2026-10-20, the-greenman/srs#940 ruling 2; accepted 2026-10-20, the-greenman/srs#941)",
+    "affected_components": "The repository manifest (the required inline `container` is replaced by a required `rootContainerId`; the root container is stored in the container set at `containers/<containerId>.json`), RFC-013 [R1] and [R9] (withdrawn), RFC-038 [R1], [R22], Change F and Change K, reading-rule notes in RFC-025, RFC-026, RFC-029, RFC-042 and RFC-043, Invariants I-79 and I-87 (amended, effective at revision 10), the dataModelRevision generation (9 to 10), and a successor record superseding rfc-decision-2fb87c1e's inline-root exception. Landing is two-phase because the data migration lives in the srs-rust migration registry (srs-rust#1417) and the pinned binary cannot load a revision-10 corpus: what lands with acceptance is the RFC text, the Door 3 amendments, the amended invariant and mechanism records (each gated \"effective at dataModelRevision 10\") and the successor decision record. The schema files (manifest.json, srsj-envelope.json, container.json) are staged under docs/schema/staged/rfc-052/ and are promoted into docs/schema/2.0/ in the corpus-migration step, together with the metamodel generator change and the migrated corpus; the integration manifest therefore names the artifacts folded now and no schema: token.\n\n<!-- srs-integration:v1\ncell:repository\ncell:conformance\nI-79\nI-87\n-->",
+    "dependency_refs": "Builds on RFC-013 (required root container, Accepted), RFC-038 (tree-authoritative storage, Accepted) and RFC-043 (ordered container entries, Accepted). Supersedes in part rfc-decision-2fb87c1e (its inline-root exception). Consults rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-7caca3a1, rfc-decision-e99a9437, rfc-decision-628cf6c4, rfc-decision-4431046e, rfc-decision-86f49083. Precedes RFC-051 (per-entry container storage, revision 11).",
+    "proposal_artifact_path": "rfcs/rfc-052-root-container-in-container-set.md",
+    "content": "The manifest stops carrying the root container inline and names it by a required `rootContainerId`; the root container is stored in `containers/` like every other container and keeps every role it has (repository identity, navigation order). The manifest holds no content. Split from RFC-051 as its ruling 2 (owner: \"worth the cost as long as this happens soon and is not lost\"). Full text: rfcs/rfc-052-root-container-in-container-set.md."
+  },
+  "lifecycleState": "accepted",
+  "createdAt": "2026-10-20T16:47:01.800320980+00:00",
+  "updatedAt": "2026-10-20T16:47:22.850934735+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
