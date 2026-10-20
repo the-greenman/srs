@@ -943,6 +943,8 @@ Evidence drove the design corrections. Keying discovery on declared package boun
 
 Independent implementations of the proposed discovery rule return exactly the indexed instances in both measured live repositories: 375/375 for `srs` and 32/32 for `muSrs`, with zero discovered-only, indexed-only, or path-disagreement cases. No instance moves; the remaining non-instance repairs have defined outcomes. Full text: rfcs/rfc-038-tree-authoritative-storage.md. RFC-043 Door 3 amendment (Revision 14, 2026-10-01, effective at dataModelRevision 8): entries of memberInstanceIds are never sorted or reordered by a canonicalizer, archive writer or enumeration; a deleted record's entry is removed by the promoting removal and an unresolved entry is a validation error repaired by the repair operation. Rev 16 (Door 3, RFC-052, the-greenman/srs#941; effective at dataModelRevision 10): [R1]'s root-container exception removed (the manifest is authoritative for no content set); [R22]'s manifest clause, Change F's root-delete paragraph and Change K's retained list amended; the root container is stored in the container set.
 
+Rev 17 (Door 3, RFC-051, the-greenman/srs#940; effective at dataModelRevision 11): containers are stored per entry; [R5], [R8], [R9], [R13], [R14], [R22] and [R23] amended.
+
 
 **Title**: RFC-040: Metamodel v1.1.0 — the definition-layer train
 
@@ -1140,6 +1142,8 @@ schema:srsj-envelope.json
 
 **Content**: Makes a Container's memberInstanceIds a flat, ordered outline of entries (instanceId and optional depth): membership when read flat, layout when read in order, with nesting derived from depth. A Composition no longer names records: memberOrder is retired and a section declares only an ordering source, arranged or rule. rootInstanceIds is removed; navigation order is the root container's entry order; the 20 root-container precedes edges are kept (owner ruling 2026-10-01). dataModelRevision 8, migrated by an srs-rust registry entry (srs-rust#1133). Accepted by the owner 2026-10-01 (srs#849) as Revision 10, with two final rulings: keep the 20 precedes edges, and allow the container-subset containerId literal for now as an enforced allowlist tied to srs#851 (scripts/check-composition-container-literal.mjs). Charter Check: cell:containment, cell:governance, cell:portability, cell:repository, decision_mode complex. Revision 10 landed in two phases (see affected components); phase 2 (srs#852, Revision 11) migrated the corpus to dataModelRevision 8 and promoted the schemas. Revision 11 records owner ruling Q: the container being rendered overrides a section's literal containerId.
 
+Rev 12 (Door 3, RFC-051, the-greenman/srs#940; effective at dataModelRevision 11): containers are stored per entry; [R1], [R2], [R5], [R6], [R7] and Change D, [R13], [R14] (replaced by a per-path merge), [R18] and [R20] amended for stored containers.
+
 
 **Title**: RFC-044: Package requirement identity — packageDependencies.packageId and package-bundle alignment
 
@@ -1288,5 +1292,31 @@ I-87
 **Proposal Artifact Path**: rfcs/rfc-052-root-container-in-container-set.md
 
 **Content**: The manifest stops carrying the root container inline and names it by a required `rootContainerId`; the root container is stored in `containers/` like every other container and keeps every role it has (repository identity, navigation order). The manifest holds no content. Split from RFC-051 as its ruling 2 (owner: "worth the cost as long as this happens soon and is not lost"). Full text: rfcs/rfc-052-root-container-in-container-set.md.
+
+
+**Title**: RFC-051: Per-entry container storage — one file per entry, so concurrent membership edits merge cleanly
+
+**RFC Number**: 051
+
+**Status**: Accepted
+
+**Author**: Peter Brownell (owner request and rulings 1-4, 2026-10-20; accepted 2026-10-20, the-greenman/srs#940)
+
+**Affected Components**: Container storage under containers/ (each Container a directory of a one-line head and one-line entry files {containerId, instanceId, parent?, key}; memberInstanceIds remains the logical form every adapter presents), the member operations' write sets and the fractional-index key algorithm (mechanism "Container entry order keys"), the three-way merge of a container (per path; replaces RFC-043 [R14]), detached entries (orphans and loops, warnings with a deterministic decode, re-attached by repair), RFC-043 [R1], [R2], [R5], [R6], [R7] and Change D, [R13], [R14], [R18], [R20] (Revision 12), RFC-038 [R5], [R8], [R9], [R13], [R14], [R22], [R23] (Revision 17), Invariant I-21 (amended, effective at revision 11), an editorial pointer in RFC-010 (Draft), the dataModelRevision generation (10 to 11), and a successor record superseding rfc-decision-0df19d60's merge-cost clause. Builds on RFC-052 (revision 10). Landing is two-phase because the data migration lives in the srs-rust migration registry (srs-rust#1414) and the pinned binary cannot load a revision-11 corpus: what lands with acceptance is the RFC text, the Door 3 amendments, the gated invariant and mechanism records, the new key-algorithm mechanism record and the successor decision record. The schema files (stored-container-entry.json, new; container.json, manifest.json, srsj-envelope.json) are staged under docs/schema/staged/rfc-051/ and are promoted with the corpus migration after RFC-052's; the integration manifest therefore names the artifacts folded now and no schema: token.
+
+<!-- srs-integration:v1
+cell:repository
+cell:containment
+cell:conformance
+cell:portability
+I-21
+mechanism:container-entry-order-keys
+-->
+
+**Dependency Refs**: Builds on RFC-052 (root container in the container set, Accepted), RFC-043 (ordered container entries, Accepted), RFC-038 (tree-authoritative storage, Accepted) and RFC-046 (revision 9). Supersedes in part rfc-decision-0df19d60 (its merge-cost clause). Coordinates with RFC-010 (Draft). Consults rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-7caca3a1, rfc-decision-e99a9437, rfc-decision-0750c62f, rfc-decision-0118e938, rfc-decision-4431046e, rfc-decision-628cf6c4, rfc-decision-8948e43f, rfc-decision-2fb87c1e, rfc-decision-86f49083, rfc-decision-5f18603e.
+
+**Proposal Artifact Path**: rfcs/rfc-051-per-entry-container-storage.md
+
+**Content**: Stores each Container as a directory of a one-line head and one one-line file per entry, so two branches that each add a member touch different files and any text merge reaches the result the specification defines. The logical outline and every member operation's behaviour are unchanged; keys come from one shared fractional-indexing algorithm, so one edit always writes the same bytes. Answers SP-30. Full text: rfcs/rfc-051-per-entry-container-storage.md.
 
 

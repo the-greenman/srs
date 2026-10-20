@@ -2,7 +2,7 @@
 
 # RFC-038: Tree-authoritative repositories and conflict-free Git storage
 
-**Status**: Accepted (Revision 16)
+**Status**: Accepted (Revision 17)
 **Affects**: `RepositoryManifest` (`instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath`), `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry`, `Relation` storage, `ext:repository` repository layout and archive format, `ext:json-store` (`.srsj`) membership and version gate, `ext:slices` (RFC-026 [R5], [R6], [R13]), `dataModelRevision`; `docs/schema/2.0/{manifest,relations-collection,relation-type}.json` a new `docs/schema/2.0/relation.json`, and three further schemas recorded as owed and absent (a `.revisions.json` sidecar schema, a `protocol.json` definition schema, and a `{srsj, manifest, data}` envelope schema that has never existed). Resolves a standing contradiction between the manifest schema / `RepositoryManifest` prose and RFC-012 [R6] / RFC-013 [R2] / I-80 / I-118. **Amends Accepted RFC-039 [R13]/[R14], RFC-026 [R5]/[R6]/[R13] and migration steps, RFC-013 [R6]/[R9], and RFC-017 [R2]/[R12].** Composed with RFC-039 (Accepted Rev 6 — `#242`) in one first-party cutover at a single `dataModelRevision: 2`. **Breaking (storage layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -13,6 +13,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 17 | 2026-10-20 | Door 3 amendment executing RFC-051 (the-greenman/srs#940, accepted): containers are stored per entry. [R5], [R8], [R9], [R13], [R14], [R22] and [R23]. Effective at `dataModelRevision` 11. |
 | 16 | 2026-10-20 | Door 3 amendment executing RFC-052 (the-greenman/srs#941, accepted): [R1]'s root-container exception removed, [R22]'s manifest clause, Change F's root-delete paragraph, Change K's retained list and root-container sentences, and Phase 2 read by the reading rule. Effective at `dataModelRevision` 10. |
 | 15 | 2026-10-08 | **Door 3 amendment resolving a standing contradiction with Accepted RFC-029 [R1] (owner ruling on srs-rust#1291, 2026-10-08: "Ruling: option A... The R13 check and `type create` both resolve against the merged package + core set (ADR-025)").** RFC-029 [R1] already requires `com.semanticops.core/*` types and fields to "resolve against [the implicit core merge] exactly as if they appeared in an explicit local package" for *every* conforming implementation — but this RFC's own **definition set** table (just below [R1]) and [R13]'s prose scoped resolution to "local package roots... resolved through each package manifest's declared arrays" only, silently excluding the implicitly-merged core package RFC-029 mandates. The reference implementation followed this RFC's narrower text: `type create` rejected a `FieldAssignment.fieldId` naming a core field (e.g. `com.semanticops.core/title`) with `field not found`, and a hand-written Type referencing one by id made the repository catalog fatally unloadable at the next `repo validate` (srs-rust#1039, srs-rust#1291). **Both now read as amended below**: the **definition set** row gains the clause "plus every field and type definition the implementation implicitly merges per RFC-029 [R1] (and any future RFC establishing an equivalent always-available package), resolved identically regardless of source"; [R13]'s `FieldAssignment.fieldId` sentence gains the parenthetical "(including implicitly-merged definitions, RFC-029 [R1])". No schema or stored-data shape changes — this is a resolution-scope clarification, not a storage change, so no `dataModelRevision` bump. The matching `srs-rust` fix (PR implementing srs-rust#1291) updates `catalog.rs::resolve_references` and `package_service::create_type_in_package`'s mirror of it to the merged set, and gives `update_type` the same field-existence check `create_type_in_package` already had. |
 | 14 | 2026-10-01 | Door 3 amendment executing RFC-043 (the-greenman/srs#849, accepted): amends [R14] (entries of `memberInstanceIds` are never sorted or reordered by a canonicalizer, archive writer or enumeration; order is data), the Change F dangling-id paragraph and the [R25] instance-set resolution (a deleted record's entry in any container is removed by the promoting removal, and an unresolved entry is a validation error repaired by the repair operation), the [R13] container id resolution text, and the step-13 render-parity text naming the navigation order. Effective at dataModelRevision 8; the text above stays in force for revision-7 corpora until then. (Rows are newest first in this table.) |
@@ -796,6 +797,8 @@ the closure `ext:slices` needs.
 > classification. The contents of the `.srs` directory are implementation-private: they MUST NOT be
 > validated as SRS entities and MUST be preserved unmodified.
 
+> **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R5]**: `containers/` holds container directories, each a head `container.json` and `entries/<instanceId>.json` (RFC-051 [R1]).
+
 > **[R6]** The tier and kind of an object MUST be determined from its own content. An implementation
 > MUST NOT infer tier or kind from the name or position of the directory containing it.
 
@@ -824,6 +827,8 @@ the closure `ext:slices` needs.
 > does not set `additionalProperties` today, and RelationType is a declared definition kind (23 in
 > `srs/`, 5 in each governance package), so the blanket clause is false until it does.
 
+> **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R8]**: the admissible set under `containers/` is the head (`container.json`) and the entry (`stored-container-entry.json`), told apart by content (RFC-051 [R12]).
+
 > **[R9]** Every candidate file under a reserved repository location MUST be an object conforming to an entity
 > admissible at that location, a recognised
 > sidecar, or an error. A recognised sidecar MUST satisfy all three of: a name ending in a reserved
@@ -835,6 +840,8 @@ the closure `ext:slices` needs.
 > MUST NOT be skipped silently. Under `sourceDocumentsPath`, `.meta.json` files are the candidate files;
 > every other file is an opaque source payload, MUST NOT be parsed or classified as an SRS entity, and
 > MUST be preserved unmodified whether or not a sidecar's `contentPath` names it.
+
+> **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R9]**: inside a container directory, any file other than the head and `entries/*.json` is an error (`container-stray-file`), and names must equal in-file ids (RFC-051 [R2]).
 
 > **[R10]** Files under no reserved repository location, and non-candidate application or opaque payload
 > files expressly permitted by [R8]/[R9] inside one, MUST NOT be discovered as SRS entities, MUST NOT be
@@ -863,12 +870,16 @@ the closure `ext:slices` needs.
 > `Relation.targetInstanceId`, and Container `rootInstanceIds`/`memberInstanceIds`, against the
 > **instance set**; `SourceReference.sourceId` against the **source-document set**.
 
+> **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R13]**: an entry's `instanceId` resolves against the instance set (RFC-051 [R12]).
+
 > **[R14]** Enumeration MUST be deterministic and total-ordered within every authoritative set by its
 > schema-defined logical identifier ascending — including `instanceId`, `relationId`, `documentId`,
 > and `containerId` — compared byte-wise over the canonical
 > lowercase hyphenated UUID form. Implementations MUST NOT expose filesystem or key iteration order as
 > enumeration order. The extension set MUST order first by `kind` byte-wise and then by `id`, because
 > two aggregate kinds may deliberately project the same owning `repositoryId`.
+
+> **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R14]**: container entries are never reordered; order is each entry's stored `key` (RFC-051 [R7]).
 
 > **Amended by RFC-043 (effective at `dataModelRevision` 8).** **[R14]** is unchanged for every authoritative set, and gains this clause: the entries of a Container's `memberInstanceIds` are ordered data, not an authoritative set to enumerate. A canonicalizer, archive writer, enumerator or any other tool MUST NOT sort or otherwise reorder `memberInstanceIds` entries, and an archive round-trip MUST preserve their order and `depth` (RFC-043 [R6]). The `instanceId` ascending rule applies to the enumeration of instances, not to the order of entries inside a Container. *(Prior text, in force until a corpus is at revision 8: "Enumeration MUST be deterministic and total-ordered within every authoritative set by its schema-defined logical identifier ascending", with no carve-out for ordered member lists.)*
 
@@ -918,6 +929,8 @@ the closure `ext:slices` needs.
 > when retaining one would violate [R13]. The same exception applies to references incident to a deleted
 > Container or source document. No unrelated object may be added to the cascade.
 
+> **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R22]**: a membership operation or record-delete cascade writes only the entry files RFC-051 [R8] names, never a head.
+
 > **Amended by RFC-052 (effective at `dataModelRevision` 10).** **[R22]**'s manifest clause reads: a routine instance create, update or delete that is not an explicit container-membership operation MUST NOT modify `manifest.json`, and a record delete's cascade MUST remove that record's entries from the root container as from any other (RFC-052 [R4]). Its other clauses stand.
 
 > **[R23]** The store enumeration interface MUST return, per authoritative set, entries of
@@ -925,6 +938,8 @@ the closure `ext:slices` needs.
 > for instances. Enumeration MUST be materialised, not streaming, and MUST return diagnostics
 > alongside entries. A locator MUST NOT be required to address an object and MUST NOT be used as
 > semantic identity.
+
+> **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R23]**: enumeration returns one container per directory that has a head; heads and entries are not enumerated as set members (RFC-051 [R12]).
 
 > **[R24]** Every diagnostic this RFC introduces MUST carry a stable identifier and a declared
 > severity. An `error` under a reserved repository location MUST be **fatal to the load**: the
