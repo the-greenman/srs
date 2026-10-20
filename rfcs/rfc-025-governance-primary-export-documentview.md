@@ -126,6 +126,9 @@ The embedded `data["package/package.json"]` entry MUST also have its `documentVi
 ## Conformance Rules
 
 > **[R1]** The `com.mudemocracy.governance` package seed MUST ship `manifest.container.containerId` equal to `54432eb2-7961-4538-ac16-9e25dcfa2f42`. Tools creating governance repositories from this seed MUST preserve that `containerId` in the initialised repository. A governance repository newly initialised from the seed at or after RFC-025 that does not carry this `containerId` is non-conformant under this RFC. Repositories that predate RFC-025 are subject to the Migration procedure (see below) — they achieve full RFC-025 conformance by adopting `containerId: "54432eb2-7961-4538-ac16-9e25dcfa2f42"`, but remain RFC-013-conformant with any valid `containerId`. (Note: RFC-013 I-79 makes `manifest.container` itself required for all SRS repositories, independent of this RFC.)
+
+> **Amended by RFC-052 (effective at `dataModelRevision` 10).** `manifest.container` in this text reads as the container `manifest.rootContainerId` names (RFC-052 [R2], the reading rule). The root container is stored in the container set like every other container; no other text here changes.
+
 >
 > **[R2]** The `governance-document` DocumentView (id `732a982b-3765-4f22-90e0-e456463bac54`) MUST NOT declare `rootTypeRefs`. Its selection MUST be driven exclusively by a `renderedPresentations` entry in the repository manifest, as specified by RFC-015 Rule [N+31].
 >
