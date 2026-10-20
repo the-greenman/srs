@@ -2047,3 +2047,35 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 **Review Trigger**: A machine-facing output where a consumer genuinely needs to act on free text, or a second identifier spelling scheme appearing for one concept.
 
 
+**Title**: The root container is stored in the container set; the manifest names it and holds no content
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-20
+
+**Decision Rationale**: Keeping the root inline left two storage encodings of one construct: every container reader handled two forms, and every navigation edit was a write to manifest.json. Past the Continuity flip (axis 2-8) both encodings would be permanent. Tested against the decision compass, keeping the root inline passed only Reliability over Renewal, and only on cost; moving it passes Conformance (one way over many), Repository (catalog over circumstance: the manifest becomes a pure descriptor) and axis 2-8. It also removes RFC-051's only root special case.
+
+**Decision**: The repository's root container is stored in the container set like every other container, and manifest.json names it by a required rootContainerId instead of carrying it inline. The root container keeps every role it has: it is the repository's identity object, and its entry order is the navigation order. manifest.json is authoritative for no content set. This supersedes, in part, rfc-decision-2fb87c1e: its exception "except for its inline root container" is withdrawn, and its position, that a repository's authoritative content is what its authoritative store reports, stands unchanged.
+
+**Scope**: Where the root container is stored and how the manifest refers to it: manifest.json's container property (replaced by rootContainerId), RFC-013 [R1] and [R9], RFC-038 [R1], [R22], Change F and Change K, and every accepted rule naming manifest.container (read by RFC-052's reading rule). Does not change the root container's roles, its identity rule, or navigation order.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keep the root inline in manifest.json. Rejected by the owner: two encodings, made permanent at the Continuity flip. Keep the property name container holding only an id. Rejected: one name with two shapes across revisions, and a rename is a migration either way (rfc-decision-628cf6c4). Compose with RFC-051 at one revision (precedent rfc-decision-86f49083). Rejected: the changes are independent and one combined migration is larger and harder to gate.
+
+**Accepted Costs**: A breaking change at dataModelRevision 10: every manifest in every corpus changes (four first-party corpora, three fixtures, gallery.srsj; the four published governance seeds are migrated on load by the pre-load transformer), five srs scripts, a guard test, the metamodel generator (a new root_container_id Field, Field 165 retired) and clerk's render-handbook read manifest.container and change, and every implementation's manifest loader changes. Concurrent root edits now merge like any container's instead of conflicting by ruling.
+
+**Evidence**:
+- the-greenman/srs#941 (RFC-052, accepted by the owner 2026-10-20)
+- the-greenman/srs#940 ruling 2 (owner, 2026-10-20: "worth the cost as long as this happens soon and is not lost")
+- rfcs/rfc-052-root-container-in-container-set.md, Revision 4
+- rfc-decision-2fb87c1e (superseded in part: the inline-root exception)
+- the-greenman/srs-rust#1417 (the implementation)
+
+**Review Trigger**: Review if a corpus needs repository identity to be readable from manifest.json alone, without the container set (for example a tool that reads only the manifest), which would be evidence for carrying a copy of the identity pointer in the manifest.
+
+

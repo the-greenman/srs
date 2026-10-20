@@ -38,7 +38,9 @@ Answers SP-30. Split from RFC-051 (the-greenman/srs#940), where it was ruling 2.
 ## Charter alignment
 
 **Cell(s):** cell:repository, cell:conformance
-**Decision mode:** complicated. The substance was ruled by the owner (#940, ruling 2). The RFC amends three accepted RFCs, so it is Door 3, and the owner merges.
+**Decision mode:** complicated
+
+The substance was ruled by the owner (#940, ruling 2). The RFC amends three accepted RFCs, so it is Door 3, and the owner merges.
 
 **Governing cell preference:**
 - **Repository, "catalog over circumstance":** aligned. The manifest becomes a descriptor only.

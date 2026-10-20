@@ -377,7 +377,7 @@ I-82
 
 **Content**: Makes `manifest.container` required, adds a reassignable identity pointer `Container.identityInstanceId` to both Container schemas, and defines a structural navigation model derived from existing primitives (container membership + `precedes` order). Full text: rfcs/rfc-013-required-root-container.md. Rev 7 (srs#446): [R9] tightened — a duplicate manifest.container/container-set containerId is fatal under RFC-038 [R12], no precedence; [R5] confirmed as holding without exception now that RFC-009 no longer relies on rootInstanceIds[0] position.
 
-RFC-043 Door 3 amendment (effective at dataModelRevision 8): navigation order is the order of the root container's `memberInstanceIds` entries (identity entry excluded, depth-0 entries the sections), replacing the Rule [N+12] derivation of Change C and [R5] ([R12]); [R2] resolves entry ids; identity and anchor pointers are entry ids; and [R6] reads "is the anchor of some Container" ([R19]).
+RFC-043 Door 3 amendment (effective at dataModelRevision 8): navigation order is the order of the root container's `memberInstanceIds` entries (identity entry excluded, depth-0 entries the sections), replacing the Rule [N+12] derivation of Change C and [R5] ([R12]); [R2] resolves entry ids; identity and anchor pointers are entry ids; and [R6] reads "is the anchor of some Container" ([R19]). Rev 9 (Door 3, RFC-052, the-greenman/srs#941; effective at dataModelRevision 10): [R1] — the manifest names the root by `rootContainerId` and the root is stored in the container set; [R9] withdrawn; every `manifest.container` reads as the container `manifest.rootContainerId` names.
 
 
 **Title**: RFC-015: View-Owned Ordering & Declared Root Presentations
@@ -941,7 +941,7 @@ RFC-038 makes the authoritative store answer membership and the manifest a stabl
 
 Evidence drove the design corrections. Keying discovery on declared package boundaries loses 7 of 375 `srs` instances, which sit beside an undeclared sixth package manifest, so the rule keys on the presence of a conforming manifest instead. Requiring `$schema` would invalidate conforming Records, and declaring it does not imply conformance. Retiring `sourceDocumentIndex` costs zero tombstones. The `muSrs` cross-check then exposed two package roots with 27 duplicate definitions, conflicting inline/file root Containers, source payloads accidentally made fatal, and package manifests absent from their own admissible set; Revision 5 closes each rule and migration gap. Revision 7 turns the remaining work into explicit repairs rather than owner choices. Revision 8 adds the two schema gaps that fail-closed loading turns into prerequisites — an absent `protocol.json` that both governance packages need, and `relation-type.json`'s missing `additionalProperties: false` — and stamps `core-bundle.srsj`, which [R21] would otherwise make unreadable. Revision 9 records the owner's disposition of the one item Revision 8 left open, moving `spec/srs-purpose-and-scope.md` out of the source-document set rather than adopting it.
 
-Independent implementations of the proposed discovery rule return exactly the indexed instances in both measured live repositories: 375/375 for `srs` and 32/32 for `muSrs`, with zero discovered-only, indexed-only, or path-disagreement cases. No instance moves; the remaining non-instance repairs have defined outcomes. Full text: rfcs/rfc-038-tree-authoritative-storage.md. RFC-043 Door 3 amendment (Revision 14, 2026-10-01, effective at dataModelRevision 8): entries of memberInstanceIds are never sorted or reordered by a canonicalizer, archive writer or enumeration; a deleted record's entry is removed by the promoting removal and an unresolved entry is a validation error repaired by the repair operation.
+Independent implementations of the proposed discovery rule return exactly the indexed instances in both measured live repositories: 375/375 for `srs` and 32/32 for `muSrs`, with zero discovered-only, indexed-only, or path-disagreement cases. No instance moves; the remaining non-instance repairs have defined outcomes. Full text: rfcs/rfc-038-tree-authoritative-storage.md. RFC-043 Door 3 amendment (Revision 14, 2026-10-01, effective at dataModelRevision 8): entries of memberInstanceIds are never sorted or reordered by a canonicalizer, archive writer or enumeration; a deleted record's entry is removed by the promoting removal and an unresolved entry is a validation error repaired by the repair operation. Rev 16 (Door 3, RFC-052, the-greenman/srs#941; effective at dataModelRevision 10): [R1]'s root-container exception removed (the manifest is authoritative for no content set); [R22]'s manifest clause, Change F's root-delete paragraph and Change K's retained list amended; the root container is stored in the container set.
 
 
 **Title**: RFC-040: Metamodel v1.1.0 — the definition-layer train
@@ -1264,5 +1264,29 @@ mechanism:package
 **Proposal Artifact Path**: rfcs/rfc-050-compositions-name-no-content.md
 
 **Content**: Draft: a package artifact names no instance or container id (validator check, no allowlist); every container-subset section may omit containerId and bind to the rendered container; a new containerScope value, children, renders the declared child containers of the rendered container so one section replaces the per-Part literal sections. Executes RFC-043 ruling P (the 24-literal allowlist, expiry srs#851). Binds nothing until accepted. Full text: rfcs/rfc-050-compositions-name-no-content.md.
+
+
+**Title**: RFC-052: The root container is stored in the container set
+
+**RFC Number**: 052
+
+**Status**: Accepted
+
+**Author**: Peter Brownell (owner ruling 2026-10-20, the-greenman/srs#940 ruling 2; accepted 2026-10-20, the-greenman/srs#941)
+
+**Affected Components**: The repository manifest (the required inline `container` is replaced by a required `rootContainerId`; the root container is stored in the container set at `containers/<containerId>.json`), RFC-013 [R1] and [R9] (withdrawn), RFC-038 [R1], [R22], Change F and Change K, reading-rule notes in RFC-025, RFC-026, RFC-029, RFC-042 and RFC-043, Invariants I-79 and I-87 (amended, effective at revision 10), the dataModelRevision generation (9 to 10), and a successor record superseding rfc-decision-2fb87c1e's inline-root exception. Landing is two-phase because the data migration lives in the srs-rust migration registry (srs-rust#1417) and the pinned binary cannot load a revision-10 corpus: what lands with acceptance is the RFC text, the Door 3 amendments, the amended invariant and mechanism records (each gated "effective at dataModelRevision 10") and the successor decision record. The schema files (manifest.json, srsj-envelope.json, container.json) are staged under docs/schema/staged/rfc-052/ and are promoted into docs/schema/2.0/ in the corpus-migration step, together with the metamodel generator change and the migrated corpus; the integration manifest therefore names the artifacts folded now and no schema: token.
+
+<!-- srs-integration:v1
+cell:repository
+cell:conformance
+I-79
+I-87
+-->
+
+**Dependency Refs**: Builds on RFC-013 (required root container, Accepted), RFC-038 (tree-authoritative storage, Accepted) and RFC-043 (ordered container entries, Accepted). Supersedes in part rfc-decision-2fb87c1e (its inline-root exception). Consults rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-7caca3a1, rfc-decision-e99a9437, rfc-decision-628cf6c4, rfc-decision-4431046e, rfc-decision-86f49083. Precedes RFC-051 (per-entry container storage, revision 11).
+
+**Proposal Artifact Path**: rfcs/rfc-052-root-container-in-container-set.md
+
+**Content**: The manifest stops carrying the root container inline and names it by a required `rootContainerId`; the root container is stored in `containers/` like every other container and keeps every role it has (repository identity, navigation order). The manifest holds no content. Split from RFC-051 as its ruling 2 (owner: "worth the cost as long as this happens soon and is not lost"). Full text: rfcs/rfc-052-root-container-in-container-set.md.
 
 
