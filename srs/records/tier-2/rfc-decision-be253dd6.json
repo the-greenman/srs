@@ -7,7 +7,7 @@
   "fieldValues": {
     "title": "A Container is stored as a directory of one-line entry files, so concurrent membership edits merge per entry",
     "decision_date": "2026-10-20",
-    "decision_rationale": "Under RFC-043 [R14] two branches that each add a member merge cleanly, but git merges the container file line by line and both appends collide at the end of one array. Measured over all four first-party corpora since 2026-08-21, 172 of 190 member edits were appends and 13 merges conflicted on a container file. RFC-038 ruled for elimination in storage over mitigation in tools; this applies that ruling to the last shared array, before the Continuity flip (axis 2-8) makes the layout permanent. One-line files make every rename-paired merge a visible conflict rather than a silent misapplied edit.",
+    "decision_rationale": "Under RFC-043 [R14] two branches that each add a member merge cleanly, but git merges the container file line by line and both appends collide at the end of one array. Measured over all four first-party corpora since 2026-08-21, 172 of 190 member edits were appends and 12 merges conflicted on a container file (correction 2026-10-20: first written as 13, which counted conflicted files, not merges). RFC-038 ruled for elimination in storage over mitigation in tools; this applies that ruling to the last shared array, before the Continuity flip (axis 2-8) makes the layout permanent. One-line files make every rename-paired merge a visible conflict rather than a silent misapplied edit.",
     "decision_statement": "At dataModelRevision 11 every Container is stored as a directory: a one-line head carrying its own fields, and one one-line file per entry naming the entry's container, its parent and a fractional-index key. The logical memberInstanceIds outline and every member operation's behaviour are unchanged; storage decides only what is written. A three-way merge is per path, and its result is the decoding of the merged files. Orphans and loops left by a clean merge are warnings with a deterministic decode, re-attached by repair. Keys come from one shared algorithm. This supersedes, in part, rfc-decision-0df19d60: its accepted cost that two writers who reorder one container conflict as a whole no longer holds, since conflicts are per entry; its position, that context order is declared on the Container, stands.",
     "decision_scope": "How a Container is stored and merged at revision 11: the directory layout, the entry file, the decoding, the write set of each member operation, the key algorithm, the per-path merge and the migration. Does not change the logical Container, the member operations' behaviour or inputs, or how conflicts are reported (RFC-010).",
     "governing_values": [
@@ -34,6 +34,6 @@
     "cell:containment"
   ],
   "createdAt": "2026-10-20T17:13:33.991091952+00:00",
-  "updatedAt": "2026-10-20T17:13:34.227172433+00:00",
+  "updatedAt": "2026-10-20T17:58:26.016805866+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
