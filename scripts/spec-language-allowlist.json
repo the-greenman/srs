@@ -1322,20 +1322,15 @@
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 1): | `upstreamPackage` | ref → `upstream-package` (inli…"
     },
-    "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#5bf1e7f6": {
+    "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#12790321": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
-      "matched": "6 em-dashes in one paragraph (cap 1): ```typescript manifest { srsVersion: string // SRS s…"
+      "matched": "5 em-dashes in one paragraph (cap 1): ```typescript manifest { srsVersion: string // SRS s…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#bdee9f80": {
       "issue": "the-greenman/srs#563",
       "rule": "em-dash-cap",
       "matched": "2 em-dashes in one paragraph (cap 1): | `renderedPresentations` | ref → `rendered-presenta…"
-    },
-    "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#e2ca938e": {
-      "issue": "the-greenman/srs#563",
-      "rule": "em-dash-cap",
-      "matched": "2 em-dashes in one paragraph (cap 1): | `container` | ref → `container` (inline) | yes | —…"
     },
     "srs/records/tier-2/generated-type-reference-3bffe9cf.json#content#em-dash-cap#eae8c2f6": {
       "issue": "the-greenman/srs#563",
