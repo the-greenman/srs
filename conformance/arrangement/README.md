@@ -26,3 +26,18 @@ These RFC-043 scenarios need an engine that does not exist in `srs-rust` today
 - [R15] the same entries through CLI, WASM and MCP; [R16] cross-revision refusal; [R17] migration
   gate refusals; [R20] repair; [R19] shared-anchor ambiguity; heading clamp at level 6, `typeFilter`
   with descendants, and a `rule` section flattening a nested container.
+
+## RFC-051 cases pending revision 11
+
+RFC-051 (per-entry container storage, `dataModelRevision` 11) adds cases to this fixture. They
+become scenarios once srs-rust ships revision 11 (the-greenman/srs-rust#1414) and the pinned CLI can
+run them. RFC-051's full case list is in its Change F; the cases below are the ones pinned here so
+far, and the rest are detailed in srs-rust#1414.
+
+- **Detached entries followed by an operation** ([R8], [R9], [R11]; Revision 15, the-greenman/srs#954).
+  A container holds the top-level entry `t` (key `a0`, no `parent`) and two orphans, `b` (key `a0`)
+  and `o` (key `a1`), whose `parent` names an entry the container does not hold. The decoded outline
+  is `t`, `b`, `o`, all at depth 0. Insert `n` at position 1, depth 0. The operation writes exactly
+  `b` = `{key: "a1"}` and `o` = `{key: "a2"}`, both with no `parent`, and `n` = `{key: "a0V"}`;
+  `t` and the head are not written. The outline is `t`, `n`, `b`, `o`. The one-pass keys `n` = `a1`,
+  `b` = `a2`, `o` = `a3` do not conform.

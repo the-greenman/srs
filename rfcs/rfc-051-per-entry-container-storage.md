@@ -2,7 +2,7 @@
 
 # RFC-051: Per-entry container storage — one file per entry, so concurrent membership edits merge cleanly
 
-**Status**: Accepted (Revision 14)
+**Status**: Accepted (Revision 15)
 **Affects**:
 - **Storage:** container storage under `containers/` (`ext:repository`).
 - **Schemas:** new `stored-container-entry.json`; `container.json` (description); `manifest.json` (revision description). Both existing files are generated, through the metamodel package, generation ledger and closure tests.
@@ -25,6 +25,7 @@ Answers SP-30 (srs-programme: "Several writers can overwrite each other").
 |---|---|---|
 | 1–5 | 2026-10-20 | Draft and four review rounds (#940 comments) |
 | 6–9 | 2026-10-20 | Owner rulings applied (#940); three more review rounds; the last found no blocking findings |
+| 15 | 2026-10-23 | **Door 3 correction: [R8] two passes, owner ruling on srs-rust#1438 A1** (the-greenman/srs#954). [R8] and [R9] could be read as one keying pass. [R8] now says outright: an operation on a container with detached entries first re-attaches them exactly as [R11] does, then keys its own writes under [R9] against that re-attached state, so the result is the re-attachment followed by the operation. [R9] and Change C follow; [R8] gains the worked example, and the conformance case *detached entries followed by an operation* pins its keys. |
 | 14 | 2026-10-20 | **Correction** (rfc-decision-4431046e's correction class; no position changes): the merge counts in Motivation were per conflicted file, not per merge. Corrected to merges: srs 22 (0 on a container), srs-context 4, muSrs 7; total 40, of which 12 on a container (was 62 and 13). |
 | 13 | 2026-10-20 | **Accepted by the owner** (2026-10-20, the-greenman/srs#940). Two-phase landing, as RFC-043 and RFC-052: now, this text, the Door 3 amendment notes, the gated records, the key-algorithm mechanism record (the Appendix) and the successor decision record, with the schemas staged under `docs/schema/staged/rfc-051/`; later, in one PR after srs-rust#1414 ships revision 11 (and after RFC-052's promotion), the corpus migration, the schema promotion and the pin advance. No normative rule changes. |
 | 12 | 2026-10-20 | Final check (#940): no blocking findings. The re-attached entries join [R8]'s write set; [R13] names every pending migration, and converts a stray flat file at revision 11; [R10] covers a path added on one side; two wording nits. |
@@ -161,7 +162,7 @@ Every RFC-043 Change D operation keeps its exact behaviour and inputs: add, inse
 
 An append writes one file. A remove also rewrites its children. No operation writes the head.
 
-An operation on a container that holds detached entries first re-attaches them, as part of the same all-or-nothing outcome. Otherwise some outlines (an append at the very end) would have no encoding.
+An operation on a container that holds detached entries first re-attaches them, as part of the same all-or-nothing outcome. Otherwise some outlines (an append at the very end) would have no encoding. It then keys its own writes against that re-attached state, so it writes the same bytes as repair's re-attachment followed by the operation ([R8]).
 
 ### Change D — Keys from one algorithm
 
@@ -260,13 +261,18 @@ These are added to `conformance/arrangement`; the detail is in srs-rust#1414:
 >
 > **[R7]** No tool MAY rewrite an entry's `key` or `parent` except as the target of a member operation or the migration. *(Amends RFC-043 [R6] and RFC-038 [R14].)*
 >
-> **[R8]** Every RFC-043 Change D operation MUST produce the outline RFC-043 defines, with the same inputs and rejections. It MUST first re-attach detached entries as [R11] does, within its own all-or-nothing outcome.
+> **[R8]** Every RFC-043 Change D operation MUST produce the outline RFC-043 defines, with the same inputs and rejections. On a container with detached entries it MUST work in two passes, within its own all-or-nothing outcome:
+> 1. it MUST first re-attach the detached entries exactly as [R11] does, with [R11]'s keys;
+> 2. it MUST then key its own writes under [R9] against that re-attached state.
+>
+> The result MUST be the same bytes as [R11]'s re-attachment followed by the operation.
+> - **Example:** a container holds the attached top-level entry `t` (key `a0`) and the orphans `b` and `o`, in that decoding order. Inserting `n` at the top level after `t` re-attaches `b` = `a1` and `o` = `a2`, then keys `n` = `a0V`, between `a0` and `a1`. A single [R9] pass that counted `b` and `o` as written would give `n` = `a1`, `b` = `a2`, `o` = `a3`, and does not conform.
 > - **Write set:** it MUST write exactly the entries [R11] re-attaches; the entry it adds, moves or removes; the entries whose `parent` changes; and the tied siblings that [R9] requires. It MUST NOT write any other entry, or the head.
 > - **Record-delete cascade:** a cascade MAY write entries only in this way, as declared cascade targets.
 >
 > *(Amends RFC-043 [R7] and RFC-038 [R22].)*
 >
-> **[R9]** The entries an operation writes MUST be keyed in outline order, each by the Appendix's *key between* its preceding sibling's key and the key of the next sibling that keeps its key. Where the place lies among equal keys, the write set MUST be decided first:
+> **[R9]** The entries an operation writes, after [R8]'s re-attachment, MUST be keyed in outline order, each by the Appendix's *key between* its preceding sibling's key and the key of the next sibling that keeps its key. Where the place lies among equal keys, the write set MUST be decided first:
 > - if the tied key places every written entry correctly by `instanceId`, they MUST take it and nothing else is written;
 > - otherwise every tied sibling after the place MUST join the write set.
 >
