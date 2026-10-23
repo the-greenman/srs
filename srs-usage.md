@@ -1852,8 +1852,11 @@ Do not treat a missing `identity` as an error, and do not substitute the first e
 for it — that inference is exactly what this contract removed (it presented an ordinary section as
 the repository's identity while silently dropping it from navigation). If your surface needs a
 headline for an identity-less repository, choose a presentation fallback in your own client. Set a
-real identity with `srs repo set-root-container --identity-instance-id <uuid>`, or run
-`srs repo migrate-identity` to mint a `com.semanticops.core/purpose` record.
+real identity by updating the root container (`srs container update <rootContainerId>` with
+`{"identityInstanceId": "<uuid>"}`), or run `srs repo migrate-identity` to mint a
+`com.semanticops.core/purpose` record. Setting the root is pointer-only (RFC-052 [R8]): it changes
+only `manifest.rootContainerId`, to name an existing container, and changes no container's title,
+identity or members, so it is not the way to set an identity.
 
 ### Tools
 
