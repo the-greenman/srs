@@ -2654,6 +2654,41 @@ async function partContainerMembershipCases(root) {
     exit: 0,
     contains: ["✓ all 1 Part containers match"],
   });
+
+  // srs#957 review N2: a manifest that names no root container must fail, never read as an empty
+  // root with zero Parts to check (which passed vacuously before readRootContainer threw).
+  await writeJson(join(root, "srs/manifest.json"), {});
+  expect("rejects a manifest that names no root container", runCheck("part-container-membership.mjs", root, "--check"), {
+    exit: 1,
+    contains: ["names no root container"],
+  });
+  // ...and one whose rootContainerId points at no file.
+  await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000f6" });
+  expect("rejects a rootContainerId that names no container file", runCheck("part-container-membership.mjs", root, "--check"), {
+    exit: 1,
+    contains: ["names no file"],
+  });
+}
+
+// ---- srs#957 review N3 — the envelope check's history exemption is pinned by path AND sha256 ----
+async function srsjEnvelopeExemptionCases(root) {
+  console.log("srs#957 — check-srsj-envelope-conformance.mjs: history exemption is pinned, not a pattern");
+  const gov = join(root, "packages/com.mudemocracy.governance");
+  await mkdir(join(gov, "1.2.3"), { recursive: true }); // the CURRENT version, so 1.0.0 is history
+  // A pre-revision-10 archive, not envelope-conformant, at the exempt PATH but with different bytes.
+  const junk = { srsj: "1", manifest: { dataModelRevision: 8, container: { containerId: "x" } }, data: {} };
+  await writeJson(join(gov, "1.0.0/seed/empty-governance-document.srsj"), junk);
+  expect("checks a published-history path whose bytes are not the published file", runCheck("check-srsj-envelope-conformance.mjs", root), {
+    exit: 1,
+    contains: ["1.0.0/seed/empty-governance-document.srsj", "failed srsj-envelope.json conformance"],
+  });
+  // The pattern loophole the review found: any .srsj under a non-current version's seed/.
+  await rm(join(gov, "1.0.0/seed/empty-governance-document.srsj"));
+  await writeJson(join(gov, "1.0.0/seed/junk.srsj"), junk);
+  expect("checks any other .srsj under a non-current version's seed/", runCheck("check-srsj-envelope-conformance.mjs", root), {
+    exit: 1,
+    contains: ["1.0.0/seed/junk.srsj", "failed srsj-envelope.json conformance"],
+  });
 }
 
 // ---- srs#716 — check-pr-classification.mjs: the PR body's Mode/Cell/Door line resolves ----------
@@ -2741,6 +2776,7 @@ try {
   await repositoryCellCases(join(root, "repository-cell"));
   await compositionContainerLiteralCases(join(root, "composition-container-literal"));
   await partContainerMembershipCases(join(root, "part-container-membership"));
+  await srsjEnvelopeExemptionCases(join(root, "srsj-envelope-exemption"));
   await prClassificationCases(join(root, "pr-classification"));
 } finally {
   await rm(root, { recursive: true, force: true });
