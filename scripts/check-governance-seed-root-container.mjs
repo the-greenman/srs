@@ -3,7 +3,8 @@
  * check-governance-seed-root-container.mjs — srs#947.
  *
  * RFC-025 [R1] (Accepted): "The com.mudemocracy.governance package seed MUST ship
- * manifest.container.containerId equal to 54432eb2-7961-4538-ac16-9e25dcfa2f42." No check ever
+ * manifest.container.containerId equal to 54432eb2-7961-4538-ac16-9e25dcfa2f42." (From dataModelRevision 10, RFC-052,
+ * that id is manifest.rootContainerId; srs#948.) No check ever
  * enforced [R1], so all four seeds published before this fix
  * (packages/com.mudemocracy.governance/{1.0.0,1.1.0,1.2.0,1.2.1}/seed/empty-governance-document.srsj)
  * carried e2e8489a-5ada-4309-9b26-90ccc263146d instead — scripts/build-governance-seed.mjs's

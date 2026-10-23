@@ -79,6 +79,12 @@ env:
   # 400-404 carry unrelated changes (navigation membership srs-rust#1097,
   # write-time schema validation srs-rust#1102) that this bump does not
   # intend to pick up.
+  # `v0.1.0-build.545` carries srs-rust#1417/#1440 (released as srs-rust#1419):
+  # dataModelRevision 10 (RFC-052, the root container stored in containers/ and
+  # named by manifest.rootContainerId) and the rfc046/rfc052 registry migrations.
+  # It cannot load the revision-8 corpus after migration by an older binary, so
+  # the corpus migration and this bump land together (srs#948). The re-render
+  # diff is confined to the RFC-052 record text and the Manifest type reference.
   SRS_RUST_CLI_TAG: v0.1.0-build.545
 
 jobs:

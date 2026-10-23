@@ -1874,7 +1874,7 @@ async function packageIdUniquenessCases(root) {
     repositoryId: ID(0),
     namespace: "com.example.fixture",
     packageRefs: [{ mode: "local", path: "package/a" }],
-    container: { containerId: ID(1), title: "Fixture", memberInstanceIds: [] },
+    rootContainerId: ID(1),
   });
 
   // Baseline: one declared Type, nothing else on disk.
