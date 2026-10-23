@@ -2692,11 +2692,11 @@ A conforming importer must use `repositoryId` as the key to determine whether an
 A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sidecarChecksum`, `SourceDocumentIndexEntry.contentChecksum`, or `RelationsChecksumEntry.checksum` must use the format `<algorithm>:<hex-encoded-digest>`. A value that does not include the `<algorithm>:` prefix is invalid.
 
 
-##### manifest.container is required and satisfies core Container invariants 20-21
+##### manifest.rootContainerId is required; the root container satisfies core Container invariants 20-21
 
 **Number**: I-79
 
-The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants.
+The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants.
 
 
 ##### Root container membership ids resolve in the authoritative instance set
@@ -2710,7 +2710,7 @@ Every entry `instanceId` in the root container's `memberInstanceIds` MUST resolv
 
 **Number**: I-87
 
-`manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately. Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
+`manifest.container.identityInstanceId`, when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately. Amended by RFC-052 (the-greenman/srs#941): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
 
 **Rationale**: RFC-013 I-81 left the type of the identity record unconstrained, requiring only membership in the root container. This made the identity record un-navigable by the SRS type system: a consumer could not use `resolve_type`/`record_get` without a special code path for the missing-type case. By requiring a `com.semanticops.core/purpose` Record, identity resolution becomes an ordinary typed record lookup, and the RFC-013 Tier-0-note default is formally superseded.
 
@@ -2820,7 +2820,7 @@ Every repository declares its manifest at `manifest.json`, the one file a reader
 
 The manifest's `container` field is the repository's required root Container (RFC-013): its `identityInstanceId` names the repository's identity Record, and every other member is a navigation section.
 
-The root Container's order is navigation order: navigation is the order of the entries of `manifest.container.memberInstanceIds`, excluding the entry named by `identityInstanceId`, with depth-0 entries as the navigation sections and deeper entries nested under their derived parent ([R12]). Navigation is not derived from the `precedes` chain or Rule [N+12], and the identity entry is at depth 0 with no descendants ([R2]). At dataModelRevision 8 the manifest's `dataModelRevision` is 8 ([R16]). Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
+The root Container's order is navigation order: navigation is the order of the entries of `manifest.container.memberInstanceIds`, excluding the entry named by `identityInstanceId`, with depth-0 entries as the navigation sections and deeper entries nested under their derived parent ([R12]). Navigation is not derived from the `precedes` chain or Rule [N+12], and the identity entry is at depth 0 with no descendants ([R2]). At dataModelRevision 8 the manifest's `dataModelRevision` is 8 ([R16]). Amended by RFC-052 (the-greenman/srs#941): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
 
 ###### `RepositoryManifest`
 
@@ -3256,7 +3256,7 @@ Example: the top-level shape of a `.srsj` file.
 
 The `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version.
 
-Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
+Amended by RFC-052 (the-greenman/srs#941): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
 
 
 ###### Path conventions in `data`
@@ -3340,7 +3340,7 @@ Closure and membership read the `instanceId` values of `memberInstanceIds` entri
 
 The closure root becomes the slice's root container, so RFC-043 [R2]'s root rule applies to it. At revision 8 and later, when the closure root's `identityInstanceId` entry is at a depth above 0 or has descendants, export MUST be refused before anything is written, with the error `slice-root-identity-invalid` naming the container, the entry and the reason. The outline and `identityInstanceId` are never rewritten to fit (RFC-026 [R16]).
 
-A Container that is not the closure root or one of its declared `childContainerIds` descendants is never carried, whatever its entries. An empty Container therefore cannot join a slice through a subset test that it passes vacuously (RFC-026 Revision 9 spec finding). A declared descendant with no entries is carried with its edge (RFC-034 [R7], I-151). Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
+A Container that is not the closure root or one of its declared `childContainerIds` descendants is never carried, whatever its entries. An empty Container therefore cannot join a slice through a subset test that it passes vacuously (RFC-026 Revision 9 spec finding). A declared descendant with no entries is carried with its edge (RFC-034 [R7], I-151). Amended by RFC-052 (the-greenman/srs#941): `manifest.container` here reads as the container `manifest.rootContainerId` names; the root container is stored in the container set like every other container.
 
 ###### Slice package closure
 
@@ -5735,7 +5735,7 @@ source-document-meta {
 | `title` | string | yes | — | core | Human-readable title. |
 | `description` | string | no | — | core | Human-readable description of this entity. |
 | `declaredExtensions` | string[] | no | — | core | SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1']. |
-| `container` | ref → `container` (inline) | yes | — | core | Embedded Container record — canonical source of truth for this repository's identity. |
+| `rootContainerId` | string | yes | format: uuid | core | RFC-052 [R1]: the containerId of the repository's root container, a Container in the container set (containers/) that is the repository's identity object and the top of structural navigation (RFC-013). |
 | `packageRef` | ref → `package-ref` (inline) | no | — | core | Reference to the SRS Package that supplies field and type definitions (single package). |
 | `packageRefs` | ref → `package-ref` (inline)[] | no | — | core | References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories). |
 | `upstreamPackage` | ref → `upstream-package` (inline) | no | — | core | RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package. |
@@ -5759,7 +5759,7 @@ manifest {
   title: string // Human-readable title.
   description?: string // Human-readable description of this entity.
   declaredExtensions?: string[] // SRS extensions this repository conforms to, e.g. ['ext:lifecycle', 'ext:views-l1'].
-  container: ref → `container` (inline) // Embedded Container record — canonical source of truth for this repository's identity.
+  rootContainerId: string // RFC-052 [R1]: the containerId of the repository's root container, a Container in the container set (containers/) that is the repository's identity object and the top of structural navigation (RFC-013).
   packageRef?: ref → `package-ref` (inline) // Reference to the SRS Package that supplies field and type definitions (single package).
   packageRefs?: ref → `package-ref` (inline)[] // References to one or more SRS Packages (RFC-014 Change C, multi-package/multi-version repositories).
   upstreamPackage?: ref → `upstream-package` (inline) // RFC-014 (ext:import-tracking) — top-level normative provenance stamp for a repository initialised from an upstream Package.
