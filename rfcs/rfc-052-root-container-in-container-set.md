@@ -18,7 +18,7 @@
 - **Coordinated:** RFC-050 (Draft) names `manifest.container` in one example and reads the same way.
 - **Revision:** `dataModelRevision` 10.
 
-Answers SP-30. Split from RFC-051 (the-greenman/srs#940), where it was ruling 2. Implementation: the-greenman/srs-rust#1417 (lands before srs-rust#1414).
+Answers SP-30. Split from RFC-051 (the-greenman/srs#940), where it was ruling 2. Implementation: the-greenman/srs-rust#1417 (lands before srs-rust#1414); Revision 5: the-greenman/srs-rust#1453.
 **Author**: design draft; owner ruling 2026-10-20 on #940: "worth the cost as long as this happens soon and is not lost"
 **Date**: 2026-10-20
 
