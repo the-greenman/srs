@@ -29,9 +29,10 @@
  *      Change G's Part containers) — this is the one case a Container under `containers/` DOES
  *      become a presentation surface, exactly because a section names it (see the note on
  *      `containers()` below).
- *   2. **Root container membership** — `manifest.container` only (RFC-013's required root container,
+ *   2. **Root container membership** — the root container only (RFC-013's required root container,
+ *      named by `manifest.rootContainerId` and stored in `containers/`, RFC-052;
  *      the top of structural navigation): `identityInstanceId`, the `memberInstanceIds`
- *      entry ids (RFC-043). A Container under `containers/` is deliberately NOT a surface by
+ *      entry ids (RFC-043). Any other Container under `containers/` is deliberately NOT a surface by
  *      existing — see the note on `containers()` for the wrong verdict that produced.
  *   3. **The RFC-016 invariant projection** — [R1]: every `com.semanticops.spec/invariant` record
  *      MUST appear in the rendered Key Invariants region of each view marked `requiresKeyInvariants`.
@@ -92,7 +93,7 @@ import { fileURLToPath } from "url";
 import { instancePaths, loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
 import { INVARIANT_PROJECTION_ROOT, isInInvariantProjectionRoot } from "./render-invariants.mjs";
 import { EXPORTED_VIEW_IDS } from "./lib/view-exports.mjs";
-import { entryIds } from "./lib/container-entries.mjs";
+import { entryIds, readRootContainer } from "./lib/container-entries.mjs";
 
 // `fileURLToPath`, not `new URL(..).pathname` — the percent-encoding trap the sibling guards
 // document against; getting it wrong breaks every run under a checkout path containing a space.
@@ -174,11 +175,11 @@ async function declaredDocumentViews(repoRoot) {
 
 /**
  * The Containers that are ALWAYS presentation surfaces regardless of naming — which is
- * `manifest.container` and nothing else.
+ * the root container named by `manifest.rootContainerId` (RFC-052) and nothing else.
  *
- * RFC-013 makes `manifest.container` the repository's identity object and the top of structural
- * navigation, so its members are reached by a reader navigating the repository. **A Container under
- * `containers/` is not a presentation surface by existing.** It becomes one when a `container-subset`
+ * RFC-013 makes the root container the repository's identity object and the top of structural
+ * navigation, so its members are reached by a reader navigating the repository. **Any other Container
+ * under `containers/` is not a presentation surface by existing.** It becomes one when a `container-subset`
  * section names it (resolved separately, in `reachability()`'s own container-subset loop — RFC-042
  * Change G) — that is a real presentation surface, so it is resolved, not refused. A `containerIds`
  * discovery-query filter naming one is different: it *narrows* an existing discovery-query surface
@@ -187,7 +188,7 @@ async function declaredDocumentViews(repoRoot) {
  * lever with no reader behind it.
  *
  * That is not hypothetical. All 12 Containers under `srs/containers/` are referenced by nothing at
- * all — not `manifest.container`, not any view, not each other. Honouring them published exactly one
+ * all — not the root container, not any view, not each other. Honouring them published exactly one
  * record: `records/notes/rfc-001-implementation-prerequisites.json`, sole member of an orphan
  * Container, reported reachable while its 18 siblings in the same directory were recorded as
  * invisible. Adding an id to any of those 12 files would have silenced this guard for that record,
@@ -197,8 +198,9 @@ async function containers(repoRoot) {
   const out = [];
   try {
     const manifest = JSON.parse(await readFile(join(repoRoot, "manifest.json"), "utf8"));
-    if (manifest.container) out.push({ path: "manifest.json#container", container: manifest.container });
-    else fail(`${join(repoRoot, "manifest.json")} declares no root container — required by RFC-013`);
+    const root = readRootContainer(repoRoot, manifest);
+    if (root.containerId) out.push({ path: `containers/${root.containerId}.json`, container: root });
+    else fail(`${join(repoRoot, "manifest.json")} names no readable root container (rootContainerId) — required by RFC-013/RFC-052`);
   } catch {
     fail(`cannot read ${join(repoRoot, "manifest.json")}`);
   }
@@ -241,7 +243,7 @@ async function reachability(repoRoot) {
   }
 
   // Every Container under `containers/**`, keyed by containerId — read here (not just via
-  // `manifest.container`) because a `container-subset` section (RFC-042 Change G) names one of
+  // the root container) because a `container-subset` section (RFC-042 Change G) names one of
   // these directly, and that naming is what turns it into a presentation surface (see the note
   // on `containers()` above: a Container is not a surface by existing, only by being named).
   const containersById = new Map();

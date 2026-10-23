@@ -37,7 +37,7 @@ import { existsSync } from "fs";
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
-import { entryIds } from "./lib/container-entries.mjs";
+import { entryIds, readRootContainer } from "./lib/container-entries.mjs";
 
 const ROOT = process.argv[2]
   ? resolve(process.argv[2])
@@ -110,7 +110,7 @@ function siblingOrder(ids) {
 const manifest = existsSync(join(REPO, "manifest.json"))
   ? JSON.parse(await readFile(join(REPO, "manifest.json"), "utf8"))
   : {};
-const rootContainer = manifest.container ?? {};
+const rootContainer = readRootContainer(REPO, manifest);
 const rootMembers = entryIds(rootContainer);
 const identity = rootContainer.identityInstanceId;
 const treeOrder = [];

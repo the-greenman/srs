@@ -592,8 +592,11 @@ async function publicationReachabilityCases(root) {
     dataModelRevision: 2,
     repositoryId: "00000000-0000-4000-8000-000000000501",
     namespace: "com.example.fixture",
-    container: { containerId: "00000000-0000-4000-8000-000000000601", title: "Fixture", memberInstanceIds: [] },
+    rootContainerId: "00000000-0000-4000-8000-000000000601",
   });
+  const rootContainerPath = join(repo, "containers/00000000-0000-4000-8000-000000000601.json");
+  const baseRoot = { containerId: "00000000-0000-4000-8000-000000000601", title: "Fixture", memberInstanceIds: [] };
+  await writeJson(rootContainerPath, baseRoot);
   await writeJson(join(repo, "package/package.json"), {
     id: "00000000-0000-4000-8000-000000000701",
     namespace: "com.example.fixture",
@@ -708,19 +711,14 @@ async function publicationReachabilityCases(root) {
   await rm(join(repo, "relations/precedes.json"));
 
   // The RFC-013 ROOT container is a surface — it is the top of structural navigation.
-  const manifestPath = join(repo, "manifest.json");
-  const baseManifest = JSON.parse(await readFile(manifestPath, "utf8"));
-  await writeJson(manifestPath, {
-    ...baseManifest,
-    container: { ...baseManifest.container, memberInstanceIds: [{ instanceId: ID(2) }] },
-  });
+  await writeJson(rootContainerPath, { ...baseRoot, memberInstanceIds: [{ instanceId: ID(2) }] });
   expect("accepts a record reached only by root container membership", runCheck("check-publication-reachability.mjs", root), {
     exit: 0,
     contains: ["✓ Every discovered record is reachable"],
   });
-  await writeJson(manifestPath, baseManifest);
+  await writeJson(rootContainerPath, baseRoot);
 
-  // ...but a Container under `containers/` is NOT, because nothing points at it. Honouring those made
+  // ...but any other Container under `containers/` is NOT, because nothing points at it. Honouring those made
   // membership a free "publish" lever: all 12 Containers in the live corpus are referenced by nothing,
   // and one of them was silencing this guard for a note that reaches no reader.
   await writeJson(join(repo, "containers/orphan.json"), {
@@ -1876,7 +1874,7 @@ async function packageIdUniquenessCases(root) {
     repositoryId: ID(0),
     namespace: "com.example.fixture",
     packageRefs: [{ mode: "local", path: "package/a" }],
-    container: { containerId: ID(1), title: "Fixture", memberInstanceIds: [] },
+    rootContainerId: ID(1),
   });
 
   // Baseline: one declared Type, nothing else on disk.
@@ -2015,7 +2013,8 @@ async function specCoherenceCases(root) {
   const relDir = join(root, "srs/relations");
   const allowlist = join(root, "scripts/spec-coherence-allowlist.json");
 
-  await writeJson(join(root, "srs/manifest.json"), { container: { containerId: "00000000-0000-4000-8000-0000000000e0", memberInstanceIds: [] } });
+  await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000e0" });
+  await writeJson(join(root, "srs/containers/00000000-0000-4000-8000-0000000000e0.json"), { containerId: "00000000-0000-4000-8000-0000000000e0", memberInstanceIds: [] });
   await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha"));
   await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta"));
   await writeJson(join(root, "srs/records/subsections/leaf.json"), leaf("Plain prose, no headings.\n"));
@@ -2123,7 +2122,8 @@ async function specReadabilityCases(root) {
   // children with no `precedes` edge between any pair — under check-spec-coherence.mjs's weaker
   // ancestor-comparison test this sibling set would be "unordered", but Rule [N+12]'s createdAt
   // tiebreak still gives it one definite order: Leaf, then Alpha, then Beta.
-  await writeJson(join(root, "srs/manifest.json"), { container: { containerId: "00000000-0000-4000-8000-0000000000f0", memberInstanceIds: [{ instanceId: P }] } });
+  await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000f0" });
+  await writeJson(join(root, "srs/containers/00000000-0000-4000-8000-0000000000f0.json"), { containerId: "00000000-0000-4000-8000-0000000000f0", memberInstanceIds: [{ instanceId: P }] });
   await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part One", "2026-09-06T00:00:00Z"));
   await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha", "2026-09-06T00:00:01Z"));
   await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta", "2026-09-06T00:00:02Z"));
@@ -2433,7 +2433,7 @@ async function repositoryCellCases(root) {
     srsVersion: "2.0",
     repositoryId: "00000000-0000-4000-8000-000000000f01",
     title: "fixture repository",
-    container: { containerId: "00000000-0000-4000-8000-000000000f02" },
+    rootContainerId: "00000000-0000-4000-8000-000000000f02",
     createdAt: "2026-08-15T00:00:00Z",
     ...extra,
   });
@@ -2626,7 +2626,8 @@ async function partContainerMembershipCases(root) {
   });
   const containerFile = join(root, "srs/containers/part-p.json");
 
-  await writeJson(join(root, "srs/manifest.json"), { container: { memberInstanceIds: [{ instanceId: P }] } });
+  await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000f5" });
+  await writeJson(join(root, "srs/containers/00000000-0000-4000-8000-0000000000f5.json"), { containerId: "00000000-0000-4000-8000-0000000000f5", memberInstanceIds: [{ instanceId: P }] });
   await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part P"));
   await writeJson(join(root, "srs/records/concepts/c1.json"), concept(C1, "Child"));
   await writeJson(join(root, "srs/records/concepts/c2.json"), concept(C2, "Grandchild"));
@@ -2652,6 +2653,41 @@ async function partContainerMembershipCases(root) {
   expect("accepts membership once restored", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 0,
     contains: ["✓ all 1 Part containers match"],
+  });
+
+  // srs#957 review N2: a manifest that names no root container must fail, never read as an empty
+  // root with zero Parts to check (which passed vacuously before readRootContainer threw).
+  await writeJson(join(root, "srs/manifest.json"), {});
+  expect("rejects a manifest that names no root container", runCheck("part-container-membership.mjs", root, "--check"), {
+    exit: 1,
+    contains: ["names no root container"],
+  });
+  // ...and one whose rootContainerId points at no file.
+  await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000f6" });
+  expect("rejects a rootContainerId that names no container file", runCheck("part-container-membership.mjs", root, "--check"), {
+    exit: 1,
+    contains: ["names no file"],
+  });
+}
+
+// ---- srs#957 review N3 — the envelope check's history exemption is pinned by path AND sha256 ----
+async function srsjEnvelopeExemptionCases(root) {
+  console.log("srs#957 — check-srsj-envelope-conformance.mjs: history exemption is pinned, not a pattern");
+  const gov = join(root, "packages/com.mudemocracy.governance");
+  await mkdir(join(gov, "1.2.3"), { recursive: true }); // the CURRENT version, so 1.0.0 is history
+  // A pre-revision-10 archive, not envelope-conformant, at the exempt PATH but with different bytes.
+  const junk = { srsj: "1", manifest: { dataModelRevision: 8, container: { containerId: "x" } }, data: {} };
+  await writeJson(join(gov, "1.0.0/seed/empty-governance-document.srsj"), junk);
+  expect("checks a published-history path whose bytes are not the published file", runCheck("check-srsj-envelope-conformance.mjs", root), {
+    exit: 1,
+    contains: ["1.0.0/seed/empty-governance-document.srsj", "failed srsj-envelope.json conformance"],
+  });
+  // The pattern loophole the review found: any .srsj under a non-current version's seed/.
+  await rm(join(gov, "1.0.0/seed/empty-governance-document.srsj"));
+  await writeJson(join(gov, "1.0.0/seed/junk.srsj"), junk);
+  expect("checks any other .srsj under a non-current version's seed/", runCheck("check-srsj-envelope-conformance.mjs", root), {
+    exit: 1,
+    contains: ["1.0.0/seed/junk.srsj", "failed srsj-envelope.json conformance"],
   });
 }
 
@@ -2740,6 +2776,7 @@ try {
   await repositoryCellCases(join(root, "repository-cell"));
   await compositionContainerLiteralCases(join(root, "composition-container-literal"));
   await partContainerMembershipCases(join(root, "part-container-membership"));
+  await srsjEnvelopeExemptionCases(join(root, "srsj-envelope-exemption"));
   await prClassificationCases(join(root, "pr-classification"));
 } finally {
   await rm(root, { recursive: true, force: true });

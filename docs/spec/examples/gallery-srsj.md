@@ -27,8 +27,12 @@ To regenerate after changes to `gallery-project-v2/`:
   the previously orphaned supersession (srs#158 / srs#160) is healed.
 - 1 Note (initial brain dump, Tier 0)
 
-`manifest.container` (RFC-013) is wired to the root container (`4e4c9501...`), whose
-identity record is Article A-001. Sub-containers exist for Articles, Roles, and the
+`manifest.rootContainerId` (RFC-052) names the root container (`4e4c9501...`, stored at
+`containers/4e4c9501-....json` inside the archive), whose identity record is Article A-001.
+At srs#948 the archive was migrated in place to `dataModelRevision` 10 with
+`srs repo apply-migration --id rfc046-actor-provenance` then `--id rfc052-root-container`
+(`--repo gallery.srsj`), rather than regenerated: `repo copy` would also replace the gallery's
+local relation-type definitions with the core ones. Sub-containers exist for Articles, Roles, and the
 Decision Log.
 
 The governance Records (Articles, Roles, Decisions) carry a `lifecycleState` of

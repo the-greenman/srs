@@ -23,14 +23,35 @@ import { existsSync } from "fs";
 import { join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadSchema, validateJsonSchema } from "./lib/json-schema-lite.mjs";
+import { latestGovernanceVersion } from "./lib/governance-versions.mjs";
+import { createHash } from "crypto";
 
 const HERE = resolve(fileURLToPath(new URL(".", import.meta.url)));
-const REPO = resolve(HERE, "..");
-const SCHEMA_PATH = join(REPO, "docs/schema/2.0/srsj-envelope.json");
+// The schema is the rule, read from beside THIS script; the corpus root is optional so a guard can
+// point the check at a fixture tree (`node scripts/check-srsj-envelope-conformance.mjs [root]`).
+const REPO = process.argv[2] ? resolve(process.argv[2]) : resolve(HERE, "..");
+const SCHEMA_PATH = join(HERE, "..", "docs/schema/2.0/srsj-envelope.json");
 
 // RFC-038: "core-bundle.srsj is a package bundle with no data/manifest envelope at all, so the
 // .srsj membership rule does not apply to it" — the one named, permanent exclusion from this check.
 const EXCLUDED = new Set([join(REPO, "packages/com.semanticops.core/1.0.0/core-bundle.srsj")]);
+
+// RFC-052 Change C (srs#948, owner ruling 2026-10-23): a published com.mudemocracy.governance seed
+// below dataModelRevision 10 is immutable history. It is never rewritten and opens through the
+// loader's in-memory migration, so it is not held to this revision's envelope schema. Pinned to the
+// exact five published files by path AND sha256 (srs#957 review N3): any other file, or one of these
+// paths with different bytes, is checked like everything else. Never the CURRENT version.
+const PUBLISHED_BELOW_10 = new Map([
+  ["packages/com.mudemocracy.governance/1.0.0/seed/empty-governance-document.srsj", "c66d7a5d8c5d356b2744bc2410a4d1a7bdf14ce3f238ecdb4a2c0949d77e3dd5"],
+  ["packages/com.mudemocracy.governance/1.1.0/seed/empty-governance-document.srsj", "e39b65accbc440435bf0199ec8e1929524f673af11d043738230d897d3ce19e7"],
+  ["packages/com.mudemocracy.governance/1.2.0/seed/empty-governance-document.srsj", "b90649c1623966c7605e994f0abb85c53e3af7ac79b7fc0f69dfd6ea795d1f6d"],
+  ["packages/com.mudemocracy.governance/1.2.1/seed/empty-governance-document.srsj", "4640a7251a35cda4efcd9db51ad16f2502b41b48ef3fb237bfcd60aa5cff6193"],
+  ["packages/com.mudemocracy.governance/1.2.2/seed/empty-governance-document.srsj", "4f5578b7bc41f08f6cebb15866d853515182f719a5ac11f8b96c790a1fad663a"],
+]);
+const CURRENT_GOVERNANCE = latestGovernanceVersion(REPO);
+const isPublishedHistoryBelow10 = (rel, text) =>
+  PUBLISHED_BELOW_10.get(rel) === createHash("sha256").update(text).digest("hex") &&
+  !rel.startsWith(`packages/com.mudemocracy.governance/${CURRENT_GOVERNANCE}/`);
 
 async function findSrsjFiles(dir) {
   const out = [];
@@ -73,14 +94,21 @@ if (targets.length === 0) {
 }
 
 let fail = 0;
+const historical = [];
 for (const path of targets) {
   const rel = path.slice(REPO.length + 1);
   let doc;
+  let text;
   try {
-    doc = JSON.parse(await readFile(path, "utf8"));
+    text = await readFile(path);
+    doc = JSON.parse(text.toString("utf8"));
   } catch (err) {
     console.error(`  ✗ ${rel}: failed to parse JSON — ${err.message}`);
     fail++;
+    continue;
+  }
+  if (isPublishedHistoryBelow10(rel, text)) {
+    historical.push(rel);
     continue;
   }
   const errors = validateJsonSchema(doc, schema);
@@ -93,7 +121,8 @@ for (const path of targets) {
   }
 }
 
-console.log(`\nchecked ${targets.length} genuine .srsj envelope instance(s) against srsj-envelope.json`);
+console.log(`\nchecked ${targets.length - historical.length} genuine .srsj envelope instance(s) against srsj-envelope.json`);
+console.log(`exempt (published governance seed history below revision 10, RFC-052 Change C): ${historical.join(", ") || "none"}`);
 console.log(`excluded (bare package-bundle, no envelope): ${[...EXCLUDED].map((p) => p.slice(REPO.length + 1)).join(", ") || "none"}`);
 
 if (fail) {

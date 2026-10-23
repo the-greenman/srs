@@ -2,7 +2,7 @@
 import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join } from "path";
-import { entryIds } from "./lib/container-entries.mjs";
+import { entryIds, readRootContainer } from "./lib/container-entries.mjs";
 
 // RFC-039: the carrier keys by Field.name.
 const INVARIANT_NUMBER_FIELD = "invariant_number";
@@ -271,7 +271,7 @@ export async function renderInvariants(repoPath) {
   // reachable concept.
   const manifestPath = join(repoPath, "manifest.json");
   const manifest = existsSync(manifestPath) ? JSON.parse(await readFile(manifestPath, "utf8")) : {};
-  const rootContainer = manifest.container ?? {};
+  const rootContainer = readRootContainer(repoPath, manifest);
   const identity = rootContainer.identityInstanceId;
   const rootMembers = entryIds(rootContainer);
   const parts = rootMembers.filter((m) => m !== identity);

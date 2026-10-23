@@ -2,7 +2,16 @@
   "srsj": "2",
   "manifest": {
     "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
-    "container": {
+    "createdAt": "2026-10-01T13:04:24.608454158+00:00",
+    "dataModelRevision": 10,
+    "namespace": "com.limoma",
+    "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
+    "rootContainerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
+    "srsVersion": "2.0-draft",
+    "title": "Limoma"
+  },
+  "data": {
+    "containers/4e4c9501-2709-4220-bb47-486f6f78a937.json": {
       "containerId": "4e4c9501-2709-4220-bb47-486f6f78a937",
       "identityInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
       "memberInstanceIds": [
@@ -18,14 +27,6 @@
       ],
       "title": "Limoma"
     },
-    "createdAt": "2026-10-01T13:04:24.608454158+00:00",
-    "dataModelRevision": 8,
-    "namespace": "com.limoma",
-    "repositoryId": "8ae058dc-b52d-4e52-8e7e-969018532a04",
-    "srsVersion": "2.0-draft",
-    "title": "Limoma"
-  },
-  "data": {
     "containers/articles-f7562aa3.json": {
       "anchorInstanceId": "ad159754-2edd-4bf8-a70f-a29a617e5809",
       "containerId": "f7562aa3-98c7-44be-b4c5-5474df6441f2",
@@ -849,7 +850,7 @@
         "compositions/decision-log-b5c8d124.json"
       ],
       "createdAt": "2026-01-01T00:00:00Z",
-      "dataModelRevision": 8,
+      "dataModelRevision": 10,
       "description": "",
       "fields": [
         "fields/title-d7e82557.json",

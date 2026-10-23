@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-052 [R1]: the containerId of the repository's root container, a Container in the container set (containers/) that is the repository's identity object and the top of structural navigation (RFC-013)."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-052 [R1]: the containerId of the repository's root container, a Container in the container set (containers/) that is the repository's identity object and the top of structural navigation (RFC-013).",
+  "id": "4b000117-0000-4000-a000-000000000117",
+  "name": "root_container_id",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

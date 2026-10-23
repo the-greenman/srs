@@ -25,7 +25,7 @@
     {
       "instanceId": "09b57270-d763-4a7c-b6fa-182e03365aab",
       "path": "records/notes/ai-native-srs-repositories.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -102,7 +102,7 @@
     {
       "instanceId": "2bd94648-85c0-4e2a-a8a8-4db54895c65d",
       "path": "records/notes/purpose-principles-constraints.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -123,14 +123,14 @@
     {
       "instanceId": "3718815c-d505-40c1-a754-b0ab29e90b8f",
       "path": "records/notes/rfc-005-relation-type-cardinality-decision.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "3ac58ecc-dfc8-45cd-8ddb-2a3b429e768e",
       "path": "records/notes/rfc-001-implementation-prerequisites.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section. This one was previously reported reachable, via membership of an orphan Container under `containers/` that no view and no manifest references — see the note on `containers()` in the guard.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section. This one was previously reported reachable, via membership of an orphan Container under `containers/` that no view and no manifest references — see the note on `containers()` in the guard.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -165,7 +165,7 @@
     {
       "instanceId": "4d9f78b5-3138-4d8a-a443-e39f5af0a830",
       "path": "records/notes/shared-meaning-governing-documents.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -214,14 +214,14 @@
     {
       "instanceId": "5ea8cdb1-35d9-49d3-8d6e-95e2dc8239a7",
       "path": "records/notes/srs-domain-key-challenges.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "609370d7-03cf-4501-894a-02276621df8e",
       "path": "records/notes/semantic-pipeline-from-transcripts.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -270,7 +270,7 @@
     {
       "instanceId": "7f46a5b2-7c5c-4c2c-9d79-6ef5a4a7c201",
       "path": "records/notes/fundamental-tensions.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -291,7 +291,7 @@
     {
       "instanceId": "82de2b6e-9589-4b82-a59f-417eec5c59d1",
       "path": "records/notes/meaning-evolution-path.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -305,7 +305,7 @@
     {
       "instanceId": "8c0bcb3b-bd82-4d84-b9ef-8e64f69d9ac7",
       "path": "records/notes/conversation-attention-addressability.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -340,7 +340,7 @@
     {
       "instanceId": "9d78580b-bfd8-48e0-8893-f7f09602ac8d",
       "path": "records/notes/srs-domain-definition.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -354,7 +354,7 @@
     {
       "instanceId": "a8ecf7de-c92c-4d1c-80c7-8288329b7a91",
       "path": "records/notes/protocols-as-meaning-making.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -389,21 +389,21 @@
     {
       "instanceId": "c0f264d7-3b9e-44b9-9446-04adf55576a0",
       "path": "records/notes/domain-definition-template.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "c0f7c97d-84a9-48a5-bc4d-41d7ee5f8cd9",
       "path": "records/notes/human-meaning-ai-collaboration.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
     {
       "instanceId": "c1a5f920-9de7-4f99-8cfd-b4b8cbb7b09a",
       "path": "records/notes/srs-domain-potential-problems.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -424,7 +424,7 @@
     {
       "instanceId": "cdd08a86-4fb8-47a0-bcfd-1fd7b9449af9",
       "path": "records/notes/tooling-design-principles-authority-and-determinism.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -452,7 +452,7 @@
     {
       "instanceId": "d5c7e536-5f7d-491a-8166-5ee25a954377",
       "path": "records/notes/origin-purpose.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -487,7 +487,7 @@
     {
       "instanceId": "f13e9f41-2a98-4f2d-a66e-55e546cd7585",
       "path": "records/notes/distributed-knowledge-ownership.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },
@@ -501,7 +501,7 @@
     {
       "instanceId": "fa1d2160-0117-47c3-9c86-12a811911e3e",
       "path": "records/notes/why-tags-exist-from-clustering-to-definitions.json",
-      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is `manifest.container.identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
+      "reason": "Tier-0 source note: pre-formalisation material from which the specification was written. All notes in `records/notes/` are unpublished — none is the repository identity record, which is the root container's `identityInstanceId` = `records/tier-2/purpose-9288ed3d.json`, a Tier-2 `com.semanticops.core/purpose` record. They are deliberately not part of either rendered document. Their long-term home is the #274 prose-generation decision and the purpose charter, not a spec section.",
       "disposition": "permanent",
       "issue": "#274"
     },

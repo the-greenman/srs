@@ -16,7 +16,7 @@ import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join, dirname, resolve, relative } from "path";
 import { fileURLToPath } from "url";
-import { entryIds } from "./lib/container-entries.mjs";
+import { entryIds, readRootContainer } from "./lib/container-entries.mjs";
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const CHECK = process.argv.includes("--check");
@@ -57,7 +57,7 @@ function subtree(id) {
 }
 
 const manifest = JSON.parse(await readFile(join(ROOT, "srs/manifest.json"), "utf8"));
-const rootContainer = manifest.container ?? {};
+const rootContainer = readRootContainer(join(ROOT, "srs"), manifest);
 const identity = rootContainer.identityInstanceId;
 const parts = (rootContainer.memberInstanceIds ?? []).filter((e) => (e.depth ?? 0) === 0 && e.instanceId !== identity).map((e) => e.instanceId);
 
