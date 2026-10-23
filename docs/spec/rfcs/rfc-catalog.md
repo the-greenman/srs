@@ -1319,4 +1319,6 @@ mechanism:container-entry-order-keys
 
 **Content**: Stores each Container as a directory of a one-line head and one one-line file per entry, so two branches that each add a member touch different files and any text merge reaches the result the specification defines. The logical outline and every member operation's behaviour are unchanged; keys come from one shared fractional-indexing algorithm, so one edit always writes the same bytes. Answers SP-30. Full text: rfcs/rfc-051-per-entry-container-storage.md.
 
+Rev 15 (Door 3 correction, owner ruling on srs-rust#1438 A1, the-greenman/srs#954; effective at dataModelRevision 11): [R8] works in two passes. An operation on a container with detached entries first re-attaches them exactly as [R11] does, with [R11]'s keys, then keys its own writes under [R9] against that re-attached state; the result is the same bytes as the re-attachment followed by the operation. Example: attached top-level `t` (`a0`) and orphans `b`, `o`; inserting `n` after `t` gives `b` = `a1`, `o` = `a2`, `n` = `a0V` (one pass would give `n` = `a1`, `b` = `a2`, `o` = `a3`, which does not conform).
+
 
