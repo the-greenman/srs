@@ -8,6 +8,15 @@ their seeds are below revision 10, are exempt from the current-revision gates (t
 envelope check and the seed-drift check), and open through the loader's in-memory migration
 (RFC-052 Change C). No field/type/protocol/lifecycle/view semantic content changed.
 
+**Disclosure: four relation-type definitions in the seed.** `package/` still ships the package's own
+`derived-from`, `evidences`, `precedes` and `supersedes` definitions, but the 1.2.3 **seed** carries the
+core definitions for those four keys instead (`derived-from-b1c2d3e4`, `evidences-d4e5f6a7`,
+`precedes-f7a8b9c0`, `supersedes-c2d3e4f5`), where 1.2.2's seed carried the package's own. The cause is
+`srs repo copy`, which `build-governance-seed.mjs` uses: it rewrites a corpus's local relation-type
+definitions for core keys to the core ones (the-greenman/srs-rust#1447). Behaviour does not change:
+core already governs resolution and validation for a core key that a local definition shadows
+(RFC-048 [R11]). `delegates` is not a core key and is carried unchanged.
+
 **v1.2.2** (srs#947): republish of 1.2.1's `package/` (byte-for-byte identical) whose **seed**
 (`seed/empty-governance-document.srsj`) shipped with the wrong root container id.
 `scripts/build-governance-seed.mjs`'s `SEED_REPOSITORY_ID` constant — which becomes both
