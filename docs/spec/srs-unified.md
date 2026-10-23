@@ -2696,7 +2696,7 @@ A checksum value in `InstanceIndexEntry.checksum`, `SourceDocumentIndexEntry.sid
 
 **Number**: I-79
 
-The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants.
+The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants. Amended by RFC-052 Revision 5 (the-greenman/srs#953, owner rulings 2026-10-23): from revision 10 a repository always has exactly one root container. Setting the root changes only `manifest.rootContainerId`, accepts only a container already in the container set, and changes no container: the promoted container and the previous root keep their own titles, `identityInstanceId` and entries, and the previous root stays an ordinary container. Setting it to an id that names no container, or unsetting it, is refused, writing nothing (`manifest-root-container-missing`).
 
 
 ##### Root container membership ids resolve in the authoritative instance set
@@ -2821,6 +2821,10 @@ The manifest is a descriptor, not an index. It carries no `instanceIndex` and no
 The manifest's `rootContainerId` names the repository's required root Container (RFC-013, RFC-052): a Container stored at `containers/<rootContainerId>.json` like every other container. Its `identityInstanceId` names the repository's identity Record, and every other member is a navigation section.
 
 The root Container's order is navigation order: navigation is the order of the root Container's `memberInstanceIds` entries, excluding the entry named by `identityInstanceId`, with depth-0 entries as the navigation sections and deeper entries nested under their derived parent ([R12]). Navigation is not derived from the `precedes` chain or Rule [N+12], and the identity entry is at depth 0 with no descendants ([R2]).
+
+From revision 10 a repository always has exactly one root Container (RFC-052 [R1], [R8]). Setting the root is pointer-only: it changes only `rootContainerId`, to name a Container already in the container set, and changes no Container. The promoted Container and the previous root keep their own titles, identity Records and entries, and the previous root stays an ordinary Container. Setting the root to an id that names no Container, or unsetting it, is refused, writing nothing (`manifest-root-container-missing`). To rename a root, create a Container and point at it; changing a root's title, identity or members is an ordinary Container edit.
+
+A corpus still to be migrated to revision 10 is recognised by the `dataModelRevision` its manifest declares (9 or lower), never by the manifest's shape: it is reported as `container-migration-needed` and refused for every other operation, even when it already names its root by `rootContainerId` (RFC-052 [R7]). The migration refuses, before any write, a revision-9 manifest that declares no root Container (`migration-root-missing`).
 
 ###### `RepositoryManifest`
 

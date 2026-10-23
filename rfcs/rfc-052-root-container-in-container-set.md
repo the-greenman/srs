@@ -2,7 +2,7 @@
 
 # RFC-052: The root container is stored in the container set
 
-**Status**: Accepted (Revision 4)
+**Status**: Accepted (Revision 5)
 **Affects**:
 - **Schemas:** `manifest.json` (`container` → `rootContainerId`); `srsj-envelope.json` (its embedded manifest); three descriptions in `container.json`.
 - **RFC-013 (Accepted, Revision 8):** [R1] is amended and [R9] is withdrawn (Door 3).
@@ -18,7 +18,7 @@
 - **Coordinated:** RFC-050 (Draft) names `manifest.container` in one example and reads the same way.
 - **Revision:** `dataModelRevision` 10.
 
-Answers SP-30. Split from RFC-051 (the-greenman/srs#940), where it was ruling 2. Implementation: the-greenman/srs-rust#1417 (lands before srs-rust#1414).
+Answers SP-30. Split from RFC-051 (the-greenman/srs#940), where it was ruling 2. Implementation: the-greenman/srs-rust#1417 (lands before srs-rust#1414); Revision 5: the-greenman/srs-rust#1453.
 **Author**: design draft; owner ruling 2026-10-20 on #940: "worth the cost as long as this happens soon and is not lost"
 **Date**: 2026-10-20
 
@@ -29,6 +29,7 @@ Answers SP-30. Split from RFC-051 (the-greenman/srs#940), where it was ruling 2.
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-10-20 | Split from RFC-051 Revision 9 (Change I and [R16]). |
+| 5 | 2026-10-23 | **Door 3 amendment, owner rulings of 2026-10-23** (on the-greenman/srs-rust#1440, answers A1 and A2 and the root swap, and on the-greenman/srs#953, rulings 1 and 2; challenger review N1 and N3 on srs-rust#1440). (1) [R7]: an older corpus is detected by its declared `dataModelRevision` (9 or lower), never by the shape of its manifest. (2) Setting the root is pointer-only: it changes only `rootContainerId`, accepts only an existing container, and leaves every container as it was; the previous root stays an ordinary container (Change D, [R8]). (3) The migration refuses, before any write, a revision-9 manifest that declares no root container (`migration-root-missing`, Change C, [R7]). (4) Unsetting the root is refused at revision 10 with `manifest-root-container-missing`, writing nothing: from revision 10 a repository always has exactly one root container ([R1], [R8]). Implementation: the-greenman/srs-rust#1453. |
 | 4 | 2026-10-20 | **Accepted by the owner** (2026-10-20, the-greenman/srs#941). The spec-side change lands in two phases, as RFC-043 did. Now: this text, the Door 3 amendment notes, the gated invariant and mechanism records, the successor decision record and the doc updates; the schema files are staged under `docs/schema/staged/rfc-052/`. Later, in one PR after srs-rust#1417 ships revision 10: the corpus migration, the metamodel Field change, the schema promotion and the pin advance. No normative rule changes in this revision. |
 | 3 | 2026-10-20 | Final check: RFC-038 Change K's sentence keeping `manifest.container` inline and canonical is withdrawn explicitly. |
 | 2 | 2026-10-20 | Review (#941). **Blocking, fixed:** [R1] and [R7] gave contradictory migration status; a revision-10 manifest carrying `container` is now its own error. **Should-fix, fixed:** the root's file name is fixed; the migration is specified (registry entry, ordering, refusals); RFC-038 Change F and Change K are amended explicitly; [R4]'s cascade is a MUST and its scope is stated; the missing readers and the metamodel Field are listed; the schema table is completed; prior texts are quoted; the single-cutover sentence is resolved; Door 3 is named; the governance seeds are handled. |
@@ -106,8 +107,12 @@ Each rule below is marked NEW, CHANGED or REMOVED, and quotes its prior text.
 
 ### Change C — Migration
 
-The migration is a registry entry, `rfc052-root-container`, that operates on the raw tree. It is ordered after the revision-9 (RFC-046) entry. A corpus at revision 7 or 8 reaches it through the existing chain. For each manifest it:
-1. **refuses before any write** if `containers/<containerId>.json` already exists (`migration-root-path-exists`), or if any container file already declares the root's `containerId` (`migration-root-duplicate`, already fatal under RFC-013 [R9]);
+The migration is a registry entry, `rfc052-root-container`, that operates on the raw tree. It is ordered after the revision-9 (RFC-046) entry. A corpus at revision 7 or 8 reaches it through the existing chain.
+
+A corpus needs the migration when its manifest **declares** `dataModelRevision` 9 or lower (absent counts as 0, RFC-033). Detection reads the declared revision only, never the manifest's shape: a revision-9 manifest that already names a root by `rootContainerId`, or names no root at all, still needs the migration and is refused for every other operation (structure is declared, never inferred; owner ruling 1 on srs#953). Test fixtures at older revisions are restamped through the migration ladder, never by hand.
+
+For each manifest the migration:
+1. **refuses before any write** if the manifest declares no root container (`migration-root-missing`), if `containers/<containerId>.json` already exists (`migration-root-path-exists`), or if any container file already declares the root's `containerId` (`migration-root-duplicate`, already fatal under RFC-013 [R9]);
 2. writes the root to `containers/<containerId>.json`, removes `container`, writes `rootContainerId`, and stamps revision 10.
 
 `.srsj`, `.srs` and bundle forms are migrated by a pre-load transformer to the same outcome. The gate is that navigation order, identity resolution and every Composition's rendered output are byte-identical before and after. The migration is all-or-nothing, and re-running it reports `alreadyApplied`.
@@ -115,6 +120,19 @@ The migration is a registry entry, `rfc052-root-container`, that operates on the
 **Published package seeds** (`com.mudemocracy.governance` 1.0.0–1.2.1) are immutable published versions, so they are not rewritten. The pre-load transformer migrates them on load.
 
 **Pre-existing, outside this RFC:** those seeds' root id (`e2e8489a…`) differs from RFC-025 [R1]'s `54432eb2…`. This is reported separately.
+
+### Change D — Setting and unsetting the root
+
+From revision 10 a repository always has exactly one root container ([R1]).
+
+**Setting the root is pointer-only** (owner ruling 2 on srs#953; "we can swap roots, the old root is just a container", srs-rust#1440):
+- It changes only `manifest.rootContainerId`, to name another container that already exists in the container set.
+- The promoted container keeps its own title, identity record (`identityInstanceId`) and members; nothing is copied into it from the previous root.
+- The previous root keeps its own title, identity record and members, and stays an ordinary container of the container set. Swapping back restores the first state exactly.
+- An id that names no container is refused, writing nothing (`manifest-root-container-missing`, the same condition [R1] makes fatal to a load). To "rename" a root, create a new container and point at it; the previous root's id stays valid, so nothing that names it is left dangling.
+- Changing a root's title, identity record or members is an ordinary container edit, never a side effect of setting the root.
+
+**Unsetting the root is refused**, writing nothing (`manifest-root-container-missing`, owner answer A1 on srs-rust#1440): a manifest without `rootContainerId` cannot load ([R1]). To change the root, set it to another container.
 
 ---
 
@@ -133,12 +151,13 @@ The migration is a registry entry, `rfc052-root-container`, that operates on the
   - every implementation's manifest loader.
 - **Records:** I-79, I-87, mechanism-027b1fa3, mechanism-1ca691f3, mechanism-3d8fa08c and rfc-0c185e05 are reworded at the fold.
 - **Payloads and APIs:** nothing breaks, because every adapter already presents the root as a Container.
+- **Setting the root (Revision 5):** an operation that also rewrote the promoted container's title, identity or members, or that renamed the root to a new id and removed the old root's file, narrows to the pointer-only rule of Change D (the-greenman/srs-rust#1453).
 
 ---
 
 ## Conformance Rules
 
-> **[R1]** At `dataModelRevision` 10 a manifest MUST carry `rootContainerId`, the `containerId` of a container in the container set, and MUST NOT carry `container`. A `rootContainerId` that is absent or names no container MUST be an error fatal to the load (`manifest-root-container-missing`). A revision-10 manifest that carries `container` MUST be an error fatal to the load (`manifest-root-container-inline`). *(Amends RFC-013 [R1].)*
+> **[R1]** At `dataModelRevision` 10 a manifest MUST carry `rootContainerId`, the `containerId` of a container in the container set, and MUST NOT carry `container`. A `rootContainerId` that is absent or names no container MUST be an error fatal to the load (`manifest-root-container-missing`). A revision-10 manifest that carries `container` MUST be an error fatal to the load (`manifest-root-container-inline`). From revision 10 a repository therefore always has exactly one root container. *(Amends RFC-013 [R1].)*
 >
 > **[R2]** Every rule of an accepted RFC that names `manifest.container` MUST be read as naming the container that `manifest.rootContainerId` names. *(The rules are listed in the header.)*
 >
@@ -150,20 +169,22 @@ The migration is a registry entry, `rfc052-root-container`, that operates on the
 >
 > **[R6]** Deleting the container that `rootContainerId` names MUST be refused, changing nothing (`container-root-delete`).
 >
-> **[R7]** A binary supporting only revision 9 or lower MUST refuse a revision-10 corpus. A revision-10 binary MUST report a revision-9-or-lower corpus as needing the registry migration (`container-migration-needed`, naming RFC-052 and `rfc052-root-container`), and MUST refuse other operations. The migration MUST:
-> - refuse before any write on `migration-root-path-exists` or `migration-root-duplicate`;
+> **[R7]** A binary supporting only revision 9 or lower MUST refuse a revision-10 corpus. A revision-10 binary MUST report a corpus whose manifest declares `dataModelRevision` 9 or lower as needing the registry migration (`container-migration-needed`, naming RFC-052 and `rfc052-root-container`), and MUST refuse other operations. The declared revision decides: an implementation MUST NOT infer a corpus's generation from its manifest's shape, so a revision-9 manifest that names its root by `rootContainerId`, or names none, is still reported. The migration MUST:
+> - refuse before any write on `migration-root-missing` (a revision-9 manifest that declares no root container), `migration-root-path-exists` or `migration-root-duplicate`;
 > - write the root at `containers/<containerId>.json`;
 > - pass Change C's gate;
 > - be all-or-nothing;
 > - report `alreadyApplied` on a revision-10 corpus.
 >
+> **[R8]** Setting the root container MUST change only `rootContainerId`, and MUST accept only the `containerId` of a container already in the container set; any other id MUST be refused, writing nothing (`manifest-root-container-missing`). It MUST NOT change any container: the promoted container and the previous root keep their own titles, `identityInstanceId` and entries, and the previous root stays an ordinary container. Unsetting the root at revision 10 MUST be refused, writing nothing (`manifest-root-container-missing`).
+>
 > | Code | Severity | Load |
 > |---|---|---|
-> | `manifest-root-container-missing` | error | fatal |
+> | `manifest-root-container-missing` | error; also a rejected operation ([R8]: unsetting the root, or setting it to an id that names no container) | fatal to a load; the operation writes nothing |
 > | `manifest-root-container-inline` | error | fatal |
 > | `container-migration-needed` | error | fatal; only the migration runs |
 > | `container-root-delete` | rejected operation | none; nothing is written |
-> | `migration-root-path-exists`, `migration-root-duplicate` | migration refusal | nothing is written |
+> | `migration-root-missing`, `migration-root-path-exists`, `migration-root-duplicate` | migration refusal | nothing is written |
 
 ---
 
