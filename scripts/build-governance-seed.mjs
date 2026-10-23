@@ -56,7 +56,8 @@ const SEED_PATH = join(SEED_DIR, 'empty-governance-document.srsj');
 const PACKAGE_ID = '1cd9622e-3d05-4214-a683-4cb81d0c44d9';
 const PACKAGE_NAMESPACE = 'com.mudemocracy.governance';
 const PACKAGE_NAME = 'governance';
-// RFC-025 [R1]: the seed MUST ship manifest.container.containerId (and, since this id also
+// RFC-025 [R1]: the seed MUST ship its root container id (manifest.rootContainerId from revision 10,
+// RFC-052; manifest.container.containerId before) (and, since this id also
 // becomes the scaffolded repo's repositoryId, manifest.repositoryId) equal to this fixed,
 // provenance-anchored UUID. srs#947: this constant previously carried a different UUID
 // (e2e8489a-5ada-4309-9b26-90ccc263146d), so every seed published before the fix is
@@ -67,7 +68,7 @@ const STAMP_TIME = '2026-01-01T00:00:00Z';
 // the current data-model generation (docs/schema/2.0/manifest.json's
 // dataModelRevision description) so the seed doesn't ship pre-declared as an
 // older, narrower generation than the shapes it actually contains.
-const SEED_DATA_MODEL_REVISION = 7;
+const SEED_DATA_MODEL_REVISION = 10;
 
 // SRS_BIN wins if set (this script's own long-standing override); SRS_CLI_PATH is the shared
 // pinned-CLI convention (scripts/lib/pinned-srs.mjs, fetch-pinned-srs.mjs) so a caller that already
@@ -115,9 +116,16 @@ function build(outPath) {
       // instanceIndex ([R2] denies it) and declares the storage generation the
       // package is at ([R21] rejects an absent revision as generation 0).
       dataModelRevision: SEED_DATA_MODEL_REVISION,
+      // RFC-052 [R1]: from revision 10 the manifest names the root container, stored in containers/.
+      rootContainerId: SEED_REPOSITORY_ID,
       createdAt: STAMP_TIME,
     };
     writeFileSync(join(repo, 'manifest.json'), `${JSON.stringify(sourceManifest, null, 2)}\n`);
+    mkdirSync(join(repo, 'containers'), { recursive: true });
+    writeFileSync(
+      join(repo, 'containers', `${SEED_REPOSITORY_ID}.json`),
+      `${JSON.stringify({ containerId: SEED_REPOSITORY_ID, title: sourceManifest.title }, null, 2)}\n`,
+    );
 
     // 2. Export to a self-contained .srsj bundle (package definitions inlined)
     //    via the sanctioned `srs repo copy` path.

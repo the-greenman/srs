@@ -38,12 +38,13 @@ try {
   process.exit(1);
 }
 
-const containerId = doc.manifest?.container?.containerId;
+// RFC-052 [R1]: the current seed is at dataModelRevision 10, so the manifest names its root by rootContainerId.
+const containerId = doc.manifest?.rootContainerId;
 const repositoryId = doc.manifest?.repositoryId;
 
 const problems = [];
 if (containerId !== REQUIRED_CONTAINER_ID) {
-  problems.push(`manifest.container.containerId is ${JSON.stringify(containerId)}, expected ${JSON.stringify(REQUIRED_CONTAINER_ID)} (RFC-025 [R1])`);
+  problems.push(`manifest.rootContainerId is ${JSON.stringify(containerId)}, expected ${JSON.stringify(REQUIRED_CONTAINER_ID)} (RFC-025 [R1])`);
 }
 if (repositoryId !== REQUIRED_CONTAINER_ID) {
   problems.push(`manifest.repositoryId is ${JSON.stringify(repositoryId)}, expected ${JSON.stringify(REQUIRED_CONTAINER_ID)} (RFC-025 [R1] — the seed's scaffolded repositoryId must match the root container it ships)`);
@@ -56,4 +57,4 @@ if (problems.length) {
 }
 
 console.log(`✓ ${rel} (CURRENT version ${version}) ships the RFC-025 [R1] root container id ${REQUIRED_CONTAINER_ID}.`);
-console.log('  (packages/com.mudemocracy.governance/{1.0.0,1.1.0,1.2.0,1.2.1} are prior published history and are exempt — srs#947.)');
+console.log('  (packages/com.mudemocracy.governance/{1.0.0,1.1.0,1.2.0,1.2.1,1.2.2} are prior published history and are exempt — srs#947, srs#948.)');

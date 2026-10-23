@@ -23,6 +23,7 @@ import { existsSync } from "fs";
 import { join, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadSchema, validateJsonSchema } from "./lib/json-schema-lite.mjs";
+import { latestGovernanceVersion } from "./lib/governance-versions.mjs";
 
 const HERE = resolve(fileURLToPath(new URL(".", import.meta.url)));
 const REPO = resolve(HERE, "..");
@@ -31,6 +32,17 @@ const SCHEMA_PATH = join(REPO, "docs/schema/2.0/srsj-envelope.json");
 // RFC-038: "core-bundle.srsj is a package bundle with no data/manifest envelope at all, so the
 // .srsj membership rule does not apply to it" — the one named, permanent exclusion from this check.
 const EXCLUDED = new Set([join(REPO, "packages/com.semanticops.core/1.0.0/core-bundle.srsj")]);
+
+// RFC-052 Change C (srs#948, owner ruling 2026-10-23): a published com.mudemocracy.governance seed
+// below dataModelRevision 10 is immutable history. It is never rewritten and opens through the
+// loader's in-memory migration, so it is not held to this revision's envelope schema. Narrow on
+// purpose: only a non-current version, only below revision 10. The CURRENT version is always checked.
+const GOVERNANCE = join(REPO, "packages/com.mudemocracy.governance");
+const CURRENT_GOVERNANCE = latestGovernanceVersion(REPO);
+const isPublishedHistoryBelow10 = (path, doc) => {
+  const m = path.slice(GOVERNANCE.length + 1).match(/^(\d+\.\d+\.\d+)\/seed\/[^/]+\.srsj$/);
+  return path.startsWith(GOVERNANCE + "/") && !!m && m[1] !== CURRENT_GOVERNANCE && (doc?.manifest?.dataModelRevision ?? 0) < 10;
+};
 
 async function findSrsjFiles(dir) {
   const out = [];
@@ -73,6 +85,7 @@ if (targets.length === 0) {
 }
 
 let fail = 0;
+const historical = [];
 for (const path of targets) {
   const rel = path.slice(REPO.length + 1);
   let doc;
@@ -81,6 +94,10 @@ for (const path of targets) {
   } catch (err) {
     console.error(`  ✗ ${rel}: failed to parse JSON — ${err.message}`);
     fail++;
+    continue;
+  }
+  if (isPublishedHistoryBelow10(path, doc)) {
+    historical.push(rel);
     continue;
   }
   const errors = validateJsonSchema(doc, schema);
@@ -93,7 +110,8 @@ for (const path of targets) {
   }
 }
 
-console.log(`\nchecked ${targets.length} genuine .srsj envelope instance(s) against srsj-envelope.json`);
+console.log(`\nchecked ${targets.length - historical.length} genuine .srsj envelope instance(s) against srsj-envelope.json`);
+console.log(`exempt (published governance seed history below revision 10, RFC-052 Change C): ${historical.join(", ") || "none"}`);
 console.log(`excluded (bare package-bundle, no envelope): ${[...EXCLUDED].map((p) => p.slice(REPO.length + 1)).join(", ") || "none"}`);
 
 if (fail) {
