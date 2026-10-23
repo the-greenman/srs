@@ -1,7 +1,7 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
   "aiGuidance": {
-    "purpose": "Describes a repository Manifest: its identity, package references, root Container, and declared presentations."
+    "purpose": "Describes a repository Manifest: its identity, package references, the id of its root Container, and declared presentations."
   },
   "createdAt": "2026-07-29T00:00:00Z",
   "description": "RFC-038 — root file for an ext:repository: the repository identity and entry point. Membership is the tree (RFC-038 [R1]); the manifest carries no index.",
@@ -46,9 +46,10 @@
       "displayLabel": "Declared Extensions"
     },
     {
-      "fieldId": "4b0000a5-0000-4000-a000-0000000000a5",
+      "fieldId": "4b000117-0000-4000-a000-000000000117",
       "order": 7,
-      "required": true
+      "required": true,
+      "displayLabel": "Root Container Id"
     },
     {
       "fieldId": "4b0000aa-0000-4000-a000-0000000000aa",

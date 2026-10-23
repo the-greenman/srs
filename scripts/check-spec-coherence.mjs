@@ -20,7 +20,7 @@
  *   2. one-home              No record has two `contains` parents.
  *   3. no-orphan-leaf        Every spec content record (section, subsection, mechanism, invariant,
  *                            example, design-note, table, generated-type-reference, extension) has a
- *                            `contains` parent or is a member of the root container (manifest.container).
+ *                            `contains` parent or is a member of the root container (`containers/<manifest.rootContainerId>.json`, RFC-052).
  *   4. part-order            A Part is a non-identity member of the root container, ordered by the
  *                            `precedes` chain over those members. No `depends-on` edge may point from
  *                            an earlier Part's `contains`-subtree into a later one. Until #563 hangs
@@ -52,7 +52,7 @@ import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join, dirname, resolve, relative } from "path";
 import { fileURLToPath } from "url";
-import { entryIds } from "./lib/container-entries.mjs";
+import { entryIds, readRootContainer } from "./lib/container-entries.mjs";
 
 const ROOT = process.argv[2]
   ? resolve(process.argv[2])
@@ -92,7 +92,7 @@ const edges = (type) => relations.filter((r) => r.relationType === type);
 const manifest = existsSync(join(ROOT, "srs/manifest.json"))
   ? JSON.parse(await readFile(join(ROOT, "srs/manifest.json"), "utf8"))
   : {};
-const rootContainer = manifest.container ?? {};
+const rootContainer = readRootContainer(join(ROOT, "srs"), manifest);
 const rootMembers = new Set(entryIds(rootContainer));
 
 const name = (id) => records.get(id)?.fieldValues?.title ?? records.get(id)?.path ?? id;
@@ -261,7 +261,7 @@ const summary = {};
     }
   }
   summary["part-order"] = parts.length === 0
-    ? "no Parts declared (manifest.container has no non-identity members) — nothing to check"
+    ? "no Parts declared (the root container has no non-identity members) — nothing to check"
     : `${parts.length} Parts, ${inside} depends-on edges inside Part subtrees, ${bad} pointing forward` +
       (inside === 0 ? " — vacuous until #563 hangs the concept tree under the Parts" : "");
 }

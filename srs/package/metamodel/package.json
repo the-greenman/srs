@@ -1,7 +1,7 @@
 {
   "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
   "createdAt": "2026-07-29T00:00:00Z",
-  "dataModelRevision": 8,
+  "dataModelRevision": 10,
   "description": "The self-hosted SRS meta-model (RFC-033/RFC-040): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.",
   "fields": [
     "fields/id.json",
@@ -163,7 +163,6 @@
     "fields/data_model_revision.json",
     "fields/repository_id.json",
     "fields/declared_extensions.json",
-    "fields/container.json",
     "fields/package_ref_mode.json",
     "fields/path.json",
     "fields/package_id.json",
@@ -273,7 +272,8 @@
     "fields/depth.json",
     "fields/source.json",
     "fields/label_mode.json",
-    "fields/readme.json"
+    "fields/readme.json",
+    "fields/root_container_id.json"
   ],
   "id": "4a000004-0000-4000-a000-000000000004",
   "name": "metamodel",

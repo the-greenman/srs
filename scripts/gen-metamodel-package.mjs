@@ -386,7 +386,8 @@ const FIELD_SPECS = [
   [162, 'data_model_revision', { datatype: 'integer', constraints: { minimum: 0 } }, 'RFC-033/#265 — monotonic integer generation stamp for operational data-model migrations. Absent means revision 0.'],
   [163, 'repository_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID for this repository (or, on a Slice, the source repository it was exported from). Never changes on copy or export.'],
   [164, 'declared_extensions', { datatype: 'string', cardinality: 'list' }, 'SRS extensions this repository conforms to, e.g. [\'ext:lifecycle\', \'ext:views-l1\'].'],
-  [165, 'container', ref('container', 'inline', 'single'), 'Embedded Container record — canonical source of truth for this repository\'s identity.'],
+  // 165: `container` — RETIRED, never reused (append-only numbering). RFC-052 [R1]: the inline root
+  // container leaves the manifest at dataModelRevision 10; `root_container_id` (279) names it instead.
   [166, 'package_ref_mode', closed(['local', 'remote']), 'LOCATOR (rfc-decision-c8704763). local: definitions live in the repository under package/. remote: pre-installed in the consumer\'s registry.'],
   [167, 'path', { datatype: 'string' }, 'Relative path to a file within the artifact that holds it.'],
   [168, 'package_id', { datatype: 'string', format: 'uuid' }, 'Stable UUID of a package.'],
@@ -525,6 +526,8 @@ const FIELD_SPECS = [
   [275, 'label_mode', closed(['inline', 'none']), "RFC-037 Revision 5. FieldView.labelMode, presentation only (Invariant 13). 'inline' (the default) carries the row's resolved label; 'none' emits the value alone, with no label and no separating colon."],
   // -- RFC-045 (srs#858): the optional readme a .srsj envelope (and a package bundle) carries.
   [278, 'readme', ref('bundled-readme', 'inline', 'single'), "RFC-045 [R2]: an optional readme carried by a travelling form, its actual path within the artifact and its UTF-8 text. Opaque: no model fact is derived from it ([R1])."],
+  // -- RFC-052 (srs#941): the manifest names its root container, stored in the container set.
+  [279, 'root_container_id', { datatype: 'string', format: 'uuid' }, "RFC-052 [R1]: the containerId of the repository's root container, a Container in the container set (containers/) that is the repository's identity object and the top of structural navigation (RFC-013)."],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -1057,12 +1060,12 @@ const TYPE_SPECS = {
   },
   manifest: {
     description: 'RFC-038 — root file for an ext:repository: the repository identity and entry point. Membership is the tree (RFC-038 [R1]); the manifest carries no index.',
-    purpose: 'Describes a repository Manifest: its identity, package references, root Container, and declared presentations.',
+    purpose: 'Describes a repository Manifest: its identity, package references, the id of its root Container, and declared presentations.',
     assignments: [
       a('srs_version', true, 'Srs Version'), a('data_model_revision', false, 'Data Model Revision'),
       a('repository_id', true, 'Repository Id'), a('namespace', false),
       a('title', true), a('description', false), a('declared_extensions', false, 'Declared Extensions'),
-      a('container', true), a('package_ref', false, 'Package Ref'), a('package_refs', false, 'Package Refs'),
+      a('root_container_id', true, 'Root Container Id'), a('package_ref', false, 'Package Ref'), a('package_refs', false, 'Package Refs'),
       a('upstream_package', false, 'Upstream Package'), a('source_documents_path', false, 'Source Documents Path'),
       a('repository_ai_guidance', false, 'Ai Guidance'), a('rendered_presentations', false, 'Rendered Presentations'),
       a('slice', false), a('created_at', true), a('updated_at', false, 'Updated At'),
@@ -1349,7 +1352,7 @@ function packageIndex() {
     // migration #2 (toRevision 2); this train's definition-layer removals under reject-unknown
     // (defaultValue both sites, deprecatedAt) and additions (FieldAssignment.description,
     // Type.lineage/provenance) are migration #3, stamped once here at Unit 1 landing.
-    dataModelRevision: 8,
+    dataModelRevision: 10,
     description: 'The self-hosted SRS meta-model (RFC-033/RFC-040): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.',
     fields: FIELD_SPECS.map(([, name]) => `fields/${name}.json`),
     id: PACKAGE_ID,

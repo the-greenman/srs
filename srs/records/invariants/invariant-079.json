@@ -6,10 +6,10 @@
   "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "I-79",
-    "title": "manifest.container is required and satisfies core Container invariants 20-21",
-    "normative_statement": "The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941; effective at dataModelRevision 10): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants."
+    "title": "manifest.rootContainerId is required; the root container satisfies core Container invariants 20-21",
+    "normative_statement": "The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants."
   },
   "createdAt": "2026-06-28T14:37:38.745409348+00:00",
-  "updatedAt": "2026-10-20T16:46:39.811474301+00:00",
+  "updatedAt": "2026-10-23T12:06:40.267277696+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

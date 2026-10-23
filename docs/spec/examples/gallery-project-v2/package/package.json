@@ -5,7 +5,7 @@
   ],
   "createdAt": "2026-01-01T00:00:00Z",
   "description": "",
-  "dataModelRevision": 8,
+  "dataModelRevision": 10,
   "fields": [
     "fields/title-d7e82557.json",
     "fields/decisionstatement-de1296e0.json",
