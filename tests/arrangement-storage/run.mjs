@@ -8,7 +8,10 @@
  *      [R3]; `null` deletes the path); `given.flatten` turns every container back into its revision-10
  *      flat file (the logical form `container get` reports) and stamps the manifest 10;
  *   2. `git` (optional) commits that tree, runs each branch's `steps` on its own branch, then merges
- *      the second branch into the first with plain git;
+ *      the second branch into the first twice: with rename detection off (`merge.renames=false`),
+ *      which is RFC-051 [R10]'s per-path merge and is what `expect.merge` and the expectations
+ *      check; and with stock git, which MAY conflict more (`expect.stockMerge: "conflict"` requires
+ *      it to) but, when clean, MUST give the same outlines;
  *   3. `steps` run in order (`cli` arguments without `--repo`, optional `expect` on the envelope by
  *      dotted path);
  *   4. `expect` is checked: `merge`, `outline` (container get), `writes` (the exact set of container
@@ -130,20 +133,33 @@ for (const raw of doc.scenarios) {
         git(repo, ["commit", "-q", "--no-gpg-sign", "--allow-empty", "-m", branch]);
       }
       const [into, from] = sc.git.merge;
+      const outlines = () =>
+        Object.fromEntries(Object.keys(sc.expect.outline ?? {}).map((cid) => [cid, srs(repo, ["container", "get", cid]).payload?.container?.memberInstanceIds ?? null]));
+      // 1. Stock git (rename detection on). [R10]: it MAY conflict more than the per-path rule,
+      //    but a clean result MUST equal the per-path result checked below.
+      git(repo, ["checkout", "-q", "-b", "stock", into]);
+      const stockClean = git(repo, ["merge", "-q", "--no-edit", "--no-gpg-sign", from], false);
+      const stockOutlines = stockClean ? outlines() : null;
+      if (!stockClean) git(repo, ["merge", "--abort"]);
+      // 2. The per-path merge [R10] defines: git with rename detection off.
       git(repo, ["checkout", "-q", into]);
-      const clean = git(repo, ["merge", "-q", "--no-edit", "--no-gpg-sign", from], false);
+      const clean = git(repo, ["-c", "merge.renames=false", "merge", "-q", "--no-edit", "--no-gpg-sign", from], false);
       const want = sc.expect.merge;
-      if (want === "clean" && !clean) problems.push("the merge conflicted, expected a clean merge");
-      if (want === "conflict" && clean) problems.push("the merge was clean, expected a visible conflict");
-      // [R10]: a merge MAY conflict more than the per-path rule, but a clean result MUST equal it.
+      if (want === "clean" && !clean) problems.push("the per-path merge conflicted, expected a clean merge");
+      if (want === "conflict" && clean) problems.push("the per-path merge was clean, expected a conflict");
+      if (sc.expect.stockMerge === "conflict" && stockClean) problems.push("stock git merged cleanly, expected a visible conflict");
+      if (stockClean && clean && JSON.stringify(stockOutlines) !== JSON.stringify(outlines())) {
+        problems.push(`stock git merged cleanly to ${JSON.stringify(stockOutlines)}, which differs from the per-path result ${JSON.stringify(outlines())}`);
+      }
       if (!clean) {
-        if (problems.length === 0) console.log(`  ✓ ${sc.name} (merge conflicted)`);
+        if (problems.length === 0) console.log(`  ✓ ${sc.name} (per-path conflict${stockClean ? "" : "; stock git conflicts too"})`);
         else {
           failures++;
           console.error(`  ✗ ${sc.name}\n${problems.map((p) => `      ${p}`).join("\n")}`);
         }
         continue;
       }
+      if (!stockClean) console.log(`    (${sc.name}: stock git conflicts, which [R10] allows)`);
     }
     const before = snapshot(repo);
     runSteps(repo, sc.steps, problems);

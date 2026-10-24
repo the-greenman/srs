@@ -36,7 +36,7 @@ scenarios covering every case in RFC-051's conformance fixture list, run against
 by `tests/arrangement-storage/run.mjs` (registered as `arrangement-storage-conformance`, tier
 `pinned-cli`, run in Release Drift). Each scenario works on a fresh copy of `fixture-repo/`: it writes
 its `given` files into a scratch container (`0a0000c5-...`), runs CLI steps (and, for the merge cases,
-plain `git` branches and a merge), then checks the outline, the exact files written with their
+plain `git` branches merged twice: per path, with rename detection off, as RFC-051 [R10] defines, and with stock git, which may conflict more but must agree when clean), then checks the outline, the exact files written with their
 bytes, the `repo validate` diagnostics or the fatal load code. Expectations were captured from
 v0.1.0-build.554 and checked against the rule each cites.
 
@@ -49,8 +49,8 @@ v0.1.0-build.554 and checked against the rule each cites.
 | add/add, with equal and with different values | `add_add_equal_merges_cleanly`, `add_add_different_conflicts` |
 | a dangling pointer | `dangling_pointer_is_a_validation_error` |
 | a container deleted against an added entry | `container_deleted_against_an_added_entry`, `headless_directory_is_a_warning` |
-| rename pairing | `rename_pairing_is_a_visible_conflict` |
-| rename/delete and rename/rename | `rename_delete`, `rename_rename` (git MAY conflict; a clean result MUST equal the per-path one, [R10]) |
+| rename pairing | `rename_pairing_is_a_visible_conflict` (per path a delete/modify conflict; stock git pairs the files as a rename and conflicts in the new file: visible either way) |
+| rename/delete and rename/rename | `rename_delete`, `rename_rename` (clean per path; stock git conflicts, which [R10] allows, and a clean stock result would have to equal the per-path one) |
 | write sets with tie runs | `write_set_tie_placed_by_instance_id`, `write_set_tie_rekeys_the_run_after_the_place` |
 | detached entries followed by an operation | `detached_entries_followed_by_an_operation` ([R8], Revision 15, the-greenman/srs#954) |
 | deterministic migration | `migration_is_deterministic` (the fixture's flat outlines migrate to the committed directories byte for byte) |

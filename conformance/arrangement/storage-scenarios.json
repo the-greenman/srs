@@ -1,5 +1,5 @@
 {
-  "$comment": "RFC-051 (per-entry container storage, dataModelRevision 11) conformance scenarios, run against the pinned srs CLI by tests/arrangement-storage/run.mjs (srs#949). Each scenario works on a fresh copy of fixture-repo. Ids are written $NAME and resolved from `ids`; the record ids are the fixture's, whose byte order is ZETA < EPS < GAMMA < ETA < BETA < DELTA < ALPHA. `case` names the RFC-051 conformance fixture case the scenario covers. Expectations were captured from v0.1.0-build.554 and checked against the rule each cites.",
+  "$comment": "RFC-051 (per-entry container storage, dataModelRevision 11) conformance scenarios, run against the pinned srs CLI by tests/arrangement-storage/run.mjs (srs#949). A git scenario's `merge` is the per-path merge of RFC-051 [R10] (git with merge.renames=false); stock git is also run and, when clean, must agree; `stockMerge: conflict` requires stock git to conflict too. Each scenario works on a fresh copy of fixture-repo. Ids are written $NAME and resolved from `ids`; the record ids are the fixture's, whose byte order is ZETA < EPS < GAMMA < ETA < BETA < DELTA < ALPHA. `case` names the RFC-051 conformance fixture case the scenario covers. Expectations were captured from v0.1.0-build.554 and checked against the rule each cites.",
   "ids": {
     "C": "0a0000c5-0000-4000-8000-000000000001",
     "OUTLINE": "0a0000c1-0000-4000-8000-000000000001",
@@ -1232,7 +1232,8 @@
         ]
       },
       "expect": {
-        "merge": "conflict"
+        "merge": "conflict",
+        "stockMerge": "conflict"
       }
     },
     {
@@ -1334,7 +1335,7 @@
         "R10"
       ],
       "case": "rename pairing",
-      "description": "One branch removes ALPHA and appends GAMMA (a similar one-line file); the other moves ALPHA after BETA. With one-line files git never pairs them as a rename that would land the move on GAMMA: the delete against the modify is a visible conflict.",
+      "description": "One branch removes ALPHA and appends GAMMA (a similar one-line file); the other moves ALPHA after BETA. Per path, ALPHA is deleted against modified: a conflict. Stock git pairs the two files as a rename and reports the conflict in GAMMA's file instead; either way it is visible, never a clean merge that lands the move on GAMMA.",
       "given": {
         "files": {
           "containers/$C/container.json": {
@@ -1395,7 +1396,8 @@
         ]
       },
       "expect": {
-        "merge": "conflict"
+        "merge": "conflict",
+        "stockMerge": "conflict"
       }
     },
     {
@@ -1404,7 +1406,7 @@
         "R10"
       ],
       "case": "rename/delete and rename/rename",
-      "description": "One branch removes ALPHA and appends GAMMA; the other removes ALPHA. Per path this is clean (ALPHA removed on both sides, GAMMA added on one); git MAY report a conflict, but a clean result MUST be BETA, GAMMA.",
+      "description": "One branch removes ALPHA and appends GAMMA; the other removes ALPHA. Per path this is clean (ALPHA removed on both sides, GAMMA added on one) and gives BETA, GAMMA. Stock git, pairing ALPHA and GAMMA as a rename, MAY report a conflict (it does, as rename/delete), but a clean result MUST be the same.",
       "given": {
         "files": {
           "containers/$C/container.json": {
@@ -1463,7 +1465,7 @@
         ]
       },
       "expect": {
-        "merge": "clean-or-conflict",
+        "merge": "clean",
         "outline": {
           "$C": [
             {
@@ -1482,7 +1484,7 @@
         "R10"
       ],
       "case": "rename/delete and rename/rename",
-      "description": "One branch removes ALPHA and appends GAMMA; the other removes ALPHA and appends DELTA. Per path this is clean; git MAY report a conflict, but a clean result MUST be BETA, GAMMA, DELTA (equal keys a2, by instanceId).",
+      "description": "One branch removes ALPHA and appends GAMMA; the other removes ALPHA and appends DELTA. Per path this is clean and gives BETA, GAMMA, DELTA (equal keys a2, by instanceId). Stock git MAY report a rename/rename conflict (it does), but a clean result MUST be the same.",
       "given": {
         "files": {
           "containers/$C/container.json": {
@@ -1550,7 +1552,7 @@
         ]
       },
       "expect": {
-        "merge": "clean-or-conflict",
+        "merge": "clean",
         "outline": {
           "$C": [
             {

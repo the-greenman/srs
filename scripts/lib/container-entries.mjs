@@ -10,7 +10,7 @@
 // `parent` or `key` ([R5]).
 //
 // ponytail: a JS port of the decode, kept as the bridge #968 A1 recorded; the readers move onto the
-// pinned srs CLI once their guard fixtures are CLI-loadable repositories (see srs#949).
+// pinned srs CLI once their guard fixtures are CLI-loadable repositories (srs#970).
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
