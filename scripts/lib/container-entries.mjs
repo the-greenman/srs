@@ -67,7 +67,7 @@ function readStored(repoDir, name) {
   const head = readJson(join(full, "container.json"));
   const entriesDir = join(full, "entries");
   const stored = existsSync(entriesDir)
-    ? readdirSync(entriesDir).filter((n) => n.endsWith(".json")).sort().map((n) => readJson(join(entriesDir, n)))
+    ? readdirSync(entriesDir).filter((n) => n.endsWith(".json")).map((n) => readJson(join(entriesDir, n)))
     : [];
   return { path: `containers/${name}/container.json`, container: { ...head, memberInstanceIds: decodeEntries(stored) } };
 }
@@ -78,8 +78,9 @@ export function listContainers(repoDir) {
   const dir = join(repoDir, "containers");
   if (!existsSync(dir)) return [];
   const out = [];
-  for (const name of readdirSync(dir).sort()) {
-    if (!name.endsWith(".json") && !statSync(join(dir, name)).isDirectory()) continue;
+  for (const e of readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
+    const name = e.name;
+    if (!name.endsWith(".json") && !e.isDirectory()) continue;
     try {
       out.push(readStored(repoDir, name));
     } catch {
