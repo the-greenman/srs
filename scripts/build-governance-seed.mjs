@@ -68,7 +68,7 @@ const STAMP_TIME = '2026-01-01T00:00:00Z';
 // the current data-model generation (docs/schema/2.0/manifest.json's
 // dataModelRevision description) so the seed doesn't ship pre-declared as an
 // older, narrower generation than the shapes it actually contains.
-const SEED_DATA_MODEL_REVISION = 10;
+const SEED_DATA_MODEL_REVISION = 11;
 
 // SRS_BIN wins if set (this script's own long-standing override); SRS_CLI_PATH is the shared
 // pinned-CLI convention (scripts/lib/pinned-srs.mjs, fetch-pinned-srs.mjs) so a caller that already
@@ -121,10 +121,12 @@ function build(outPath) {
       createdAt: STAMP_TIME,
     };
     writeFileSync(join(repo, 'manifest.json'), `${JSON.stringify(sourceManifest, null, 2)}\n`);
-    mkdirSync(join(repo, 'containers'), { recursive: true });
+    // RFC-051 [R1]/[R3]: from revision 11 a container is a directory whose head is one line with
+    // keys in byte order. The seed's root has no members, so it has a head and no entries.
+    mkdirSync(join(repo, 'containers', SEED_REPOSITORY_ID), { recursive: true });
     writeFileSync(
-      join(repo, 'containers', `${SEED_REPOSITORY_ID}.json`),
-      `${JSON.stringify({ containerId: SEED_REPOSITORY_ID, title: sourceManifest.title }, null, 2)}\n`,
+      join(repo, 'containers', SEED_REPOSITORY_ID, 'container.json'),
+      `${JSON.stringify({ containerId: SEED_REPOSITORY_ID, title: sourceManifest.title })}\n`,
     );
 
     // 2. Export to a self-contained .srsj bundle (package definitions inlined)

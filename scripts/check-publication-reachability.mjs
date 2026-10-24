@@ -274,7 +274,7 @@ async function reachability(repoRoot) {
       if (!containerId || !entry) {
         fail(
           `${path} section "${section.sectionId}" is a container-subset with containerId ` +
-            `"${containerId}", which does not resolve to any containers/**/*.json file`,
+            `"${containerId}", which does not resolve to any containers/<containerId>/ directory`,
         );
         continue;
       }

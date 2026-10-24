@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 /**
- * tests/container-entries/run.mjs — the shared container reader serves both stored layouts (srs#966).
+ * tests/container-entries/run.mjs — the shared container reader decodes the revision-11 layout (srs#966, srs#949).
  *
  * 1. `decodeEntries` reproduces srs-core's RFC-051 [R5] decode vectors (container_decode.rs,
  *    srs-rust#1433): orphans, loops, detached ordering, equal keys.
- * 2. Every container of the spec corpus, re-stored in the revision-11 directory form (RFC-051 [R1]:
- *    head without memberInstanceIds + one entry per member, parent from depth, keys in entry order),
- *    reads back through `listContainers` and `readRootContainer` with the same logical form as the
- *    flat file it came from.
+ * 2. Every container of the spec corpus (stored by the CLI's migration), re-stored by the fixture
+ *    writer `storeContainer` (parent from depth, keys in entry order), reads back through
+ *    `listContainers` and `readRootContainer` with the same logical form: the guards' fixture writer
+ *    and the reader agree on the corpus.
  */
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "fs";
+import { mkdtempSync, rmSync } from "fs";
 import { tmpdir } from "os";
 import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { readFileSync } from "fs";
-import { decodeEntries, listContainers, readRootContainer } from "../../scripts/lib/container-entries.mjs";
+import { decodeEntries, listContainers, readRootContainer, storeContainer } from "../../scripts/lib/container-entries.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 let failures = 0;
@@ -45,25 +45,12 @@ same("equal keys order by instanceId byte-wise",
   decode([["b", null, "a0"], ["B", null, "a0"], ["a", null, "a0"], ["z", null, "Zz"]]),
   shape([["z", 0], ["B", 0], ["a", 0], ["b", 0]]));
 
-// 2. Round trip of the real corpus through the revision-11 layout.
-const DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const key = (i) => `b${DIGITS[Math.floor(i / 62)]}${DIGITS[i % 62]}`; // head b: two digits, 3844 keys
+// 2. Round trip of the real corpus through the fixture writer.
 const spec = join(REPO, "srs");
 const flat = listContainers(spec);
 const tmp = mkdtempSync(join(tmpdir(), "container-entries-"));
 try {
-  for (const { container } of flat) {
-    const { memberInstanceIds = [], ...head } = container;
-    const dir = join(tmp, "containers", container.containerId);
-    mkdirSync(join(dir, "entries"), { recursive: true });
-    writeFileSync(join(dir, "container.json"), JSON.stringify(head));
-    const path = []; // path[d] = the latest entry at depth d
-    memberInstanceIds.forEach(({ instanceId, depth = 0 }, i) => {
-      path[depth] = instanceId;
-      const entry = { containerId: container.containerId, instanceId, ...(depth ? { parent: path[depth - 1] } : {}), key: key(i) };
-      writeFileSync(join(dir, "entries", `${instanceId}.json`), JSON.stringify(entry));
-    });
-  }
+  for (const { container } of flat) storeContainer(tmp, container);
   // Logical equality: an absent memberInstanceIds is the empty outline, and property order is not data.
   const norm = (c) => Object.fromEntries(Object.entries({ memberInstanceIds: [], ...c }).sort(([a], [b]) => (a < b ? -1 : 1)));
   const byId = (list) => Object.fromEntries(list.map(({ container }) => [container.containerId, norm(container)]));
@@ -80,4 +67,8 @@ if (failures) {
   console.error(`\n✗ ${failures} container-entries case(s) failed`);
   process.exit(1);
 }
-console.log(`✓ container-entries: 7 decode vectors; ${flat.length} corpus containers round-trip through the revision-11 layout`);
+if (flat.length === 0) {
+  console.error("✗ container-entries: no corpus container was read");
+  process.exit(1);
+}
+console.log(`✓ container-entries: 7 decode vectors; ${flat.length} corpus containers round-trip through the fixture writer`);
