@@ -13,8 +13,8 @@
     "proposal_artifact_path": "rfcs/rfc-052-root-container-in-container-set.md",
     "content": "The manifest stops carrying the root container inline and names it by a required `rootContainerId`; the root container is stored in `containers/` like every other container and keeps every role it has (repository identity, navigation order). The manifest holds no content. Split from RFC-051 as its ruling 2 (owner: \"worth the cost as long as this happens soon and is not lost\"). Revision 5 (Door 3, owner rulings 2026-10-23, the-greenman/srs#953 and srs-rust#1440): an older corpus is detected by its declared `dataModelRevision` (9 or lower), never by shape; the migration refuses a revision-9 manifest that declares no root (`migration-root-missing`); setting the root is pointer-only (it changes only `rootContainerId`, accepts only an existing container and changes no container; the previous root stays an ordinary container); unsetting the root is refused (`manifest-root-container-missing`), so from revision 10 a repository always has exactly one root. Revision 6 (Door 3, owner answers 2026-10-24, the-greenman/srs#962 and #963): a manifest that declares revision 9 or lower but already names its root by `rootContainerId`, with the root stored, is migrated by restamping `dataModelRevision` to 10 only, after checking the root is stored, is the only root and validates; `migration-root-missing` means neither `container` nor `rootContainerId`; setting the root to an id that names no container is refused with `container-not-found`. Full text: rfcs/rfc-052-root-container-in-container-set.md."
   },
-  "lifecycleState": "accepted",
+  "lifecycleState": "implemented",
   "createdAt": "2026-10-20T16:47:01.800320980+00:00",
-  "updatedAt": "2026-10-24T09:33:18.703880950+00:00",
+  "updatedAt": "2026-10-24T11:32:58.781618571+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

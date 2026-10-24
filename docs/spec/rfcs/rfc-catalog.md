@@ -1274,7 +1274,7 @@ mechanism:package
 
 **RFC Number**: 052
 
-**Status**: Accepted
+**Status**: Implemented
 
 **Author**: Peter Brownell (owner ruling 2026-10-20, the-greenman/srs#940 ruling 2; accepted 2026-10-20, the-greenman/srs#941)
 
