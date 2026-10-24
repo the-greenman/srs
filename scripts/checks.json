@@ -506,6 +506,15 @@
       "description": "The governance-seed-drift check demonstrably fails on a perturbed committed seed (red) and passes both on the real, unmodified corpus and once the perturbation is undone (green) — the guards-bite discipline (srs#308/#311/#391) applied to a pinned-cli check, which guards-bite itself (Node-pipeline-only) cannot reach."
     },
     {
+      "id": "arrangement-storage-conformance",
+      "script": "../tests/arrangement-storage/run.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "conformance",
+      "governing": "RFC-051 Conformance fixture cases, [R1]-[R14]; srs#949",
+      "description": "Every RFC-051 storage scenario in conformance/arrangement/storage-scenarios.json holds against the pinned srs CLI on a fresh copy of conformance/arrangement/fixture-repo: deterministic migration (the flat outlines migrate to the committed directories byte for byte), the Appendix key vectors and arrangement-key refusals, write sets with tie runs, detached entries followed by an operation ([R8]), orphans, loops (with and without an attached entry) and repair, a dangling pointer, head/entry classification, stray and misplaced files, and the plain-git merge cases (concurrent appends, add/add, a container deleted against an added entry, rename pairing, rename/delete and rename/rename)."
+    },
+    {
       "id": "governance-seed-root-container",
       "script": "check-governance-seed-root-container.mjs",
       "args": [],

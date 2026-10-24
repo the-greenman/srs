@@ -173,3 +173,11 @@ jobs:
           SRS_CLI_PATH: /tmp/srs-cli/srs
         run: node scripts/build-governance-seed.mjs --check
 
+      # RFC-051 conformance (srs#949): the storage scenarios in conformance/arrangement run against
+      # the pinned binary, plain git included for the merge cases.
+      - name: Run RFC-051 arrangement storage scenarios (#949)
+        working-directory: srs
+        env:
+          SRS_CLI_PATH: /tmp/srs-cli/srs
+        run: node tests/arrangement-storage/run.mjs
+
