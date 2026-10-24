@@ -97,6 +97,6 @@ export function readRootStored(repoDir, manifest) {
   const id = manifest?.rootContainerId;
   if (!id) throw new Error(`${join(repoDir, "manifest.json")} names no root container: rootContainerId is required (RFC-052 [R1])`);
   const name = [`${id}.json`, id].find((n) => existsSync(join(repoDir, "containers", n)));
-  if (!name) throw new Error(`manifest.rootContainerId ${id} names no container at ${join(repoDir, "containers", id)}[.json] (RFC-052 [R1])`);
+  if (!name) throw new Error(`manifest.rootContainerId ${id} names no file at ${join(repoDir, "containers", `${id}.json`)} (RFC-052 [R1])`);
   return readStored(repoDir, name);
 }
