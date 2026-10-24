@@ -273,7 +273,8 @@
     "fields/source.json",
     "fields/label_mode.json",
     "fields/readme.json",
-    "fields/root_container_id.json"
+    "fields/root_container_id.json",
+    "fields/parent.json"
   ],
   "id": "4a000004-0000-4000-a000-000000000004",
   "name": "metamodel",
@@ -357,7 +358,8 @@
     "types/theme.json",
     "types/srsj-envelope.json",
     "types/container-entry.json",
-    "types/bundled-readme.json"
+    "types/bundled-readme.json",
+    "types/stored-container-entry.json"
   ],
   "version": "1.1.0"
 }

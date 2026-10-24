@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "aiGuidance": {
+    "purpose": "RFC-051 [R5]: the instanceId of this entry's parent entry in the same Container; absent means top level. A parent naming no entry is an orphan, and a parent chain that loops is a loop (RFC-051 [R6])."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-051 [R5]: the instanceId of this entry's parent entry in the same Container; absent means top level. A parent naming no entry is an orphan, and a parent chain that loops is a loop (RFC-051 [R6]).",
+  "id": "4b000118-0000-4000-a000-000000000118",
+  "name": "parent",
+  "namespace": "com.semanticops.srs",
+  "fieldType": {
+    "datatype": "string",
+    "format": "uuid"
+  },
+  "version": 1
+}

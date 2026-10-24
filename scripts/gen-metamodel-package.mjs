@@ -155,6 +155,8 @@ const TYPE_ORDER = [
   [76, 'container-entry'],
   // -- RFC-045 (srs#858): a readme carried by a travelling form, its actual path and its text.
   [77, 'bundled-readme'],
+  // -- RFC-051 (srs#949, dataModelRevision 11): one stored entry file of a Container's directory.
+  [78, 'stored-container-entry'],
 ];
 const typeIdByName = Object.fromEntries(TYPE_ORDER.map(([n, name]) => [name, typeUuid(n)]));
 const ref = (typeName, mode, cardinality, extra) => {
@@ -528,6 +530,8 @@ const FIELD_SPECS = [
   [278, 'readme', ref('bundled-readme', 'inline', 'single'), "RFC-045 [R2]: an optional readme carried by a travelling form, its actual path within the artifact and its UTF-8 text. Opaque: no model fact is derived from it ([R1])."],
   // -- RFC-052 (srs#941): the manifest names its root container, stored in the container set.
   [279, 'root_container_id', { datatype: 'string', format: 'uuid' }, "RFC-052 [R1]: the containerId of the repository's root container, a Container in the container set (containers/) that is the repository's identity object and the top of structural navigation (RFC-013)."],
+  // -- RFC-051 (srs#949): a stored Container entry names its parent entry, never a depth.
+  [280, 'parent', { datatype: 'string', format: 'uuid' }, "RFC-051 [R5]: the instanceId of this entry's parent entry in the same Container; absent means top level. A parent naming no entry is an orphan, and a parent chain that loops is a loop (RFC-051 [R6])."],
 ];
 const fieldIdByName = {};
 for (const [n, name] of FIELD_SPECS) fieldIdByName[name] = fieldUuid(n);
@@ -835,6 +839,16 @@ const TYPE_SPECS = {
     description: 'RFC-043 [R1]: one placed member of a Container, the record it places and its nesting level.',
     purpose: 'Describes a ContainerEntry: the instanceId placed and its optional depth.',
     assignments: [a('instance_id', true, 'Instance Id'), a('depth', false)],
+  },
+  'stored-container-entry': {
+    description: 'RFC-051 [R1]: one entry of a stored Container, at containers/<containerId>/entries/<instanceId>.json, one line. Storage only: adapters present the logical memberInstanceIds outline decoded from the entries ([R5]), never this file.',
+    purpose: 'Describes a StoredContainerEntry: its container, the instance it places, its optional parent entry and its fractional-index key.',
+    assignments: [
+      a('container_id', true, 'Container Id', 'RFC-051 [R1]-[R2]: the container this entry belongs to; equals the directory\'s containerId.'),
+      a('instance_id', true, 'Instance Id', 'RFC-051 [R1]-[R2]: the member; equals the file name.'),
+      a('parent', false),
+      a('key', true, undefined, 'RFC-051 [R4]: the fractional-index position among siblings, compared byte-wise.'),
+    ],
   },
   'bundled-readme': {
     description: 'RFC-045 [R2]: a readme carried by a travelling form (package bundle, .srsj): its actual path within the artifact and its text. Opaque ([R1]); the path and content rules ([R2], [R4]) are checked by implementations.',
@@ -1352,7 +1366,7 @@ function packageIndex() {
     // migration #2 (toRevision 2); this train's definition-layer removals under reject-unknown
     // (defaultValue both sites, deprecatedAt) and additions (FieldAssignment.description,
     // Type.lineage/provenance) are migration #3, stamped once here at Unit 1 landing.
-    dataModelRevision: 10,
+    dataModelRevision: 11,
     description: 'The self-hosted SRS meta-model (RFC-033/RFC-040): Field, Type, FieldAssignment, and value-objects expressed as SRS Type definitions. Frozen-seed source for docs/schema/2.0/{field,type}.json.',
     fields: FIELD_SPECS.map(([, name]) => `fields/${name}.json`),
     id: PACKAGE_ID,
