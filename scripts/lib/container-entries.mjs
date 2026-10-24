@@ -1,14 +1,17 @@
 // RFC-043 [R1]/[R3]: `Container.memberInstanceIds` is an ordered list of `{instanceId, depth?}` entries.
 // `entryIds(c)` is direct(C): the entry ids read flat, in list order. `rootInstanceIds` no longer exists.
 //
-// Every script that reads container files reads them through this module, so it serves both stored
-// layouts (srs#966, prep for #949):
-//   - revision 10 and earlier: `containers/<name>.json`, one file holding `memberInstanceIds`;
-//   - revision 11 (RFC-051 [R1]): `containers/<containerId>/container.json`, a head without
-//     `memberInstanceIds`, plus `entries/<instanceId>.json`, one `{containerId, instanceId, parent?, key}`
-//     each, decoded into the logical `memberInstanceIds` by RFC-051 [R5] (`decodeEntries`).
-// Callers always see the logical form, never `parent` or `key` ([R5]).
-import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+// Every script that reads container files reads them through this module (srs#966, srs#949). At
+// revision 11 (RFC-051 [R1]) a container is `containers/<containerId>/container.json`, a head without
+// `memberInstanceIds`, plus `entries/<instanceId>.json`, one `{containerId, instanceId, parent?, key}`
+// each, decoded into the logical `memberInstanceIds` by RFC-051 [R5] (`decodeEntries`). A flat
+// `containers/*.json` is not a container at revision 11 (`repo validate` reports it as
+// `container-migration-needed`), so it is not read. Callers always see the logical form, never
+// `parent` or `key` ([R5]).
+//
+// ponytail: a JS port of the decode, kept as the bridge #968 A1 recorded; the readers move onto the
+// pinned srs CLI once their guard fixtures are CLI-loadable repositories (srs#970).
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
 export const entryIds = (container) => (container?.memberInstanceIds ?? []).map((e) => e.instanceId);
@@ -59,11 +62,10 @@ export function decodeEntries(stored) {
 
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
 
-// One stored container at `containers/<name>` (a `.json` file or a directory), in the logical form.
-// `path` is relative to the repository root.
+// One stored container directory `containers/<name>/`, in the logical form. `path` (the head's) is
+// relative to the repository root.
 function readStored(repoDir, name) {
   const full = join(repoDir, "containers", name);
-  if (!statSync(full).isDirectory()) return { path: `containers/${name}`, container: readJson(full) };
   const head = readJson(join(full, "container.json"));
   const entriesDir = join(full, "entries");
   const stored = existsSync(entriesDir)
@@ -72,17 +74,17 @@ function readStored(repoDir, name) {
   return { path: `containers/${name}/container.json`, container: { ...head, memberInstanceIds: decodeEntries(stored) } };
 }
 
-// Every container under `containers/`, sorted by stored name. An unreadable one is skipped: its
-// diagnostic belongs to `repo validate`, not to the check reading memberships.
+// Every container directory under `containers/`, sorted by name. An unreadable one (or a directory
+// with no head) is skipped: its diagnostic belongs to `repo validate`, not to the check reading
+// memberships.
 export function listContainers(repoDir) {
   const dir = join(repoDir, "containers");
   if (!existsSync(dir)) return [];
   const out = [];
   for (const e of readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
-    const name = e.name;
-    if (!name.endsWith(".json") && !e.isDirectory()) continue;
+    if (!e.isDirectory()) continue;
     try {
-      out.push(readStored(repoDir, name));
+      out.push(readStored(repoDir, e.name));
     } catch {
       /* skipped, see above */
     }
@@ -97,7 +99,27 @@ export const readRootContainer = (repoDir, manifest) => readRootStored(repoDir, 
 export function readRootStored(repoDir, manifest) {
   const id = manifest?.rootContainerId;
   if (!id) throw new Error(`${join(repoDir, "manifest.json")} names no root container: rootContainerId is required (RFC-052 [R1])`);
-  const name = [`${id}.json`, id].find((n) => existsSync(join(repoDir, "containers", n)));
-  if (!name) throw new Error(`manifest.rootContainerId ${id} names no file at ${join(repoDir, "containers", `${id}.json`)} (RFC-052 [R1])`);
-  return readStored(repoDir, name);
+  if (!existsSync(join(repoDir, "containers", id, "container.json"))) {
+    throw new Error(`manifest.rootContainerId ${id} names no container at ${join(repoDir, "containers", id, "container.json")} (RFC-052 [R1], RFC-051 [R1])`);
+  }
+  return readStored(repoDir, id);
+}
+
+// Test fixtures only: store a logical container `{..., memberInstanceIds}` in the RFC-051 [R1]
+// directory form. Parents come from depth (RFC-043 [R5]); keys are `b` + two digits in entry order,
+// which orders every sibling run correctly (at most 3844 entries). Real data is written by the CLI.
+const DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+export function storeContainer(repoDir, container) {
+  const { memberInstanceIds = [], ...head } = container;
+  const dir = join(repoDir, "containers", container.containerId);
+  mkdirSync(join(dir, "entries"), { recursive: true });
+  writeFileSync(join(dir, "container.json"), `${JSON.stringify(head)}\n`);
+  const path = []; // path[d] = the latest entry at depth d
+  memberInstanceIds.forEach(({ instanceId, depth = 0 }, i) => {
+    path[depth] = instanceId;
+    const key = `b${DIGITS[Math.floor(i / 62)]}${DIGITS[i % 62]}`;
+    const entry = { containerId: container.containerId, instanceId, ...(depth ? { parent: path[depth - 1] } : {}), key };
+    writeFileSync(join(dir, "entries", `${instanceId}.json`), `${JSON.stringify(entry)}\n`);
+  });
+  return join(dir, "container.json");
 }

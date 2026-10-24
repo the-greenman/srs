@@ -458,7 +458,7 @@
       "tier": "always",
       "cell": "conformance",
       "governing": "srs#534; srs#522; RFC-038; RFC-039",
-      "description": "Every genuine .srsj repository-archive envelope instance in the corpus (docs/spec/examples/gallery.srsj, every packages/com.mudemocracy.governance/*/seed/empty-governance-document.srsj) validates against the newly-authored docs/schema/2.0/srsj-envelope.json, using scripts/lib/json-schema-lite.mjs. A published governance seed of a non-current version below dataModelRevision 10 is exempt as immutable history that opens through the loader's in-memory migration (RFC-052 Change C, srs#948, owner ruling 2026-10-23); the current version is always checked. packages/com.semanticops.core/1.0.0/core-bundle.srsj is excluded by name \u2014 RFC-038 states it is a bare package-bundle artifact with no srsj/manifest/data envelope at all."
+      "description": "Every genuine .srsj repository-archive envelope instance in the corpus (docs/spec/examples/gallery.srsj, every packages/com.mudemocracy.governance/*/seed/empty-governance-document.srsj) validates against the newly-authored docs/schema/2.0/srsj-envelope.json, using scripts/lib/json-schema-lite.mjs. A published governance seed of a non-current version below the current dataModelRevision (11) is exempt as immutable history that opens through the loader's in-memory migration, pinned by path and sha256 (RFC-052 Change C, srs#948; RFC-051, srs#949; owner ruling 2026-10-23); the current version is always checked. packages/com.semanticops.core/1.0.0/core-bundle.srsj is excluded by name \u2014 RFC-038 states it is a bare package-bundle artifact with no srsj/manifest/data envelope at all."
     },
     {
       "id": "release-drift",
@@ -506,13 +506,22 @@
       "description": "The governance-seed-drift check demonstrably fails on a perturbed committed seed (red) and passes both on the real, unmodified corpus and once the perturbation is undone (green) — the guards-bite discipline (srs#308/#311/#391) applied to a pinned-cli check, which guards-bite itself (Node-pipeline-only) cannot reach."
     },
     {
+      "id": "arrangement-storage-conformance",
+      "script": "../tests/arrangement-storage/run.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "conformance",
+      "governing": "RFC-051 Conformance fixture cases, [R1]-[R14]; srs#949",
+      "description": "Every RFC-051 storage scenario in conformance/arrangement/storage-scenarios.json holds against the pinned srs CLI on a fresh copy of conformance/arrangement/fixture-repo: deterministic migration (the flat outlines migrate to the committed directories byte for byte), the Appendix key vectors and arrangement-key refusals, write sets with tie runs, detached entries followed by an operation ([R8]), orphans, loops (with and without an attached entry) and repair, a dangling pointer, head/entry classification, stray and misplaced files, and the plain-git merge cases (concurrent appends, add/add, a container deleted against an added entry, rename pairing, rename/delete and rename/rename)."
+    },
+    {
       "id": "governance-seed-root-container",
       "script": "check-governance-seed-root-container.mjs",
       "args": [],
       "tier": "always",
       "cell": "identity",
       "governing": "RFC-025 [R1]; srs#947",
-      "description": "The CURRENT com.mudemocracy.governance seed (packages/com.mudemocracy.governance's highest semver directory, scripts/lib/governance-versions.mjs) ships manifest.rootContainerId and manifest.repositoryId equal to RFC-025 [R1]'s ruled 54432eb2-7961-4538-ac16-9e25dcfa2f42 — no engine call needed, pure JSON read, so this runs under validate-all.mjs unlike governance-seed-drift. Historical versions (1.0.0/1.1.0/1.2.0/1.2.1, all published non-conformant before this check existed, and 1.2.2, published below dataModelRevision 10) are exempt as immutable published history, same discipline as governance-seed-drift's exemption. From revision 10 (RFC-052, srs#948) the root container id is read from manifest.rootContainerId."
+      "description": "The CURRENT com.mudemocracy.governance seed (packages/com.mudemocracy.governance's highest semver directory, scripts/lib/governance-versions.mjs) ships manifest.rootContainerId and manifest.repositoryId equal to RFC-025 [R1]'s ruled 54432eb2-7961-4538-ac16-9e25dcfa2f42 — no engine call needed, pure JSON read, so this runs under validate-all.mjs unlike governance-seed-drift. Historical versions (1.0.0/1.1.0/1.2.0/1.2.1, all published non-conformant before this check existed, 1.2.2, published below dataModelRevision 10, and 1.2.3, published below dataModelRevision 11) are exempt as immutable published history, same discipline as governance-seed-drift's exemption. From revision 10 (RFC-052, srs#948) the root container id is read from manifest.rootContainerId."
     },
     {
       "id": "versioning-cell",
@@ -538,8 +547,8 @@
       "args": [],
       "tier": "always",
       "cell": "assertion",
-      "governing": "RFC-051 [R1], [R5]; srs#966 (prep for srs#949)",
-      "description": "The one container reader every spec script uses (scripts/lib/container-entries.mjs) serves both stored layouts: its RFC-051 [R5] decode reproduces the srs-core decode vectors (container_decode.rs, srs-rust#1433), and every corpus container re-stored in the revision-11 directory form (a head plus one entry per member) reads back with the same logical memberInstanceIds as its flat file."
+      "governing": "RFC-051 [R1], [R5]; srs#966; srs#949",
+      "description": "The one container reader every spec script uses (scripts/lib/container-entries.mjs) reads the revision-11 directory layout: its RFC-051 [R5] decode reproduces the srs-core decode vectors (container_decode.rs, srs-rust#1433), and every corpus container re-stored by the guards' fixture writer (storeContainer: a head plus one entry per member) reads back with the same logical memberInstanceIds."
     },
     {
       "id": "part-container-membership",

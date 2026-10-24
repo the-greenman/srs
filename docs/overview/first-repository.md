@@ -90,7 +90,9 @@ garden/
 ├── .srs/                          ← marker: "this directory is an SRS repository"
 ├── manifest.json                  ← what belongs here, and who this repository is
 ├── package/package.json           ← definitions this repository consumes (empty so far)
-├── containers/riverside-….json    ← the root container: navigation starts here
+├── containers/<id>/                ← the root container: navigation starts here
+│   ├── container.json             ← its head: title and identity
+│   └── entries/<instanceId>.json  ← one small file per member
 └── records/tier-2/purpose-….json  ← the identity record: why this repository exists
 ```
 

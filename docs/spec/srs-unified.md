@@ -2174,7 +2174,7 @@ A grouping boundary over a collection of instances, answering the scoping questi
 
 Every entry in `Container.memberInstanceIds` MUST have an `instanceId` that references a valid SRS instance ID (`Note.instanceId` or `Record.instanceId`), appearing exactly once and resolving to an instance ([R2]). This is required of every container, not only the root container; a dangling entry is a validation error, and the repair operation removes it ([R20]). `rootInstanceIds` is removed ([R4]).
 
-Amended by RFC-051 (the-greenman/srs#940; effective at dataModelRevision 11): a stored container's entries are one file each, and the depth conditions hold by construction because the outline is decoded from each entry's parent and key; an orphan or a loop is a warning, not a violation of this invariant.
+Amended by RFC-051 (the-greenman/srs#940): a stored container's entries are one file each, and the depth conditions hold by construction because the outline is decoded from each entry's parent and key; an orphan or a loop is a warning, not a violation of this invariant.
 
 
 ##### Why Containers and Relations are complementary
@@ -2314,7 +2314,7 @@ From dataModelRevision 11 (RFC-051) membership and nesting are stored per entry:
 
 ##### Container entry order keys
 
-Effective at `dataModelRevision` 11 (RFC-051). Each stored container entry carries a `key`, compared byte-wise, placing it among its siblings. Keys follow fractional indexing (Greenspan, 2020), so one edit always writes the same bytes.
+Each stored container entry (RFC-051) carries a `key`, compared byte-wise, placing it among its siblings. Keys follow fractional indexing (Greenspan, 2020), so one edit always writes the same bytes.
 
 The digits are `0`–`9`, `A`–`Z`, `a`–`z`, valued 0 to 61; their byte order is their value order. A key is an integer part and an optional fraction. The integer part is a head and digits: heads `a` to `z` take 1 to 26 digits, heads `Z` to `A` take 1 to 26 digits (negative). The fraction MUST NOT end in `0`. The key `A` followed by 26 `0`s is reserved and never written.
 
@@ -2818,7 +2818,7 @@ Every repository declares its manifest at `manifest.json`, the one file a reader
 
 The manifest is a descriptor, not an index. It carries no `instanceIndex` and no other index (RFC-038 [R2]): the `records/`, `relations/` and `containers/` trees are the authoritative membership (RFC-038 [R1]). `PackageRef` names where the package that defines this repository's Fields and Types lives, local or by reference. A `SourceAnchor` anchors a source document to the position in a Tier 2 Record's content it was extracted from.
 
-The manifest's `rootContainerId` names the repository's required root Container (RFC-013, RFC-052): a Container stored at `containers/<rootContainerId>.json` like every other container. Its `identityInstanceId` names the repository's identity Record, and every other member is a navigation section.
+The manifest's `rootContainerId` names the repository's required root Container (RFC-013, RFC-052): a Container stored at `containers/<rootContainerId>/` like every other container (RFC-051). Its `identityInstanceId` names the repository's identity Record, and every other member is a navigation section.
 
 The root Container's order is navigation order: navigation is the order of the root Container's `memberInstanceIds` entries, excluding the entry named by `identityInstanceId`, with depth-0 entries as the navigation sections and deeper entries nested under their derived parent ([R12]). Navigation is not derived from the `precedes` chain or Rule [N+12], and the identity entry is at depth 0 with no descendants ([R2]).
 
@@ -3255,7 +3255,7 @@ Example: the top-level shape of a `.srsj` file.
 | Field | Type | Description |
 |---|---|---|
 | `srsj` | string | Format version. Current value: `"1"`. Implementations must reject files with unrecognised versions. |
-| `manifest` | object | The `RepositoryManifest` object as defined by `ext:repository`. There is no `manifest.instanceIndex`; it is retired (RFC-038 [R2]). The `data` object's own contents are the authoritative instance set (RFC-038 [R1]), the root container included: the manifest names it by `rootContainerId`, and it is stored at `containers/<containerId>.json` like every other container (RFC-052). |
+| `manifest` | object | The `RepositoryManifest` object as defined by `ext:repository`. There is no `manifest.instanceIndex`; it is retired (RFC-038 [R2]). The `data` object's own contents are the authoritative instance set (RFC-038 [R1]), the root container included: the manifest names it by `rootContainerId`, and it is stored at `containers/<containerId>/` like every other container (RFC-052): a `container.json` head and one `entries/<instanceId>.json` file per member (RFC-051). |
 | `data` | object | Flat key-value store. Keys are forward-slash-normalised relative paths as they would appear in a filesystem repository. Values are the parsed JSON content of each file. |
 
 The `.srsj` extension is conventional; an implementation may accept any filename. The extension must not be used as an authoritative indicator of format — implementations must inspect the `srsj` field to confirm the format and version.
@@ -3336,7 +3336,7 @@ The slice archive's `manifest.repositoryId` MUST be a **new UUID** distinct from
 
 ###### Container-membership closure
 
-The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.rootContainerId` naming the closure-root container, which is carried at `containers/<containerId>.json` (RFC-052); (2) the root container's effective membership, meaning the `instanceId` values of its `memberInstanceIds` entries, read flat and ignoring `depth` (RFC-043 [R3]), recursively through the containers declared in `childContainerIds`; (3) every package the slice uses, whole and unchanged (see Slice package closure; RFC-026 [R15]); (4) all relations with both endpoints inside the included set; (5) all source-document sidecar entries (RFC-038 [R25], amending RFC-017 [R2]/[R12]; I-102/I-112; not a manifest `sourceDocumentIndex`, retired per RFC-038 [R2]) and content files referenced by included instances or by included relations' `sourceRefs`; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
+The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.rootContainerId` naming the closure-root container, which is carried at `containers/<containerId>/` (RFC-052; a head and one entry file per member, RFC-051); (2) the root container's effective membership, meaning the `instanceId` values of its `memberInstanceIds` entries, read flat and ignoring `depth` (RFC-043 [R3]), recursively through the containers declared in `childContainerIds`; (3) every package the slice uses, whole and unchanged (see Slice package closure; RFC-026 [R15]); (4) all relations with both endpoints inside the included set; (5) all source-document sidecar entries (RFC-038 [R25], amending RFC-017 [R2]/[R12]; I-102/I-112; not a manifest `sourceDocumentIndex`, retired per RFC-038 [R2]) and content files referenced by included instances or by included relations' `sourceRefs`; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
 
 Closure and membership read the `instanceId` values of `memberInstanceIds` entries flat, ignoring `depth` ([R3]); `rootInstanceIds` is removed ([R4]). A `containerId` filter and a slice use that one definition ([R18]); a slice keeps in every contained container the entries for the included records and drops each excluded record's entry by the promoting removal ([R7], [R18]).
 

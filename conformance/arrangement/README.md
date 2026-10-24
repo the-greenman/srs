@@ -1,11 +1,13 @@
-# RFC-043 arrangement conformance fixture
+# Arrangement conformance fixture (RFC-043, RFC-051)
 
 Normative test data for container outline arrangement (RFC-043, `dataModelRevision` 8), with the
 shape of `conformance/discovery/`: a `fixture-repo/` and a `scenarios.json`. RFC-043's conformance
 section binds acceptance to this fixture, so a scenario here is contract: adding one adds an
 obligation.
 
-- `fixture-repo/` is a revision-8 repository created and populated with the CLI (never by hand): a
+- `fixture-repo/` is a repository created and populated with the CLI (never by hand), at revision 8,
+  and since migrated by the registry to revision 11 (each container a directory of a head and one
+  entry file per member, RFC-051); it holds a
   Type `item`, seven records (Alpha to Eta), the container `Outline` (`0a0000c1-...`) holding them as a
   three-level outline (Alpha 0, Beta 1, Gamma 2, Delta 1, Epsilon 0, Zeta 1, Eta 2) with Alpha as its
   anchor, a root container whose entries give the navigation (Alpha 0, Beta 1, Epsilon 0), and two
@@ -27,17 +29,35 @@ These RFC-043 scenarios need an engine that does not exist in `srs-rust` today
   gate refusals; [R20] repair; [R19] shared-anchor ambiguity; heading clamp at level 6, `typeFilter`
   with descendants, and a `rule` section flattening a nested container.
 
-## RFC-051 cases pending revision 11
+## RFC-051 storage scenarios
 
-RFC-051 (per-entry container storage, `dataModelRevision` 11) adds cases to this fixture. They
-become scenarios once srs-rust ships revision 11 (the-greenman/srs-rust#1414) and the pinned CLI can
-run them. RFC-051's full case list is in its Change F; the cases below are the ones pinned here so
-far, and the rest are detailed in srs-rust#1414.
+RFC-051 (per-entry container storage, `dataModelRevision` 11) adds `storage-scenarios.json`: 30
+scenarios covering every case in RFC-051's conformance fixture list, run against the pinned srs CLI
+by `tests/arrangement-storage/run.mjs` (registered as `arrangement-storage-conformance`, tier
+`pinned-cli`, run in Release Drift). Each scenario works on a fresh copy of `fixture-repo/`: it writes
+its `given` files into a scratch container (`0a0000c5-...`), runs CLI steps (and, for the merge cases,
+plain `git` branches merged twice: per path, with rename detection off, as RFC-051 [R10] defines, and with stock git, which may conflict more but must agree when clean), then checks the outline, the exact files written with their
+bytes, the `repo validate` diagnostics or the fatal load code. Expectations were captured from
+v0.1.0-build.554 and checked against the rule each cites.
 
-- **Detached entries followed by an operation** ([R8], [R9], [R11]; Revision 15, the-greenman/srs#954).
-  A container holds the top-level entry `t` (key `a0`, no `parent`) and two orphans, `b` (key `a0`)
-  and `o` (key `a1`), whose `parent` names an entry the container does not hold. The decoded outline
-  is `t`, `b`, `o`, all at depth 0. Insert `n` at position 1, depth 0. The operation writes exactly
-  `b` = `{key: "a1"}` and `o` = `{key: "a2"}`, both with no `parent`, and `n` = `{key: "a0V"}`;
-  `t` and the head are not written. The outline is `t`, `n`, `b`, `o`. The one-pass keys `n` = `a1`,
-  `b` = `a2`, `o` = `a3` do not conform.
+| RFC-051 case | Scenarios |
+|---|---|
+| concurrent appends with equal keys | `concurrent_appends_with_equal_keys_merge_cleanly` |
+| an orphan | `orphan_follows_the_attached_top_level`, `repair_reattaches_orphans_and_loop_breaks` |
+| a loop with a tail | `loop_with_a_tail`, `repair_reattaches_orphans_and_loop_breaks` |
+| a loop with no attached entry | `loop_with_no_attached_entry` |
+| add/add, with equal and with different values | `add_add_equal_merges_cleanly`, `add_add_different_conflicts` |
+| a dangling pointer | `dangling_pointer_is_a_validation_error` |
+| a container deleted against an added entry | `container_deleted_against_an_added_entry`, `headless_directory_is_a_warning` |
+| rename pairing | `rename_pairing_is_a_visible_conflict` (per path a delete/modify conflict; stock git pairs the files as a rename and conflicts in the new file: visible either way) |
+| rename/delete and rename/rename | `rename_delete`, `rename_rename` (clean per path; stock git conflicts, which [R10] allows, and a clean stock result would have to equal the per-path one) |
+| write sets with tie runs | `write_set_tie_placed_by_instance_id`, `write_set_tie_rekeys_the_run_after_the_place` |
+| detached entries followed by an operation | `detached_entries_followed_by_an_operation` ([R8], Revision 15, the-greenman/srs#954) |
+| deterministic migration | `migration_is_deterministic` (the fixture's flat outlines migrate to the committed directories byte for byte) |
+| head versus entry classification | `head_versus_entry_classification`, `head_carrying_members_refused` |
+| a stray file | `stray_file_refused`, `entry_misplaced_refused`, `entry_name_mismatch_refused` |
+| the key vectors | `appends_write_one_entry_each_never_the_head`, `key_*` (every Appendix vector, and the two `arrangement-key` refusals) |
+
+The srs-web `rfc038-concurrency` end-to-end acceptance (two writers, one container, a plain merge) is
+srs-web's test (the-greenman/srs-web#584); `concurrent_appends_with_equal_keys_merge_cleanly` is the
+same property at the CLI.

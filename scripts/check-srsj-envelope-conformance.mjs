@@ -36,21 +36,23 @@ const SCHEMA_PATH = join(HERE, "..", "docs/schema/2.0/srsj-envelope.json");
 // .srsj membership rule does not apply to it" — the one named, permanent exclusion from this check.
 const EXCLUDED = new Set([join(REPO, "packages/com.semanticops.core/1.0.0/core-bundle.srsj")]);
 
-// RFC-052 Change C (srs#948, owner ruling 2026-10-23): a published com.mudemocracy.governance seed
-// below dataModelRevision 10 is immutable history. It is never rewritten and opens through the
-// loader's in-memory migration, so it is not held to this revision's envelope schema. Pinned to the
-// exact five published files by path AND sha256 (srs#957 review N3): any other file, or one of these
-// paths with different bytes, is checked like everything else. Never the CURRENT version.
-const PUBLISHED_BELOW_10 = new Map([
+// RFC-052 Change C (srs#948) and RFC-051 (srs#949), owner seed ruling 2026-10-23: a published
+// com.mudemocracy.governance seed below the current dataModelRevision (11) is immutable history. It is
+// never rewritten and opens through the loader's in-memory migration, so it is not held to this
+// revision's envelope schema. Pinned to the exact six published files by path AND sha256 (srs#957
+// review N3): any other file, or one of these paths with different bytes, is checked like everything
+// else. Never the CURRENT version.
+const PUBLISHED_HISTORY = new Map([
   ["packages/com.mudemocracy.governance/1.0.0/seed/empty-governance-document.srsj", "c66d7a5d8c5d356b2744bc2410a4d1a7bdf14ce3f238ecdb4a2c0949d77e3dd5"],
   ["packages/com.mudemocracy.governance/1.1.0/seed/empty-governance-document.srsj", "e39b65accbc440435bf0199ec8e1929524f673af11d043738230d897d3ce19e7"],
   ["packages/com.mudemocracy.governance/1.2.0/seed/empty-governance-document.srsj", "b90649c1623966c7605e994f0abb85c53e3af7ac79b7fc0f69dfd6ea795d1f6d"],
   ["packages/com.mudemocracy.governance/1.2.1/seed/empty-governance-document.srsj", "4640a7251a35cda4efcd9db51ad16f2502b41b48ef3fb237bfcd60aa5cff6193"],
   ["packages/com.mudemocracy.governance/1.2.2/seed/empty-governance-document.srsj", "4f5578b7bc41f08f6cebb15866d853515182f719a5ac11f8b96c790a1fad663a"],
+  ["packages/com.mudemocracy.governance/1.2.3/seed/empty-governance-document.srsj", "e75705ce69a2664a55698b5454bb9a7ca1e8d8e8f29756cb51ddc8995044bfaa"],
 ]);
 const CURRENT_GOVERNANCE = latestGovernanceVersion(REPO);
-const isPublishedHistoryBelow10 = (rel, text) =>
-  PUBLISHED_BELOW_10.get(rel) === createHash("sha256").update(text).digest("hex") &&
+const isPublishedHistory = (rel, text) =>
+  PUBLISHED_HISTORY.get(rel) === createHash("sha256").update(text).digest("hex") &&
   !rel.startsWith(`packages/com.mudemocracy.governance/${CURRENT_GOVERNANCE}/`);
 
 async function findSrsjFiles(dir) {
@@ -107,7 +109,7 @@ for (const path of targets) {
     fail++;
     continue;
   }
-  if (isPublishedHistoryBelow10(rel, text)) {
+  if (isPublishedHistory(rel, text)) {
     historical.push(rel);
     continue;
   }
@@ -122,7 +124,7 @@ for (const path of targets) {
 }
 
 console.log(`\nchecked ${targets.length - historical.length} genuine .srsj envelope instance(s) against srsj-envelope.json`);
-console.log(`exempt (published governance seed history below revision 10, RFC-052 Change C): ${historical.join(", ") || "none"}`);
+console.log(`exempt (published governance seed history below revision 11, RFC-052 Change C / RFC-051): ${historical.join(", ") || "none"}`);
 console.log(`excluded (bare package-bundle, no envelope): ${[...EXCLUDED].map((p) => p.slice(REPO.length + 1)).join(", ") || "none"}`);
 
 if (fail) {

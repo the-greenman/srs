@@ -30,7 +30,9 @@ Membership is tree-authoritative: **the repository's catalog — everything disc
 the reserved instance roots — is the single source of truth** for what belongs to the
 repository (RFC-038 [R1]). There is no `instanceIndex` in `manifest.json`; it is retired
 (RFC-038 [R2]). The manifest names the root container by `rootContainerId`; the root
-container is stored in `containers/` like every other container (RFC-052). The manifest also declares which `declaredExtensions`
+container is stored in `containers/` like every other container (RFC-052), each container as a
+directory holding its head and one small file per member, so concurrent membership edits merge
+file by file (RFC-051). The manifest also declares which `declaredExtensions`
 are active, so consumers know the contract up front.
 
 ## Records are the truth; documents are projections

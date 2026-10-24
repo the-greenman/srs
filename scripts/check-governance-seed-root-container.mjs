@@ -58,4 +58,4 @@ if (problems.length) {
 }
 
 console.log(`✓ ${rel} (CURRENT version ${version}) ships the RFC-025 [R1] root container id ${REQUIRED_CONTAINER_ID}.`);
-console.log('  (packages/com.mudemocracy.governance/{1.0.0,1.1.0,1.2.0,1.2.1,1.2.2} are prior published history and are exempt — srs#947, srs#948.)');
+console.log('  (packages/com.mudemocracy.governance/{1.0.0,1.1.0,1.2.0,1.2.1,1.2.2,1.2.3} are prior published history and are exempt — srs#947, srs#948, srs#949.)');

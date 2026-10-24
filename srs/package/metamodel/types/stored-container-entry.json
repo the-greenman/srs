@@ -1,0 +1,36 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json",
+  "aiGuidance": {
+    "purpose": "Describes a StoredContainerEntry: its container, the instance it places, its optional parent entry and its fractional-index key."
+  },
+  "createdAt": "2026-07-29T00:00:00Z",
+  "description": "RFC-051 [R1]: one entry of a stored Container, at containers/<containerId>/entries/<instanceId>.json, one line. Storage only: adapters present the logical memberInstanceIds outline decoded from the entries ([R5]), never this file.",
+  "fields": [
+    {
+      "fieldId": "4b000071-0000-4000-a000-000000000071",
+      "order": 0,
+      "required": true,
+      "displayLabel": "Container Id"
+    },
+    {
+      "fieldId": "4b00005a-0000-4000-a000-00000000005a",
+      "order": 1,
+      "required": true,
+      "displayLabel": "Instance Id"
+    },
+    {
+      "fieldId": "4b000118-0000-4000-a000-000000000118",
+      "order": 2,
+      "required": false
+    },
+    {
+      "fieldId": "4b000039-0000-4000-a000-000000000039",
+      "order": 3,
+      "required": true
+    }
+  ],
+  "id": "4c00004e-0000-4000-a000-00000000004e",
+  "name": "stored-container-entry",
+  "namespace": "com.semanticops.srs",
+  "version": 1
+}

@@ -20,7 +20,7 @@
  *   2. one-home              No record has two `contains` parents.
  *   3. no-orphan-leaf        Every spec content record (section, subsection, mechanism, invariant,
  *                            example, design-note, table, generated-type-reference, extension) has a
- *                            `contains` parent or is a member of the root container (`containers/<manifest.rootContainerId>.json`, RFC-052).
+ *                            `contains` parent or is a member of the root container (`containers/<manifest.rootContainerId>/`, RFC-052, RFC-051).
  *   4. part-order            A Part is a non-identity member of the root container, ordered by the
  *                            `precedes` chain over those members. No `depends-on` edge may point from
  *                            an earlier Part's `contains`-subtree into a later one. Until #563 hangs

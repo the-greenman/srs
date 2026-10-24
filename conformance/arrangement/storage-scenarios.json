@@ -1,0 +1,1572 @@
+{
+  "$comment": "RFC-051 (per-entry container storage, dataModelRevision 11) conformance scenarios, run against the pinned srs CLI by tests/arrangement-storage/run.mjs (srs#949). A git scenario's `merge` is the per-path merge of RFC-051 [R10] (git with merge.renames=false); stock git is also run and, when clean, must agree; `stockMerge: conflict` requires stock git to conflict too. Each scenario works on a fresh copy of fixture-repo. Ids are written $NAME and resolved from `ids`; the record ids are the fixture's, whose byte order is ZETA < EPS < GAMMA < ETA < BETA < DELTA < ALPHA. `case` names the RFC-051 conformance fixture case the scenario covers. Expectations were captured from v0.1.0-build.554 and checked against the rule each cites.",
+  "ids": {
+    "C": "0a0000c5-0000-4000-8000-000000000001",
+    "OUTLINE": "0a0000c1-0000-4000-8000-000000000001",
+    "GONE": "0a0000ff-0000-4000-8000-000000000099",
+    "ZETA": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+    "EPS": "291abed5-1baa-429f-948e-3cb4bf267c07",
+    "GAMMA": "3c8311aa-410e-4052-be62-dba11656a94b",
+    "ETA": "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+    "BETA": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+    "DELTA": "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+    "ALPHA": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+  },
+  "scenarios": [
+    {
+      "name": "migration_is_deterministic",
+      "rules": [
+        "R13"
+      ],
+      "case": "deterministic migration",
+      "description": "The fixture's containers, turned back into revision-10 flat files with their logical outlines, migrate to exactly the committed directories (keys are successive appends among siblings, parents from RFC-043 [R5]); a second run reports alreadyApplied.",
+      "given": {
+        "flatten": true
+      },
+      "steps": [
+        {
+          "cli": [
+            "repo",
+            "apply-migration",
+            "--id",
+            "rfc051-container-entries"
+          ],
+          "expect": {
+            "payload.payload.toRevision": 11,
+            "payload.payload.alreadyApplied": false
+          }
+        },
+        {
+          "cli": [
+            "repo",
+            "apply-migration",
+            "--id",
+            "rfc051-container-entries"
+          ],
+          "expect": {
+            "payload.payload.alreadyApplied": true
+          }
+        }
+      ],
+      "expect": {
+        "fixtureBytes": true
+      }
+    },
+    {
+      "name": "appends_write_one_entry_each_never_the_head",
+      "rules": [
+        "R1",
+        "R3",
+        "R8",
+        "R9"
+      ],
+      "case": "key vectors",
+      "description": "Each append writes one one-line entry and never the head: between nothing and nothing is a0, after a0 is a1.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$ALPHA"
+          ]
+        },
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$BETA"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a1"
+          }
+        },
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$ALPHA"
+            },
+            {
+              "instanceId": "$BETA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "key_after_az_is_b00",
+      "rules": [
+        "R4",
+        "R9"
+      ],
+      "case": "key vectors",
+      "description": "Appendix key vector: after az is b00.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "az"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$BETA"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "b00"
+          }
+        }
+      }
+    },
+    {
+      "name": "key_850th_append_is_bCh",
+      "rules": [
+        "R4",
+        "R9"
+      ],
+      "case": "key vectors",
+      "description": "Appendix key vector: the 850th append is bCh (after the 849th, bCg).",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "bCg"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$BETA"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "bCh"
+          }
+        }
+      }
+    },
+    {
+      "name": "key_before_a0_is_Zz",
+      "rules": [
+        "R4",
+        "R9"
+      ],
+      "case": "key vectors",
+      "description": "Appendix key vector: before a0 is Zz.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$BETA",
+            "--position",
+            "0"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "Zz"
+          }
+        }
+      }
+    },
+    {
+      "name": "key_before_the_reserved_neighbour",
+      "rules": [
+        "R4",
+        "R9"
+      ],
+      "case": "key vectors",
+      "description": "Appendix key vector: before A, 25 0s, 1 is A, 26 0s, V (the reserved key A + 26 0s is never written).",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "A00000000000000000000000001"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$BETA",
+            "--position",
+            "0"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "A00000000000000000000000000V"
+          }
+        }
+      }
+    },
+    {
+      "name": "key_between_a0_and_a1_is_a0V",
+      "rules": [
+        "R4",
+        "R9"
+      ],
+      "case": "key vectors",
+      "description": "Appendix key vector: between a0 and a1 is a0V; only the inserted entry is written.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a1"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$GAMMA",
+            "--position",
+            "1"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a0V"
+          }
+        },
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$ALPHA"
+            },
+            {
+              "instanceId": "$GAMMA"
+            },
+            {
+              "instanceId": "$BETA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "key_with_trailing_zero_fraction_refused",
+      "rules": [
+        "R4",
+        "R14"
+      ],
+      "case": "key vectors",
+      "description": "A stored key with a fraction ending in 0 is arrangement-key, fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a10"
+          }
+        }
+      },
+      "expect": {
+        "fatal": "arrangement-key"
+      }
+    },
+    {
+      "name": "reserved_key_refused",
+      "rules": [
+        "R4",
+        "R14"
+      ],
+      "case": "key vectors",
+      "description": "A stored key with the reserved key is arrangement-key, fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "A00000000000000000000000000"
+          }
+        }
+      },
+      "expect": {
+        "fatal": "arrangement-key"
+      }
+    },
+    {
+      "name": "write_set_tie_placed_by_instance_id",
+      "rules": [
+        "R9"
+      ],
+      "case": "write sets with tie runs",
+      "description": "EPS, BETA and ALPHA share key a0 (ordered by instanceId). Inserting GAMMA between EPS and BETA: the tied key a0 already places GAMMA there by instanceId, so GAMMA takes a0 and nothing else is written.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$EPS.json": {
+            "containerId": "$C",
+            "instanceId": "$EPS",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$GAMMA",
+            "--position",
+            "1"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a0"
+          }
+        },
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$EPS"
+            },
+            {
+              "instanceId": "$GAMMA"
+            },
+            {
+              "instanceId": "$BETA"
+            },
+            {
+              "instanceId": "$ALPHA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "write_set_tie_rekeys_the_run_after_the_place",
+      "rules": [
+        "R9"
+      ],
+      "case": "write sets with tie runs",
+      "description": "Same tie run; inserting DELTA between EPS and BETA cannot take a0 (it would sort after BETA), so every tied sibling after the place joins the write set and is keyed in outline order: DELTA a1, BETA a2, ALPHA a3.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$EPS.json": {
+            "containerId": "$C",
+            "instanceId": "$EPS",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$DELTA",
+            "--position",
+            "1"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$DELTA.json": {
+            "containerId": "$C",
+            "instanceId": "$DELTA",
+            "key": "a1"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a2"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a3"
+          }
+        },
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$EPS"
+            },
+            {
+              "instanceId": "$DELTA"
+            },
+            {
+              "instanceId": "$BETA"
+            },
+            {
+              "instanceId": "$ALPHA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "detached_entries_followed_by_an_operation",
+      "rules": [
+        "R8",
+        "R9",
+        "R11"
+      ],
+      "case": "detached entries followed by an operation",
+      "description": "Revision 15 (srs#954). t = ZETA (a0, top level); orphans b = EPS (a0) and o = GAMMA (a1), whose parent names no entry; decoded t, b, o. Inserting n = BETA at position 1, depth 0 first re-attaches b = a1 and o = a2, then keys n = a0V. Exactly b, o and n are written, never t or the head. The one-pass keys n = a1, b = a2, o = a3 do not conform.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ZETA.json": {
+            "containerId": "$C",
+            "instanceId": "$ZETA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$EPS.json": {
+            "containerId": "$C",
+            "instanceId": "$EPS",
+            "key": "a0",
+            "parent": "$GONE"
+          },
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a1",
+            "parent": "$GONE"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "add",
+            "$C",
+            "$BETA",
+            "--position",
+            "1",
+            "--depth",
+            "0"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$EPS.json": {
+            "containerId": "$C",
+            "instanceId": "$EPS",
+            "key": "a1"
+          },
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a2"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a0V"
+          }
+        },
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$ZETA"
+            },
+            {
+              "instanceId": "$BETA"
+            },
+            {
+              "instanceId": "$EPS"
+            },
+            {
+              "instanceId": "$GAMMA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "orphan_follows_the_attached_top_level",
+      "rules": [
+        "R5",
+        "R6",
+        "R14"
+      ],
+      "case": "an orphan",
+      "description": "BETA's parent names no entry: it is an orphan, decoded at the top level after the attached ALPHA, with its child GAMMA beneath it; arrangement-orphan is a warning, not fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a5"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a0",
+            "parent": "$GONE"
+          },
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a0",
+            "parent": "$BETA"
+          }
+        }
+      },
+      "expect": {
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$ALPHA"
+            },
+            {
+              "instanceId": "$BETA"
+            },
+            {
+              "instanceId": "$GAMMA",
+              "depth": 1
+            }
+          ]
+        },
+        "diagnostics": [
+          {
+            "code": "arrangement-orphan",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "name": "loop_with_a_tail",
+      "rules": [
+        "R5",
+        "R6",
+        "R14"
+      ],
+      "case": "a loop with a tail",
+      "description": "GAMMA and ETA name each other; DELTA hangs off GAMMA. The loop breaks at its lowest instanceId (GAMMA), which goes to the top level after ALPHA; ETA and the tail DELTA attach beneath it. arrangement-cycle is a warning.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a0",
+            "parent": "$ETA"
+          },
+          "containers/$C/entries/$ETA.json": {
+            "containerId": "$C",
+            "instanceId": "$ETA",
+            "key": "a0",
+            "parent": "$GAMMA"
+          },
+          "containers/$C/entries/$DELTA.json": {
+            "containerId": "$C",
+            "instanceId": "$DELTA",
+            "key": "a1",
+            "parent": "$GAMMA"
+          }
+        }
+      },
+      "expect": {
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$ALPHA"
+            },
+            {
+              "instanceId": "$GAMMA"
+            },
+            {
+              "instanceId": "$ETA",
+              "depth": 1
+            },
+            {
+              "instanceId": "$DELTA",
+              "depth": 1
+            }
+          ]
+        },
+        "diagnostics": [
+          {
+            "code": "arrangement-cycle",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "name": "repair_reattaches_orphans_and_loop_breaks",
+      "rules": [
+        "R11"
+      ],
+      "case": "an orphan; a loop with a tail",
+      "description": "ALPHA attached (a0); BETA an orphan (a0); the GAMMA/ETA loop with DELTA as a tail. Decoded top level: ALPHA, then GAMMA (break) and BETA (orphan) by key then instanceId. Repair re-attaches them in that order keyed after ALPHA: GAMMA a1, BETA a2, removes nothing, and no arrangement-* warning remains.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a0",
+            "parent": "$GONE"
+          },
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a0",
+            "parent": "$ETA"
+          },
+          "containers/$C/entries/$ETA.json": {
+            "containerId": "$C",
+            "instanceId": "$ETA",
+            "key": "a0",
+            "parent": "$GAMMA"
+          },
+          "containers/$C/entries/$DELTA.json": {
+            "containerId": "$C",
+            "instanceId": "$DELTA",
+            "key": "a1",
+            "parent": "$GAMMA"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "repair",
+            "$C"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a1"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a2"
+          }
+        },
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$ALPHA"
+            },
+            {
+              "instanceId": "$GAMMA"
+            },
+            {
+              "instanceId": "$ETA",
+              "depth": 1
+            },
+            {
+              "instanceId": "$DELTA",
+              "depth": 1
+            },
+            {
+              "instanceId": "$BETA"
+            }
+          ]
+        },
+        "noArrangementWarnings": true
+      }
+    },
+    {
+      "name": "loop_with_no_attached_entry",
+      "rules": [
+        "R5",
+        "R11"
+      ],
+      "case": "a loop with no attached entry",
+      "description": "GAMMA (a3) and ETA (a5) name each other and nothing is attached. Only the break, GAMMA, is re-attached, keyed a0.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a3",
+            "parent": "$ETA"
+          },
+          "containers/$C/entries/$ETA.json": {
+            "containerId": "$C",
+            "instanceId": "$ETA",
+            "key": "a5",
+            "parent": "$GAMMA"
+          }
+        }
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "repair",
+            "$C"
+          ]
+        }
+      ],
+      "expect": {
+        "writes": {
+          "containers/$C/entries/$GAMMA.json": {
+            "containerId": "$C",
+            "instanceId": "$GAMMA",
+            "key": "a0"
+          }
+        },
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$GAMMA"
+            },
+            {
+              "instanceId": "$ETA",
+              "depth": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "dangling_pointer_is_a_validation_error",
+      "rules": [
+        "R14"
+      ],
+      "case": "a dangling pointer",
+      "description": "The head's anchorInstanceId names GAMMA, which is no entry: RFC-043 [R3]'s validation error, container-pointer-unresolved, not fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage",
+            "anchorInstanceId": "$GAMMA"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          }
+        }
+      },
+      "expect": {
+        "diagnostics": [
+          {
+            "code": "container-pointer-unresolved",
+            "severity": "error"
+          }
+        ]
+      }
+    },
+    {
+      "name": "head_versus_entry_classification",
+      "rules": [
+        "R12",
+        "R14"
+      ],
+      "case": "head versus entry classification",
+      "description": "A file under entries/ that carries a title and no key is not an entry: container-schema, fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "title": "Not an entry"
+          }
+        }
+      },
+      "expect": {
+        "fatal": "container-schema"
+      }
+    },
+    {
+      "name": "head_carrying_members_refused",
+      "rules": [
+        "R1",
+        "R14"
+      ],
+      "case": "head versus entry classification",
+      "description": "A head that carries memberInstanceIds is container-schema, fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage",
+            "memberInstanceIds": []
+          }
+        }
+      },
+      "expect": {
+        "fatal": "container-schema"
+      }
+    },
+    {
+      "name": "stray_file_refused",
+      "rules": [
+        "R1",
+        "R14"
+      ],
+      "case": "a stray file",
+      "description": "Any file other than container.json and entries/<instanceId>.json in a container directory is container-stray-file, fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/notes.json": {}
+        }
+      },
+      "expect": {
+        "fatal": "container-stray-file"
+      }
+    },
+    {
+      "name": "entry_misplaced_refused",
+      "rules": [
+        "R2",
+        "R14"
+      ],
+      "case": "a stray file",
+      "description": "An entry whose containerId differs from its directory is container-entry-misplaced, fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$OUTLINE",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          }
+        }
+      },
+      "expect": {
+        "fatal": "container-entry-misplaced"
+      }
+    },
+    {
+      "name": "entry_name_mismatch_refused",
+      "rules": [
+        "R2",
+        "R14"
+      ],
+      "case": "a stray file",
+      "description": "An entry file whose name differs from its instanceId is container-name-mismatch, fatal.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          }
+        }
+      },
+      "expect": {
+        "fatal": "container-name-mismatch"
+      }
+    },
+    {
+      "name": "concurrent_appends_with_equal_keys_merge_cleanly",
+      "rules": [
+        "R9",
+        "R10",
+        "R5"
+      ],
+      "case": "concurrent appends with equal keys",
+      "description": "Two branches each append to the empty container; both entries get key a0, plain git merges cleanly, and the instanceId tie-break orders them (BETA before ALPHA).",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          }
+        }
+      },
+      "git": {
+        "branches": {
+          "one": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$ALPHA"
+              ]
+            }
+          ],
+          "two": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$BETA"
+              ]
+            }
+          ]
+        },
+        "merge": [
+          "one",
+          "two"
+        ]
+      },
+      "expect": {
+        "merge": "clean",
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$BETA"
+            },
+            {
+              "instanceId": "$ALPHA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "add_add_equal_merges_cleanly",
+      "rules": [
+        "R10"
+      ],
+      "case": "add/add, with equal and with different values",
+      "description": "Both branches append ALPHA to the empty container: the same path with the same bytes on both sides keeps that change.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          }
+        }
+      },
+      "git": {
+        "branches": {
+          "one": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$ALPHA"
+              ]
+            }
+          ],
+          "two": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$ALPHA"
+              ]
+            }
+          ]
+        },
+        "merge": [
+          "one",
+          "two"
+        ]
+      },
+      "expect": {
+        "merge": "clean",
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$ALPHA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "add_add_different_conflicts",
+      "rules": [
+        "R10"
+      ],
+      "case": "add/add, with equal and with different values",
+      "description": "One branch appends ALPHA (a0); the other appends BETA and then inserts ALPHA first (Zz). The same path with different bytes is a conflict.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          }
+        }
+      },
+      "git": {
+        "branches": {
+          "one": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$ALPHA"
+              ]
+            }
+          ],
+          "two": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$BETA"
+              ]
+            },
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$ALPHA",
+                "--position",
+                "0"
+              ]
+            }
+          ]
+        },
+        "merge": [
+          "one",
+          "two"
+        ]
+      },
+      "expect": {
+        "merge": "conflict",
+        "stockMerge": "conflict"
+      }
+    },
+    {
+      "name": "container_deleted_against_an_added_entry",
+      "rules": [
+        "R10",
+        "R11",
+        "R14"
+      ],
+      "case": "a container deleted against an added entry",
+      "description": "One branch deletes the container (its head and ALPHA's entry); the other appends BETA. The merge is clean and leaves a directory with BETA's entry and no head: container-head-missing, a warning, ignored; repair removes the directory.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          }
+        }
+      },
+      "git": {
+        "branches": {
+          "one": [
+            {
+              "cli": [
+                "container",
+                "delete",
+                "$C"
+              ]
+            }
+          ],
+          "two": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$BETA"
+              ]
+            }
+          ]
+        },
+        "merge": [
+          "one",
+          "two"
+        ]
+      },
+      "steps": [
+        {
+          "cli": [
+            "container",
+            "members",
+            "repair",
+            "$C"
+          ]
+        }
+      ],
+      "expect": {
+        "merge": "clean",
+        "writes": {
+          "containers/$C/entries/$BETA.json": null
+        }
+      }
+    },
+    {
+      "name": "headless_directory_is_a_warning",
+      "rules": [
+        "R14"
+      ],
+      "case": "a container deleted against an added entry",
+      "description": "Entries with no head: container-head-missing, a warning; the directory is ignored and the catalog loads.",
+      "given": {
+        "files": {
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a1"
+          }
+        }
+      },
+      "expect": {
+        "diagnostics": [
+          {
+            "code": "container-head-missing",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    {
+      "name": "rename_pairing_is_a_visible_conflict",
+      "rules": [
+        "R3",
+        "R10"
+      ],
+      "case": "rename pairing",
+      "description": "One branch removes ALPHA and appends GAMMA (a similar one-line file); the other moves ALPHA after BETA. Per path, ALPHA is deleted against modified: a conflict. Stock git pairs the two files as a rename and reports the conflict in GAMMA's file instead; either way it is visible, never a clean merge that lands the move on GAMMA.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a1"
+          }
+        }
+      },
+      "git": {
+        "branches": {
+          "one": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "remove",
+                "$C",
+                "$ALPHA"
+              ]
+            },
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$GAMMA"
+              ]
+            }
+          ],
+          "two": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "move",
+                "$C",
+                "$ALPHA",
+                "--position",
+                "1"
+              ]
+            }
+          ]
+        },
+        "merge": [
+          "one",
+          "two"
+        ]
+      },
+      "expect": {
+        "merge": "conflict",
+        "stockMerge": "conflict"
+      }
+    },
+    {
+      "name": "rename_delete",
+      "rules": [
+        "R10"
+      ],
+      "case": "rename/delete and rename/rename",
+      "description": "One branch removes ALPHA and appends GAMMA; the other removes ALPHA. Per path this is clean (ALPHA removed on both sides, GAMMA added on one) and gives BETA, GAMMA. Stock git, pairing ALPHA and GAMMA as a rename, MAY report a conflict (it does, as rename/delete), but a clean result MUST be the same.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a1"
+          }
+        }
+      },
+      "git": {
+        "branches": {
+          "one": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "remove",
+                "$C",
+                "$ALPHA"
+              ]
+            },
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$GAMMA"
+              ]
+            }
+          ],
+          "two": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "remove",
+                "$C",
+                "$ALPHA"
+              ]
+            }
+          ]
+        },
+        "merge": [
+          "one",
+          "two"
+        ]
+      },
+      "expect": {
+        "merge": "clean",
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$BETA"
+            },
+            {
+              "instanceId": "$GAMMA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rename_rename",
+      "rules": [
+        "R10"
+      ],
+      "case": "rename/delete and rename/rename",
+      "description": "One branch removes ALPHA and appends GAMMA; the other removes ALPHA and appends DELTA. Per path this is clean and gives BETA, GAMMA, DELTA (equal keys a2, by instanceId). Stock git MAY report a rename/rename conflict (it does), but a clean result MUST be the same.",
+      "given": {
+        "files": {
+          "containers/$C/container.json": {
+            "containerId": "$C",
+            "title": "Storage"
+          },
+          "containers/$C/entries/$ALPHA.json": {
+            "containerId": "$C",
+            "instanceId": "$ALPHA",
+            "key": "a0"
+          },
+          "containers/$C/entries/$BETA.json": {
+            "containerId": "$C",
+            "instanceId": "$BETA",
+            "key": "a1"
+          }
+        }
+      },
+      "git": {
+        "branches": {
+          "one": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "remove",
+                "$C",
+                "$ALPHA"
+              ]
+            },
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$GAMMA"
+              ]
+            }
+          ],
+          "two": [
+            {
+              "cli": [
+                "container",
+                "members",
+                "remove",
+                "$C",
+                "$ALPHA"
+              ]
+            },
+            {
+              "cli": [
+                "container",
+                "members",
+                "add",
+                "$C",
+                "$DELTA"
+              ]
+            }
+          ]
+        },
+        "merge": [
+          "one",
+          "two"
+        ]
+      },
+      "expect": {
+        "merge": "clean",
+        "outline": {
+          "$C": [
+            {
+              "instanceId": "$BETA"
+            },
+            {
+              "instanceId": "$GAMMA"
+            },
+            {
+              "instanceId": "$DELTA"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

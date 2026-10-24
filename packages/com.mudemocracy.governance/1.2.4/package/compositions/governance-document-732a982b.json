@@ -1,0 +1,63 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json",
+  "createdAt": "2026-07-06T00:00:00Z",
+  "description": "Renders the complete governance corpus — articles of association, roles, and decision log — as a single whole-document export.",
+  "id": "732a982b-3765-4f22-90e0-e456463bac54",
+  "name": "governance-document",
+  "namespace": "governance",
+  "sections": [
+    {
+      "emptyBehavior": "hide",
+      "order": 0,
+      "ordering": {
+        "direction": "asc",
+        "fieldId": "60be1468-01bc-5d12-9eea-628f02801893"
+      },
+      "sectionId": "articles",
+      "source": {
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "article"
+        },
+        "containerScope": "repository"
+      },
+      "title": "Articles of Association",
+      "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
+    },
+    {
+      "emptyBehavior": "hide",
+      "order": 1,
+      "sectionId": "roles",
+      "source": {
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "role"
+        },
+        "containerScope": "repository"
+      },
+      "title": "Roles",
+      "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
+    },
+    {
+      "emptyBehavior": "hide",
+      "order": 2,
+      "sectionId": "decisions",
+      "source": {
+        "type": "discovery-query",
+        "query": {
+          "typeNamespace": "governance",
+          "typeName": "decision"
+        },
+        "containerScope": "repository"
+      },
+      "title": "Decision Log",
+      "titleFieldId": "d7e82557-9045-5e92-a494-d99112bbec4a"
+    }
+  ],
+  "version": 1,
+  "exportConfig": {
+    "format": "markdown"
+  }
+}

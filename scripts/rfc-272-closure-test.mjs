@@ -2,7 +2,7 @@
 /**
  * rfc-272-closure-test.mjs — Tier-2 structural closure for the instance-layer entities modelled at
  * srs#526 (Task 4b/2, epic #256/#272): Record, Note, Relation, Container, Blueprint, Term,
- * Vocabulary, Lifecycle (installable), SourceDocumentMeta.
+ * Vocabulary, Lifecycle (installable), SourceDocumentMeta; and RFC-051's StoredContainerEntry (srs#949).
  *
  * Same discipline as scripts/rfc-035-closure-test.mjs (RFC-033/RFC-040's frozen `field`/`type`
  * bootstrap), reusing its shared comparison machinery (scripts/lib/schema-closure.mjs): asserts
@@ -63,6 +63,8 @@ const ENTITIES = [
   ["record", "record.json", "instance"],
   ["relation", "relation.json", "instance"],
   ["container", "container.json", "instance"],
+  // RFC-051 (srs#949): one stored entry file; "definition" facing because the file carries no `meta`.
+  ["stored-container-entry", "stored-container-entry.json", "definition"],
   ["blueprint", "blueprint.json", "definition"],
   ["term", "term.json", "definition"],
   ["vocabulary", "vocabulary.json", "definition"],
@@ -111,5 +113,5 @@ if (errs.length) {
   process.exit(1);
 }
 console.log(`\n✓ closure holds: every covered authoritative property of Record/Note/Relation/Container/`);
-console.log(`  Blueprint/Term/Vocabulary/Lifecycle/SourceDocumentMeta projects consistently into its`);
+console.log(`  Blueprint/Term/Vocabulary/Lifecycle/SourceDocumentMeta/StoredContainerEntry projects consistently into its`);
 console.log(`  committed docs/schema/2.0/*.json seed; seed-only properties are the documented exclusion set.`);

@@ -68,9 +68,15 @@
         },
         {
             "fileMatch": [
-                "**/containers/*.json"
+                "**/containers/*/container.json"
             ],
             "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/container.json"
+        },
+        {
+            "fileMatch": [
+                "**/containers/*/entries/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs/docs/schema/2.0/stored-container-entry.json"
         },
         {
             "fileMatch": [

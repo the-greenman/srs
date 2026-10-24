@@ -17,12 +17,20 @@ import { spawnSync } from "child_process";
 import { tmpdir } from "os";
 import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { rmSync } from "fs";
+import { storeContainer } from "../../scripts/lib/container-entries.mjs";
 
 // `fileURLToPath`, not `new URL(..).pathname` — the same percent-encoding trap both guards document
 // against. Getting it wrong here breaks every case under a checkout path containing a space.
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 let failures = 0;
+
+/** Store a logical container in the revision-11 directory form (RFC-051 [R1]), replacing any earlier one. */
+function writeContainer(repoDir, container) {
+  rmSync(join(repoDir, "containers", container.containerId), { recursive: true, force: true });
+  storeContainer(repoDir, container);
+}
 
 /** Run a check script with explicit args; returns {code, out}. */
 function runScript(script, ...args) {
@@ -594,9 +602,8 @@ async function publicationReachabilityCases(root) {
     namespace: "com.example.fixture",
     rootContainerId: "00000000-0000-4000-8000-000000000601",
   });
-  const rootContainerPath = join(repo, "containers/00000000-0000-4000-8000-000000000601.json");
   const baseRoot = { containerId: "00000000-0000-4000-8000-000000000601", title: "Fixture", memberInstanceIds: [] };
-  await writeJson(rootContainerPath, baseRoot);
+  writeContainer(repo, baseRoot);
   await writeJson(join(repo, "package/package.json"), {
     id: "00000000-0000-4000-8000-000000000701",
     namespace: "com.example.fixture",
@@ -711,17 +718,17 @@ async function publicationReachabilityCases(root) {
   await rm(join(repo, "relations/precedes.json"));
 
   // The RFC-013 ROOT container is a surface — it is the top of structural navigation.
-  await writeJson(rootContainerPath, { ...baseRoot, memberInstanceIds: [{ instanceId: ID(2) }] });
+  writeContainer(repo, { ...baseRoot, memberInstanceIds: [{ instanceId: ID(2) }] });
   expect("accepts a record reached only by root container membership", runCheck("check-publication-reachability.mjs", root), {
     exit: 0,
     contains: ["✓ Every discovered record is reachable"],
   });
-  await writeJson(rootContainerPath, baseRoot);
+  writeContainer(repo, baseRoot);
 
   // ...but any other Container under `containers/` is NOT, because nothing points at it. Honouring those made
   // membership a free "publish" lever: all 12 Containers in the live corpus are referenced by nothing,
   // and one of them was silencing this guard for a note that reaches no reader.
-  await writeJson(join(repo, "containers/orphan.json"), {
+  writeContainer(repo, {
     containerId: "00000000-0000-4000-8000-000000000602",
     title: "Referenced by nothing",
     memberInstanceIds: [{ instanceId: ID(2) }],
@@ -730,7 +737,7 @@ async function publicationReachabilityCases(root) {
     exit: 1,
     contains: ["records/orphan.json", "unreachable from every declared presentation"],
   });
-  await rm(join(repo, "containers/orphan.json"));
+  await rm(join(repo, "containers/00000000-0000-4000-8000-000000000602"), { recursive: true });
 
   // RFC-016 [R1]: the invariant projection publishes `records/invariants/` after render, so no view
   // selects it. A definition quantifying only over Compositions calls all 124 live ones invisible.
@@ -786,7 +793,7 @@ async function publicationReachabilityCases(root) {
   // longer matched by any discovery-query now that the section's source kind changed above, so
   // reusing it here means "reachable" in this case can only be true via the container-subset
   // resolution being added, not a discovery-query surface left over from an earlier case.
-  await writeJson(join(repo, "containers/fixture-container.json"), {
+  writeContainer(repo, {
     containerId,
     anchorInstanceId: ID(1),
     memberInstanceIds: [{ instanceId: ID(1) }],
@@ -795,7 +802,7 @@ async function publicationReachabilityCases(root) {
     exit: 0,
     contains: ["✓ Every discovered record is reachable"],
   });
-  await rm(join(repo, "containers/fixture-container.json"));
+  await rm(join(repo, "containers", containerId), { recursive: true });
 
   // A discovery-query may also filter by lifecycle state or container, and the renderer applies
   // those. Ignoring them is fail-OPEN, not fail-closed: a section excluding `archived` records
@@ -2014,7 +2021,7 @@ async function specCoherenceCases(root) {
   const allowlist = join(root, "scripts/spec-coherence-allowlist.json");
 
   await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000e0" });
-  await writeJson(join(root, "srs/containers/00000000-0000-4000-8000-0000000000e0.json"), { containerId: "00000000-0000-4000-8000-0000000000e0", memberInstanceIds: [] });
+  writeContainer(join(root, "srs"), { containerId: "00000000-0000-4000-8000-0000000000e0", memberInstanceIds: [] });
   await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha"));
   await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta"));
   await writeJson(join(root, "srs/records/subsections/leaf.json"), leaf("Plain prose, no headings.\n"));
@@ -2123,7 +2130,7 @@ async function specReadabilityCases(root) {
   // ancestor-comparison test this sibling set would be "unordered", but Rule [N+12]'s createdAt
   // tiebreak still gives it one definite order: Leaf, then Alpha, then Beta.
   await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000f0" });
-  await writeJson(join(root, "srs/containers/00000000-0000-4000-8000-0000000000f0.json"), { containerId: "00000000-0000-4000-8000-0000000000f0", memberInstanceIds: [{ instanceId: P }] });
+  writeContainer(join(root, "srs"), { containerId: "00000000-0000-4000-8000-0000000000f0", memberInstanceIds: [{ instanceId: P }] });
   await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part One", "2026-09-06T00:00:00Z"));
   await writeJson(join(root, "srs/records/concepts/a.json"), concept(A, "Alpha", "2026-09-06T00:00:01Z"));
   await writeJson(join(root, "srs/records/concepts/b.json"), concept(B, "Beta", "2026-09-06T00:00:02Z"));
@@ -2624,16 +2631,15 @@ async function partContainerMembershipCases(root) {
     relationId: `00000000-0000-4000-8000-0000000000${n}`, relationType: "contains",
     sourceInstanceId: source, targetInstanceId: target,
   });
-  const containerFile = join(root, "srs/containers/part-p.json");
 
   await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000f5" });
-  await writeJson(join(root, "srs/containers/00000000-0000-4000-8000-0000000000f5.json"), { containerId: "00000000-0000-4000-8000-0000000000f5", memberInstanceIds: [{ instanceId: P }] });
+  writeContainer(join(root, "srs"), { containerId: "00000000-0000-4000-8000-0000000000f5", memberInstanceIds: [{ instanceId: P }] });
   await writeJson(join(root, "srs/records/concepts/p.json"), concept(P, "Part P"));
   await writeJson(join(root, "srs/records/concepts/c1.json"), concept(C1, "Child"));
   await writeJson(join(root, "srs/records/concepts/c2.json"), concept(C2, "Grandchild"));
   await writeJson(join(root, "srs/relations/r1.json"), rel("g1", P, C1));
   await writeJson(join(root, "srs/relations/r2.json"), rel("g2", C1, C2));
-  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1, C2].map((instanceId) => ({ instanceId })) });
+  writeContainer(join(root, "srs"), { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1, C2].map((instanceId) => ({ instanceId })) });
 
   expect("accepts declared membership matching the computed contains-subtree", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 0,
@@ -2642,14 +2648,14 @@ async function partContainerMembershipCases(root) {
 
   // Perturb: drop the grandchild from declared membership — a real edit that predates a new edge
   // deeper in the tree, exactly the drift class this guard exists to catch.
-  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1].map((instanceId) => ({ instanceId })) });
+  writeContainer(join(root, "srs"), { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1].map((instanceId) => ({ instanceId })) });
   expect("rejects declared membership that has drifted from the computed subtree", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 1,
     contains: ["DRIFT", "1 Part container(s) drifted"],
   });
 
   // Restore — green again.
-  await writeJson(containerFile, { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1, C2].map((instanceId) => ({ instanceId })) });
+  writeContainer(join(root, "srs"), { containerId, anchorInstanceId: P, memberInstanceIds: [P, C1, C2].map((instanceId) => ({ instanceId })) });
   expect("accepts membership once restored", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 0,
     contains: ["✓ all 1 Part containers match"],
@@ -2662,11 +2668,13 @@ async function partContainerMembershipCases(root) {
     exit: 1,
     contains: ["names no root container"],
   });
-  // ...and one whose rootContainerId points at no file.
+  // ...and one whose rootContainerId points at no container directory. A flat revision-10 file of
+  // that id is not a container at revision 11 (container-migration-needed), so it is not read.
   await writeJson(join(root, "srs/manifest.json"), { rootContainerId: "00000000-0000-4000-8000-0000000000f6" });
-  expect("rejects a rootContainerId that names no container file", runCheck("part-container-membership.mjs", root, "--check"), {
+  await writeJson(join(root, "srs/containers/00000000-0000-4000-8000-0000000000f6.json"), { containerId: "00000000-0000-4000-8000-0000000000f6", title: "Flat", memberInstanceIds: [{ instanceId: P }] });
+  expect("rejects a rootContainerId that names no container directory", runCheck("part-container-membership.mjs", root, "--check"), {
     exit: 1,
-    contains: ["names no file"],
+    contains: ["names no container at"],
   });
 }
 

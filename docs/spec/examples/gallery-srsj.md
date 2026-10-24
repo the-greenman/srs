@@ -28,10 +28,12 @@ To regenerate after changes to `gallery-project-v2/`:
 - 1 Note (initial brain dump, Tier 0)
 
 `manifest.rootContainerId` (RFC-052) names the root container (`4e4c9501...`, stored at
-`containers/4e4c9501-....json` inside the archive), whose identity record is Article A-001.
+`containers/4e4c9501-.../container.json` inside the archive, with one `entries/<instanceId>.json`
+per member), whose identity record is Article A-001.
 At srs#948 the archive was migrated in place to `dataModelRevision` 10 with
 `srs repo apply-migration --id rfc046-actor-provenance` then `--id rfc052-root-container`
-(`--repo gallery.srsj`), rather than regenerated: `repo copy` would also replace the gallery's
+(`--repo gallery.srsj`), and at srs#949 to revision 11 with `--id rfc051-container-entries`,
+rather than regenerated: `repo copy` would also replace the gallery's
 local relation-type definitions with the core ones. Sub-containers exist for Articles, Roles, and the
 Decision Log.
 
