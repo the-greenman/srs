@@ -2,7 +2,7 @@
 
 # RFC-052: The root container is stored in the container set
 
-**Status**: Accepted (Revision 6)
+**Status**: Implemented (Revision 7)
 **Affects**:
 - **Schemas:** `manifest.json` (`container` → `rootContainerId`); `srsj-envelope.json` (its embedded manifest); three descriptions in `container.json`.
 - **RFC-013 (Accepted, Revision 8):** [R1] is amended and [R9] is withdrawn (Door 3).
@@ -29,6 +29,7 @@ Answers SP-30. Split from RFC-051 (the-greenman/srs#940), where it was ruling 2.
 | Rev | Date | Summary |
 |---|---|---|
 | 1 | 2026-10-20 | Split from RFC-051 Revision 9 (Change I and [R16]). |
+| 7 | 2026-10-24 | Implemented. The owner closed the-greenman/srs#941 on 2026-10-24: implemented in srs-rust (the-greenman/srs-rust#1440, #1454, #1455, #1457, #1458; releases v0.1.0-build.545 and v0.1.0-build.551), conformed to Revision 6, and every consumer migrated to `dataModelRevision` 10. Status bookkeeping only; no normative change. |
 | 6 | 2026-10-24 | **Door 3 amendment, owner answers of 2026-10-24** (on the-greenman/srs#962, asks A1 and A2; challenger review B1 and N1 there; the-greenman/srs#963). (1) A manifest that declares revision 9 or lower but already names its root by `rootContainerId`, with the root stored in the container set, is migrated by `rfc052-root-container` restamping `dataModelRevision` to 10 only, after the same checks: the root is stored, it is the only root, and it validates (Change C, [R7]). This removes the dead end where such a manifest was reported as needing the migration and the migration refused it. (2) `migration-root-missing` means a manifest with neither `container` nor `rootContainerId`. (3) Setting the root to an id that names no container is refused with `container-not-found`; `manifest-root-container-missing` keeps its one meaning, a manifest with no root (Change D, [R8]). Implementation: the-greenman/srs-rust#1453. |
 | 5 | 2026-10-23 | **Door 3 amendment, owner rulings of 2026-10-23** (on the-greenman/srs-rust#1440, answers A1 and A2 and the root swap, and on the-greenman/srs#953, rulings 1 and 2; challenger review N1 and N3 on srs-rust#1440). (1) [R7]: an older corpus is detected by its declared `dataModelRevision` (9 or lower), never by the shape of its manifest. (2) Setting the root is pointer-only: it changes only `rootContainerId`, accepts only an existing container, and leaves every container as it was; the previous root stays an ordinary container (Change D, [R8]). (3) The migration refuses, before any write, a revision-9 manifest that declares no root container (`migration-root-missing`, Change C, [R7]). (4) Unsetting the root is refused at revision 10 with `manifest-root-container-missing`, writing nothing: from revision 10 a repository always has exactly one root container ([R1], [R8]). Implementation: the-greenman/srs-rust#1453. |
 | 4 | 2026-10-20 | **Accepted by the owner** (2026-10-20, the-greenman/srs#941). The spec-side change lands in two phases, as RFC-043 did. Now: this text, the Door 3 amendment notes, the gated invariant and mechanism records, the successor decision record and the doc updates; the schema files are staged under `docs/schema/staged/rfc-052/`. Later, in one PR after srs-rust#1417 ships revision 10: the corpus migration, the metamodel Field change, the schema promotion and the pin advance. No normative rule changes in this revision. |
