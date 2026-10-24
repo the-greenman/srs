@@ -533,6 +533,15 @@
       "description": "Every manifest.json in the repository (whole-tree walk, not a fixed list of roots — matching check-versioning-cell.mjs's reasoning) is parsed and asserted to carry no top-level instanceIndex key: membership is tree-authoritative (RFC-038 [R1]), and a manifest instanceIndex is retired (RFC-038 [R2]) — the rule I-49, I-50, I-80 and 07-15-ext-repository's own conformance text all restate. A live-tree scan, not a git-history diff — this cell's statement is about the current shape, not a transition, so it needs no fetch-depth: 0. No live corpus exceptions as of RFC-038 Revision 13 (srs-rust#1024): the prior exception, conformance/discovery/fixture-repo/manifest.json, was migrated to tree-authoritative storage and its scripts/repository-cell-allowlist.json entry removed (conformance/discovery/README.md). Its guard-bite case (repositoryCellCases) lives in the existing guards-bite entry's tests/guards/run.mjs, not a second registry row."
     },
     {
+      "id": "container-entries-reader",
+      "script": "../tests/container-entries/run.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "assertion",
+      "governing": "RFC-051 [R1], [R5]; srs#966 (prep for srs#949)",
+      "description": "The one container reader every spec script uses (scripts/lib/container-entries.mjs) serves both stored layouts: its RFC-051 [R5] decode reproduces the srs-core decode vectors (container_decode.rs, srs-rust#1433), and every corpus container re-stored in the revision-11 directory form (a head plus one entry per member) reads back with the same logical memberInstanceIds as its flat file."
+    },
+    {
       "id": "part-container-membership",
       "script": "part-container-membership.mjs",
       "args": ["--check"],

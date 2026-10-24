@@ -10,13 +10,13 @@
  *
  * Usage:
  *   node scripts/part-container-membership.mjs [root]              # print computed membership per Part
- *   node scripts/part-container-membership.mjs [root] --check       # exit 1 on drift vs containers/*.json
+ *   node scripts/part-container-membership.mjs [root] --check       # exit 1 on drift vs the stored Part containers
  */
 import { readdir, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join, dirname, resolve, relative } from "path";
 import { fileURLToPath } from "url";
-import { entryIds, readRootContainer } from "./lib/container-entries.mjs";
+import { entryIds, listContainers, readRootContainer } from "./lib/container-entries.mjs";
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const CHECK = process.argv.includes("--check");
@@ -61,10 +61,9 @@ const rootContainer = readRootContainer(join(ROOT, "srs"), manifest);
 const identity = rootContainer.identityInstanceId;
 const parts = (rootContainer.memberInstanceIds ?? []).filter((e) => (e.depth ?? 0) === 0 && e.instanceId !== identity).map((e) => e.instanceId);
 
-const containerFiles = await walkJson(join(ROOT, "srs/containers"));
 const containersByAnchor = new Map();
-for (const [p, c] of containerFiles) {
-  if (c.anchorInstanceId) containersByAnchor.set(c.anchorInstanceId, { path: relative(ROOT, p), doc: c });
+for (const { path, container: c } of listContainers(join(ROOT, "srs"))) {
+  if (c.anchorInstanceId) containersByAnchor.set(c.anchorInstanceId, { path: `srs/${path}`, doc: c });
 }
 
 let drift = 0;

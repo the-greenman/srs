@@ -74,6 +74,18 @@
         },
         {
             "fileMatch": [
+                "**/containers/*/container.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/container.json"
+        },
+        {
+            "fileMatch": [
+                "**/containers/*/entries/*.json"
+            ],
+            "url": "file:///home/greenman/dev/semanticops/srs/docs/schema/staged/rfc-051/stored-container-entry.json"
+        },
+        {
+            "fileMatch": [
                 "**/*.meta.json"
             ],
             "url": "file:///home/greenman/dev/semanticops/srs-vscode/schemas/2.0/source-document-meta.json"
