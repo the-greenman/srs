@@ -38,7 +38,7 @@ as of srs-rust#1024 (owner ruling, 2026-09-17) they do not.
 
 | Layer | State | Authority |
 |---|---|---|
-| **Data model** (RFC-032 `fieldType`, RFC-039 name-keyed carrier) | **Migrated.** `dataModelRevision: 10` (rev 2 forward through the registry, srs#852 to revision 8, srs#948 to revision 10; containers hold RFC-043 entries and the root container is stored in `containers/`, RFC-052); no Field carries the pre-RFC-032 `valueType`, no record carries the pre-RFC-039 pair-array. | #242 Phase B / #286 |
+| **Data model** (RFC-032 `fieldType`, RFC-039 name-keyed carrier) | **Migrated.** `dataModelRevision: 11` (rev 2 forward through the registry, srs#852 to revision 8, srs#948 to revision 10, srs#949 to revision 11; containers hold RFC-043 entries, the root container is stored in `containers/` (RFC-052), and each container is a directory of a head and one entry file per member (RFC-051)); no Field carries the pre-RFC-032 `valueType`, no record carries the pre-RFC-039 pair-array. | #242 Phase B / #286 |
 | **Storage** (RFC-038 tree-authoritative) | **Migrated.** `manifest.json` carries no `instanceIndex`/`containerIndex`/`relationsPath`; the (always-empty) `relations/relations.json` collection file is removed; the manifest names the root container by `rootContainerId` and the root is stored in `containers/` (RFC-013 I-79, RFC-052). | RFC-038 Revision 13, reversing Revision 7's disposition |
 
 RFC-038 Rev 7 (2026-08-01) originally kept this repository as test data rather than inventing
