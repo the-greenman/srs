@@ -93,7 +93,7 @@ import { fileURLToPath } from "url";
 import { instancePaths, loadInstances, loadRelations } from "./lib/rfc-038-tree.mjs";
 import { INVARIANT_PROJECTION_ROOT, isInInvariantProjectionRoot } from "./render-invariants.mjs";
 import { EXPORTED_VIEW_IDS } from "./lib/view-exports.mjs";
-import { entryIds, readRootContainer } from "./lib/container-entries.mjs";
+import { entryIds, listContainers, readRootStored } from "./lib/container-entries.mjs";
 
 // `fileURLToPath`, not `new URL(..).pathname` — the percent-encoding trap the sibling guards
 // document against; getting it wrong breaks every run under a checkout path containing a space.
@@ -198,8 +198,8 @@ async function containers(repoRoot) {
   const out = [];
   try {
     const manifest = JSON.parse(await readFile(join(repoRoot, "manifest.json"), "utf8"));
-    const root = readRootContainer(repoRoot, manifest);
-    if (root.containerId) out.push({ path: `containers/${root.containerId}.json`, container: root });
+    const { path, container: root } = readRootStored(repoRoot, manifest);
+    if (root.containerId) out.push({ path, container: root });
     else fail(`${join(repoRoot, "manifest.json")} names no readable root container (rootContainerId) — required by RFC-013/RFC-052`);
   } catch {
     fail(`cannot read ${join(repoRoot, "manifest.json")}`);
@@ -247,21 +247,8 @@ async function reachability(repoRoot) {
   // these directly, and that naming is what turns it into a presentation surface (see the note
   // on `containers()` above: a Container is not a surface by existing, only by being named).
   const containersById = new Map();
-  for (const { path, record } of await (async () => {
-    const dir = join(repoRoot, "containers");
-    if (!existsSync(dir)) return [];
-    const out = [];
-    for (const name of (await readdir(dir)).sort()) {
-      if (!name.endsWith(".json")) continue;
-      try {
-        out.push({ path: `containers/${name}`, record: JSON.parse(await readFile(join(dir, name), "utf8")) });
-      } catch {
-        /* validate-package.mjs's diagnostic, not ours */
-      }
-    }
-    return out;
-  })()) {
-    if (record?.containerId) containersById.set(record.containerId, { path, container: record });
+  for (const { path, container } of listContainers(repoRoot)) {
+    if (container?.containerId) containersById.set(container.containerId, { path, container });
   }
 
   // Surface 1 — Composition discovery-query and container-subset sections. `descends` records
