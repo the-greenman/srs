@@ -85,7 +85,12 @@ env:
   # It cannot load the revision-8 corpus after migration by an older binary, so
   # the corpus migration and this bump land together (srs#948). The re-render
   # diff is confined to the RFC-052 record text and the Manifest type reference.
-  SRS_RUST_CLI_TAG: v0.1.0-build.545
+  # `v0.1.0-build.554` carries srs-rust#1448-#1450 (released as srs-rust#1463):
+  # dataModelRevision 11 (RFC-051, each container stored as a directory of a
+  # head plus one entry file per member) and the rfc051-container-entries
+  # registry migration. A build.545 binary refuses revision-11 data, so the
+  # corpus migration and this bump land together (srs#949).
+  SRS_RUST_CLI_TAG: v0.1.0-build.554
 
 jobs:
   check-release-drift:
