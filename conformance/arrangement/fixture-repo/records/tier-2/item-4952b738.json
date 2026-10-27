@@ -1,0 +1,13 @@
+{
+  "instanceId": "4952b738-1acd-4ac7-940b-d30dcbea9da6",
+  "typeId": "0a0000b1-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.arrangement",
+  "typeName": "item",
+  "fieldValues": {
+    "title": "Theta"
+  },
+  "createdAt": "2026-10-27T16:27:55.030745156+00:00",
+  "updatedAt": "2026-10-27T16:27:55.030757008+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

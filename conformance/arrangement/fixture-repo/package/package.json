@@ -18,7 +18,9 @@
   "views": [],
   "compositions": [
     "compositions/outline-view-0a0000d1.json",
-    "compositions/outline-view-desc-0a0000d1.json"
+    "compositions/outline-view-desc-0a0000d1.json",
+    "compositions/outline-view-clamp-0a0000d1.json",
+    "compositions/outline-view-items-0a0000d1.json"
   ],
   "blueprints": []
 }

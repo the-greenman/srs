@@ -1,0 +1,26 @@
+{
+  "id": "0a0000d1-0000-4000-8000-000000000004",
+  "namespace": "com.example.arrangement",
+  "name": "outline-view-items",
+  "version": 1,
+  "description": "",
+  "sections": [
+    {
+      "sectionId": "s",
+      "title": "Section",
+      "order": 1,
+      "source": {
+        "type": "container-subset",
+        "typeFilter": [
+          "com.example.arrangement/item"
+        ]
+      },
+      "titleFieldId": "0a0000e1-0000-4000-8000-000000000001",
+      "ordering": {
+        "source": "arranged"
+      }
+    }
+  ],
+  "createdAt": "2026-10-27T16:27:57.059281483+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/composition.json"
+}

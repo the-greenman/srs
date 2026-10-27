@@ -12,11 +12,21 @@ obligation.
   three-level outline (Alpha 0, Beta 1, Gamma 2, Delta 1, Epsilon 0, Zeta 1, Eta 2) with Alpha as its
   anchor, a root container whose entries give the navigation (Alpha 0, Beta 1, Epsilon 0), and two
   Compositions with one arranged `container-subset` section each and no `containerId` literal
-  (`outline-view`, and `outline-view-desc` with `direction: desc`).
-- `scenarios.json` has 15 scenarios covering [R1], [R2], [R3], [R5], [R7], [R9], [R10], [R11] and [R12].
-  Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running against this
-  fixture, then checked against the rule it cites; `json_projection_carries_depth` ([R11]) was
+  (`outline-view`, and `outline-view-desc` with `direction: desc`). Two more containers serve the
+  render scenarios: `Mixed` (`0a0000c2-...`, anchor a `purpose` record; an item nested to depth 4 and
+  a second `purpose` record with descendants) and `Anchored` (`0a0000c3-...`, Alpha 0, Beta 1 and a
+  `purpose` anchor), with two more Compositions: `outline-view-clamp` (`depthOffset` 3) and
+  `outline-view-items` (arranged, `typeFilter` on the item Type).
+- `scenarios.json` has 22 scenarios covering [R1], [R2], [R3], [R5], [R7], [R9], [R10], [R11] and [R12].
+  Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running against
+  this fixture, then checked against the rule it cites; `json_projection_carries_depth` ([R11]) and
+  the seven render and Composition scenarios added for [R7], [R9] and [R10] (heading levels to depth 4
+  and the clamp at 6, `typeFilter` promotion and an excluded anchor, the three [R10] refusals) were
   captured from the pinned build.554 CLI.
+- Two keys are new for these scenarios and a runner must handle them: the operation
+  `{"composition": "create", "definition": {...}}` (the Composition is refused with
+  `composition-validation`, so the [R10] exclusions are tested where they are enforced), and the
+  expectation `expectedDiagnosticContains` (a substring that some diagnostic of the render contains).
 
 ## Not yet covered
 
@@ -25,8 +35,12 @@ These RFC-043 scenarios need an engine that does not exist in `srs-rust` today
 
 - [R14] three-way merge and [R18] slice closure (no merge or slice engine).
 - [R15] the same entries through CLI, WASM and MCP; [R16] cross-revision refusal; [R17] migration
-  gate refusals; [R20] repair; [R19] shared-anchor ambiguity; heading clamp at level 6, `typeFilter`
-  with descendants, and a `rule` section flattening a nested container.
+  gate refusals; [R20] repair; [R19] shared-anchor ambiguity.
+- [R8] a `rule` section flattening a nested container, and [R9] a supplied container against a
+  differing literal (and the literal used when none is supplied): both need a Composition whose
+  `container-subset` source names a Container by id, which `check-composition-container-literal.mjs`
+  forbids outside its allowlist (RFC-043 ruling M, srs#851). Growing that allowlist is a gate change,
+  so these wait on a ruling.
 
 ## RFC-051 storage scenarios
 

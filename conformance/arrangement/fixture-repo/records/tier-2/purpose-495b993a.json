@@ -1,0 +1,14 @@
+{
+  "instanceId": "495b993a-2d6f-474a-87ff-2610a8779456",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.core",
+  "typeName": "purpose",
+  "fieldValues": {
+    "statement": "A record of another type inside the outline.",
+    "title": "Section note"
+  },
+  "createdAt": "2026-10-27T16:27:54.777482391+00:00",
+  "updatedAt": "2026-10-27T16:27:54.777504215+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
