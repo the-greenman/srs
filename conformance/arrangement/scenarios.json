@@ -387,6 +387,284 @@
       },
       "expectedOutcome": "refused",
       "expectedCode": "arrangement-pointer"
+    },
+    {
+      "name": "move_carries_the_run",
+      "rules": [
+        "R7"
+      ],
+      "description": "Moving an entry moves its run (the entry and the deeper entries that follow it) together. Moving Beta after Epsilon takes Gamma with it; Delta stays under Alpha and Beta lands at depth 0 as Epsilon's sibling, after Epsilon's run.",
+      "operation": {
+        "container": "members-move",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+        "after": "291abed5-1baa-429f-948e-3cb4bf267c07"
+      },
+      "expectedMembers": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        },
+        {
+          "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+          "depth": 1
+        },
+        {
+          "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+        },
+        {
+          "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+          "depth": 1
+        },
+        {
+          "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+          "depth": 2
+        },
+        {
+          "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+        },
+        {
+          "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+          "depth": 1
+        }
+      ]
+    },
+    {
+      "name": "outdent_adopts_following_deeper_entries",
+      "rules": [
+        "R7",
+        "R12"
+      ],
+      "description": "Setting Beta to depth 0 (an outdent) keeps its run (Gamma) and the entries that follow it at a deeper depth than its new depth are adopted: Delta, at depth 1, becomes Beta's child.",
+      "operation": {
+        "container": "members-move",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+        "depth": 0
+      },
+      "expectedMembers": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        },
+        {
+          "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+        },
+        {
+          "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+          "depth": 1
+        },
+        {
+          "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+          "depth": 1
+        },
+        {
+          "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+        },
+        {
+          "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+          "depth": 1
+        },
+        {
+          "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+          "depth": 2
+        }
+      ]
+    },
+    {
+      "name": "outdent_of_a_leaf_adopts_following_siblings",
+      "rules": [
+        "R7"
+      ],
+      "description": "Setting Gamma (a leaf at depth 2) to depth 0 leaves Beta without descendants and adopts the entries after Gamma that are deeper than 0: Delta, at depth 1, becomes Gamma's child.",
+      "operation": {
+        "container": "members-move",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+        "depth": 0
+      },
+      "expectedMembers": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        },
+        {
+          "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+          "depth": 1
+        },
+        {
+          "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b"
+        },
+        {
+          "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47",
+          "depth": 1
+        },
+        {
+          "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+        },
+        {
+          "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+          "depth": 1
+        },
+        {
+          "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55",
+          "depth": 2
+        }
+      ]
+    },
+    {
+      "name": "depth_jump_refused_on_move",
+      "rules": [
+        "R2",
+        "R7"
+      ],
+      "description": "A move or set depth that would leave an entry deeper than the previous entry's depth plus one is rejected with arrangement-depth; nothing changes. Beta at depth 2 would follow Alpha at depth 0.",
+      "operation": {
+        "container": "members-move",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+        "depth": 2
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "arrangement-depth"
+    },
+    {
+      "name": "identity_entry_cannot_gain_a_descendant",
+      "rules": [
+        "R12",
+        "R7"
+      ],
+      "description": "In the root container an insert that would give the identity entry a descendant is rejected with arrangement-identity; nothing changes.",
+      "operation": {
+        "container": "members-add",
+        "containerId": "0a000000-0000-4000-8000-000000000001",
+        "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae",
+        "into": "ca6da9bd-3230-437d-9b7f-febcbd7584dc"
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "arrangement-identity"
+    },
+    {
+      "name": "navigation_ignores_disagreeing_precedes",
+      "rules": [
+        "R12"
+      ],
+      "description": "Navigation order is the root container's entry order. The fixture carries a precedes edge Epsilon precedes Alpha, which disagrees with the entries (Alpha first); it is ignored. The identity entry is excluded, and the payload carries each section's depth (Beta at 1) beside the top-level entries.",
+      "operation": {
+        "repo": "navigation"
+      },
+      "rootContainerId": "0a000000-0000-4000-8000-000000000001",
+      "identityInstanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc",
+      "expectedSectionOrder": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        },
+        {
+          "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+          "depth": 1
+        },
+        {
+          "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+        }
+      ],
+      "ignoredRelations": [
+        {
+          "relationType": "precedes",
+          "sourceInstanceId": "291abed5-1baa-429f-948e-3cb4bf267c07",
+          "targetInstanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        }
+      ]
+    },
+    {
+      "name": "retired_key_root_instance_ids_refused",
+      "rules": [
+        "R4"
+      ],
+      "description": "rootInstanceIds is retired at revision 8: a container patch carrying it is refused and nothing changes.",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "patch": {
+          "rootInstanceIds": [
+            "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+          ]
+        }
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "invalid-input (unknown field rootInstanceIds)"
+    },
+    {
+      "name": "retired_key_member_order_refused",
+      "rules": [
+        "R4"
+      ],
+      "description": "memberOrder is retired at revision 8: a patch carrying it is refused and nothing changes.",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "patch": {
+          "memberOrder": [
+            "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+          ]
+        }
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "invalid-input (unknown field memberOrder)"
+    },
+    {
+      "name": "flattening_leaves_validate_unchanged",
+      "rules": [
+        "R13"
+      ],
+      "description": "Converting the arrangement to a flat list (every entry at depth 0, same order) changes no instanceId and leaves the repo validate result (errors, warnings, diagnostics) byte-identical to its result before.",
+      "operation": {
+        "container": "update",
+        "containerId": "0a0000c1-0000-4000-8000-000000000001",
+        "memberInstanceIds": [
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+          },
+          {
+            "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+          },
+          {
+            "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b"
+          },
+          {
+            "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47"
+          },
+          {
+            "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+          },
+          {
+            "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae"
+          },
+          {
+            "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55"
+          }
+        ]
+      },
+      "expectedMembers": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        },
+        {
+          "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+        },
+        {
+          "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b"
+        },
+        {
+          "instanceId": "c15b3417-3578-416a-bc50-8c1a2e16eb47"
+        },
+        {
+          "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07"
+        },
+        {
+          "instanceId": "21dbfbfa-dd9e-47a8-b785-a00bac9497ae"
+        },
+        {
+          "instanceId": "64514d71-a09c-4a1a-90a3-97c4da7f2b55"
+        }
+      ],
+      "expectedValidateUnchanged": true
     }
   ]
 }
