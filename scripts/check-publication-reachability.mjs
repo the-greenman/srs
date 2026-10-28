@@ -278,14 +278,11 @@ async function reachability(repoRoot) {
         );
         continue;
       }
-      if (Array.isArray(section.source?.typeFilter) && section.source.typeFilter.length > 0) {
-        fail(
-          `${path} section "${section.sectionId}" filters its container-subset by typeFilter, ` +
-            `which this guard does not apply — resolving the whole container would report ` +
-            `records the section filters out as published`,
-        );
-        continue;
-      }
+      // A typeFilter (RFC-008) publishes a subset of the container, and resolving the whole
+      // container would report the filtered-out records as published. Skipping the section can
+      // only under-count, so the guard stays fail-closed: a record it reaches only this way is
+      // reported unreachable, never wrongly reachable (srs#982, the normative spec composition).
+      if (Array.isArray(section.source?.typeFilter) && section.source.typeFilter.length > 0) continue;
       const anchor = entry.container.anchorInstanceId;
       if (!anchor) {
         fail(`${entry.path} (named by ${path} section "${section.sectionId}") has no anchorInstanceId to root the section on`);
