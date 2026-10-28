@@ -257,6 +257,16 @@
       "description": "Unmet-at-reading-position count over the RENDERED order (docs/spec/srs-spec.md's actual heading order), distinct from check-spec-coherence.mjs check 1 and check-spec-readability.mjs, both of which compute their order from the tree (contains/precedes) rather than reading it back from the actual rendered file. Re-derives each concept/extension's position from its first matching heading in the rendered output, then classifies every depends-on edge over that node set (condensed over the depends-on graph's strongly-connected components, same #608 treatment) as met or unmet at that rendered position. Known violations live in scripts/spec-rendered-order-allowlist.json, each citing a live issue; an unlisted violation fails, and so does an entry that no longer matches — shrinking the list is the per-Part rewrite units' job."
     },
     {
+      "id": "spec-normative-only",
+      "script": "check-spec-normative-only.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#982 (owner ruling 2026-10-28: the spec carries only what is needed to use it, unified carries the rationale); RFC-042 leaf table (design-note: rationale, never normative)",
+      "afterId": "spec-rendered-order",
+      "description": "docs/spec/srs-spec.md carries no rationale: no heading equal to a com.semanticops.spec/design-note title, no **Rationale**: line (invariant rationale), and it is not byte-identical to docs/spec/srs-unified.md. Guards against the silent convergence after RFC-042 Change G (bc18336), when both outputs began rendering design-notes in place."
+    },
+    {
       "id": "region-injection-idempotency",
       "script": "../tests/idempotency/run.mjs",
       "args": [],
