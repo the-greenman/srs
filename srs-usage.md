@@ -924,6 +924,17 @@ Payload:
 {
   "migrations": [
     {
+      "id": "rfc051-container-entries",
+      "title": "Adopt RFC-051: each container is stored as a directory of one-line entry files",
+      "description": "...",
+      "status": {
+        "needed": true,
+        "alreadyApplied": false,
+        "notApplicable": false
+      },
+      "revisionStep": { "from": 10, "to": 11 }
+    },
+    {
       "id": "migrate-identity",
       "title": "Graduate identity to purpose record",
       "description": "...",
@@ -931,7 +942,8 @@ Payload:
         "needed": false,
         "alreadyApplied": true,
         "notApplicable": false
-      }
+      },
+      "revisionStep": null
     },
     {
       "id": "repo-upgrade",
@@ -941,13 +953,16 @@ Payload:
         "needed": true,
         "alreadyApplied": false,
         "notApplicable": false
-      }
+      },
+      "revisionStep": null
     }
   ]
 }
 ```
 
 Exactly one of `needed`, `alreadyApplied`, or `notApplicable` is `true` per entry (exclusive-one invariant). `notApplicable` means the migration makes no sense for this repo (e.g. `migrate-identity` on a repo with no root container).
+
+`revisionStep` is `{from, to}` for an entry that moves the data model from revision `from` to `to`, and `null` for a structural entry. Before writing, apply every `needed` entry that carries a `revisionStep`, in array order. Structural entries are optional and come after.
 
 ### Applying a Migration by ID
 
