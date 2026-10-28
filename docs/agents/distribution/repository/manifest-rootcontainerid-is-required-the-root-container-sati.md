@@ -1,0 +1,9 @@
+# manifest.rootContainerId is required; the root container satisfies core Container invariants 20-21
+
+> The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its containerId is not an instance ID and never appears as an entry instanceId in memberInstanceIds, nor in Rela…
+
+Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Repository](/agents/distribution/repository.md).
+
+**Number**: I-79
+
+The root Container MUST satisfy the core Container invariants unchanged: Invariant 20 (its `containerId` is not an instance ID and never appears as an entry `instanceId` in `memberInstanceIds`, nor in `Relation.sourceInstanceId` or `Relation.targetInstanceId`) and Invariant 21 (every entry's `instanceId` in `memberInstanceIds` references a valid SRS instance id). `rootInstanceIds` is removed ([R4]). Amended by RFC-052 (the-greenman/srs#941): `manifest.rootContainerId` is REQUIRED and names a container of the container set; that container is the root container and satisfies these invariants. Amended by RFC-052 Revision 5 (the-greenman/srs#953, owner rulings 2026-10-23): from revision 10 a repository always has exactly one root container. Setting the root changes only `manifest.rootContainerId`, accepts only a container already in the container set, and changes no container: the promoted container and the previous root keep their own titles, `identityInstanceId` and entries, and the previous root stays an ordinary container. Unsetting it is refused, writing nothing (`manifest-root-container-missing`). Amended by RFC-052 Revision 6 (the-greenman/srs#963, owner answers 2026-10-24): setting it to an id that names no container is refused, writing nothing (`container-not-found`); `manifest-root-container-missing` keeps its one meaning, a manifest with no root.

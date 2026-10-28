@@ -3368,7 +3368,7 @@ An RFC-026-aware validator MUST NOT treat the following as errors when a `slice`
 
 **Number**: I-152
 
-`slice.spec.id` MUST identify a `containerId` present in the repository's tree-authoritative container enumeration (RFC-038 [R1]), not a manifest `containerIndex`, which is retired (RFC-038 [R2]). A validator applying the RFC-026 Change E relaxations MUST NOT require that enumeration to be complete for a partial slice's included sub-containers, and MUST NOT treat that incompleteness as an error. (RFC-026 [R5](a), Change E item 3, amended by RFC-038 [R25].)
+`slice.spec.id` MUST identify a `containerId` present in the repository's tree-authoritative container enumeration (RFC-038 [R1]), not a manifest `containerIndex`, which is retired (RFC-038 [R2]). A validator applying the RFC-026 Change E relaxations MUST NOT require that enumeration to be complete for a partial slice's included sub-containers, and MUST NOT treat that incompleteness as an error. (RFC-026 [R5] (a), Change E item 3, amended by RFC-038 [R25].)
 
 
 ###### Slice relation-endpoint tests resolve against the instance set
@@ -4402,7 +4402,7 @@ For `format: "markdown"`, `"html"`, or `"adoc"`:
 |---|---|---|
 | Document title | `1 + depthOffset` | When `preamble` is absent |
 | Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
-| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section and present in the record's Type's effective field set, or (RFC-020, Rule [N+37]) as a fallback in either absence, see below |
+| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section and present in the record's Type's effective field set, or (RFC-020, Rule [N+37]) as a fallback in either absence |
 | Field label | Bold/formatted text, not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |
 
 For `format: "text"` or implementation-defined values, heading level semantics do not apply.

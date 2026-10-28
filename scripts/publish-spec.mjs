@@ -9,6 +9,7 @@ import { logSrsCliProvenance, resolveSrsCli } from "./lib/pinned-srs.mjs";
 import { VIEW_EXPORTS as VIEW_EXPORT_SPECS } from "./lib/view-exports.mjs";
 import { injectKeyInvariants } from "./lib/invariant-region.mjs";
 import { injectExtensionIndex } from "./lib/extension-index-region.mjs";
+import { buildAgentPages } from "./lib/agent-pages.mjs";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const REPO_ROOT = join(ROOT, "srs");
@@ -121,6 +122,17 @@ async function renderDocumentViews() {
   }
 }
 
+// The spec as fetch-sized pages plus docs/llms.txt (srs#983), split from the final srs-spec.md.
+async function writeAgentPages() {
+  const manifest = JSON.parse(await readFile(join(REPO_ROOT, "manifest.json"), "utf8"));
+  const spec = await readFile(join(SPEC_ROOT, "srs-spec.md"), "utf8");
+  await rm(join(ROOT, "docs", "agents"), { recursive: true, force: true });
+  for (const [path, content] of buildAgentPages(spec, manifest)) {
+    await mkdir(dirname(join(ROOT, "docs", path)), { recursive: true });
+    await writeFile(join(ROOT, "docs", path), content, "utf8");
+  }
+}
+
 // The spec as a downloadable .srs (deterministic SRSzip; check-release-drift compares bytes).
 async function packSpecArchive() {
   await run(SRS_CLI, ["--repo", REPO_ROOT, "archive", "pack", "--output", join(ROOT, "docs", "srs-spec.srs")]);
@@ -134,6 +146,7 @@ async function main() {
   await renderDocumentViews();
   await injectInvariants();
   await injectExtensionIndexes();
+  await writeAgentPages();
   await packSpecArchive();
   await syncSchemas(RUST_SCHEMA_DST);
   await syncSchemas(VSCODE_SCHEMA_DST);

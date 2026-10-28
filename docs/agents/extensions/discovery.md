@@ -1,0 +1,29 @@
+# Discovery
+
+> Defines the Discovery Contract: a portable, implementation-agnostic specification of how SRS repositories are queried.
+
+Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
+
+**Extension ID**: ext:discovery
+
+**Status**: live
+
+**Adds**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
+
+Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
+
+Example: the `DiscoveryQuery` shape. An instance matches a `DiscoveryQuery` if and only if it satisfies all predicates whose values are specified; unspecified predicates are wildcards.
+
+Example: the `TextSegment` shape.
+
+For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"` (RFC-032 Rev 7). `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
+
+The Text Projection algorithm runs differently per tier. For Tier 2 (Record): for each `fieldValue` in `fieldValues` array order, resolve the Field and apply the RFC-032 Rev-7 searchability predicate; if eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order; after all field values, emit one segment per tag, and optionally emit `displayLabel` segments after tags. For Tier 0 (Note): if `title` is non-empty, emit a leading `note-title` segment; for each `section[]` in order, emit a `note-section` segment if `content` is non-empty; after sections, emit tag segments.
+
+Normalization is applied at match time, not at segment construction time: apply Unicode NFC, fold to lowercase (Unicode simple case folding), and do not strip punctuation, diacritics, or whitespace.
+
+Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`, `tier`) are exact-match predicates: two conforming implementations with identical data MUST return identical result sets. Content matching (`contentMatch`) is a recall-floor rule: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring; additional results and alternative ranking are explicitly permitted. When both structured filters and `contentMatch` are specified, an instance MUST satisfy both the exact-match structured predicates AND the content recall-floor predicate.
+
+A self-contained fixture repository with expected result sets lives under `srs/conformance/discovery/`. Example: the discovery conformance fixture layout. An implementation that declares `ext:discovery` MUST pass all fixture scenarios (`exactMatch:true` scenarios exactly; `exactMatch:false` scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
+
+**Cost of Non-Adoption**: Without it, an implementation may filter and search its own repository however it likes, but offers no portably interoperable Discovery Contract: two conforming implementations queried against identical data are not guaranteed to return identical structured-filter result sets, and there is no shared Text Projection, normalization, or consistency rule for content matching to build against.

@@ -1,0 +1,13 @@
+# Container-membership closure
+
+> The closure root is the container identified by spec.id.
+
+Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Travelling form](/agents/distribution/repository/travelling-form.md).
+
+The closure root is the container identified by `spec.id`. The slice includes (I-151, RFC-034 [R9]): (1) `manifest.rootContainerId` naming the closure-root container, which is carried at `containers/<containerId>/` (RFC-052; a head and one entry file per member, RFC-051); (2) the root container's effective membership, meaning the `instanceId` values of its `memberInstanceIds` entries, read flat and ignoring `depth` (RFC-043 [R3]), recursively through the containers declared in `childContainerIds`; (3) every package the slice uses, whole and unchanged (see Slice package closure; RFC-026 [R15]); (4) all relations with both endpoints inside the included set; (5) all source-document sidecar entries (RFC-038 [R25], amending RFC-017 [R2]/[R12]; I-102/I-112; not a manifest `sourceDocumentIndex`, retired per RFC-038 [R2]) and content files referenced by included instances or by included relations' `sourceRefs`; (6) the closure-root container and every container reachable from it through `childContainerIds`, with those declared child edges preserved. An unrelated container is not included on the strength of its members happening to be subsets of the included set; that pre-RFC-034 subset rule is replaced.
+
+Closure and membership read the `instanceId` values of `memberInstanceIds` entries flat, ignoring `depth` ([R3]); `rootInstanceIds` is removed ([R4]). A `containerId` filter and a slice use that one definition ([R18]); a slice keeps in every contained container the entries for the included records and drops each excluded record's entry by the promoting removal ([R7], [R18]).
+
+The closure root becomes the slice's root container, so RFC-043 [R2]'s root rule applies to it. At revision 8 and later, when the closure root's `identityInstanceId` entry is at a depth above 0 or has descendants, export MUST be refused before anything is written, with the error `slice-root-identity-invalid` naming the container, the entry and the reason. The outline and `identityInstanceId` are never rewritten to fit (RFC-026 [R16]).
+
+A Container that is not the closure root or one of its declared `childContainerIds` descendants is never carried, whatever its entries. An empty Container therefore cannot join a slice through a subset test that it passes vacuously (RFC-026 Revision 9 spec finding). A declared descendant with no entries is carried with its edge (RFC-034 [R7], I-151).

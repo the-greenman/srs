@@ -1,0 +1,27 @@
+# Conformance Rules (RFC-036)
+
+> [CR-036-1] A renderer identifier MUST match ^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$.
+
+Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [View](/agents/presentation/projection/view.md).
+
+**[CR-036-1]** A `renderer` identifier MUST match `^([a-z][a-z0-9-]*|[a-z0-9-]+(\.[a-z0-9-]+)+/[^/]+)$`. An identifier that does not match MUST be treated as unrecognised, and [CR-036-7] applies. Enforced at render and validation time, not by JSON Schema, so a malformed identifier degrades gracefully rather than failing the load of an entire View or Theme.
+
+**[CR-036-2]** *(Governance.)* Bare `renderer` identifiers are reserved for SRS-defined renderers and MUST only be introduced by a ratified RFC. Those defined to date are `table` and the sentinel `baseline`. Vendor renderers MUST use the `{reverse-domain}/{name}` form.
+
+**[CR-036-3]** A binding or directive MUST reference a Field whose `fieldType.datatype` is `"ref"` and whose `fieldType.mode` is `"inline"`. Otherwise, or when the `fieldId` does not resolve in the effective package set, implementations MUST ignore the binding, MUST render the field by whatever rendering its `fieldType` normally receives, and MUST emit a diagnostic.
+
+**[CR-036-4]** Composite rendering applies to Tier 2 Records only. A binding whose `fieldId` does not appear on the rendered instance's resolved Type MUST be ignored without a diagnostic — the normal case for a heterogeneous section.
+
+**[CR-036-5]** A binding MUST target a composite field assigned directly to the rendered Record's Type. Binding a composite nested inside another composite's `rangeType` is out of scope; a nested composite is rendered by the composite baseline. Implementations MUST NOT infer a binding for a nested composite from a binding on its parent.
+
+**[CR-036-6]** For a given rendered Record and composite-range field, implementations MUST resolve at most one binding, taking the first that applies: (1) `FieldView.compositeRenderer` on the `FieldView` for that field in the `ext:views-l1` View selected to render the Record — chosen by `DocumentSection.typeDispatch`, else `DocumentSection.renderViewId`; (2) the matching `DocumentSection.compositeRenderers` entry; (3) the matching `Composition.compositeRenderers` entry. When none applies the field is unbound. A resolved `renderer` of `"baseline"` means unbound and MUST NOT fall through to a broader site. A `FieldView` that exists but carries no `compositeRenderer` is not an override and MUST fall through. A field not visible in the selected View is not rendered and no binding applies. When an L1 View is rendered outside any Composition, only site (1) exists. Duplicate `fieldId` entries within one array are a validation diagnostic; the first in array order wins.
+
+**[CR-036-7]** When a resolved `renderer` is not recognised, the implementation MUST fall back to the composite baseline and MUST emit a diagnostic identifying the unrecognised value and the field. The fallback MUST NOT suppress the field's content.
+
+**[CR-036-8]** Role resolution proceeds per role: when `roles` declares that role, its value is the bound Field and MUST resolve to an assignment on the owning Type; otherwise the role binds to the assigned Field whose `Field.name` equals the role name, compared exactly and independently of namespace. Assignments inherited via `ext:type-inheritance` are in scope. On ambiguity, implementations MUST bind the lowest `FieldAssignment.order`, with `fieldId` code-point order as tie-break, and MUST emit a diagnostic. A `roles` entry naming an undefined role MUST be silently ignored.
+
+**[CR-036-9]** A role Field satisfies the renderer's contract when its `fieldType` declares every key the contract specifies, matching the specified value where the contract gives a literal one. `rangeType` is presence-matched — it MUST be present and MUST resolve, and its resolved Type is what dependent roles are looked up on. A `constraints` key required by a contract is advisory and its absence MUST NOT fail the contract test. Additional `fieldType` keys, and assigned Fields filling no role, MUST be ignored. When a required role does not resolve or does not satisfy the contract, implementations MUST fall back to the composite baseline with a diagnostic; when an optional role does not satisfy it, implementations MUST drop that role only, with a diagnostic.
+
+**[CR-036-21]** `FieldView.editorHintOverride`, when present, MUST take a value from the same set as `Field.editorHint` (`singleline`, `textarea`, `rich-text`, `date-picker`, `dropdown`, `multi-select`, `voice`) and supersedes it for Records rendered or edited through that View. A value outside that set MUST be ignored with a diagnostic and `Field.editorHint` MUST apply. Enforced at validation and render time rather than by JSON Schema.
+
+**[CR-036-22]** Every diagnostic required or recommended by a `[CR-036-n]` rule MUST carry that rule's identifier and MUST identify the instance, field, and where applicable the value or row index. [CR-036-13]'s constraint bound raises validation-pass diagnostics of severity `error`; every other `[CR-036-n]` diagnostic is a render-pass `warning`, except [CR-036-6]'s duplicate-`fieldId` case, which is additionally reported at validation time. No `[CR-036-n]` diagnostic of either pass causes a non-zero exit code.
