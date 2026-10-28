@@ -1,0 +1,14 @@
+{
+  "instanceId": "32d425f3-bdfa-4435-a6bb-0b48abac07f3",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.core",
+  "typeName": "purpose",
+  "fieldValues": {
+    "statement": "Anchor of the Mixed container.",
+    "title": "Mixed anchor"
+  },
+  "createdAt": "2026-10-27T16:27:54.634063946+00:00",
+  "updatedAt": "2026-10-27T16:27:54.634079089+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

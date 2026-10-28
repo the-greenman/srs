@@ -928,6 +928,368 @@
         }
       ],
       "expectedValidateUnchanged": true
+    },
+    {
+      "name": "arranged_heading_levels_depth_zero_to_four",
+      "rules": [
+        "R9"
+      ],
+      "description": "Heading level is 3 + depthOffset + depth. The Mixed container nests an item to depth 4 (Alpha 1, Beta 2, Gamma 3, Theta 4); the records of another type render as properties, not headings. Depth 4 computes level 7 and is clamped to 6.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000001",
+        "container": "0a0000c2-0000-4000-8000-000000000001",
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 4,
+          "title": "Alpha"
+        },
+        {
+          "level": 5,
+          "title": "Beta"
+        },
+        {
+          "level": 6,
+          "title": "Gamma"
+        },
+        {
+          "level": 6,
+          "title": "Theta"
+        },
+        {
+          "level": 5,
+          "title": "Delta"
+        },
+        {
+          "level": 3,
+          "title": "Epsilon"
+        }
+      ],
+      "expectedDiagnosticContains": "computed heading level 7 exceeds 6"
+    },
+    {
+      "name": "arranged_depth_offset_clamps_at_level_six",
+      "rules": [
+        "R9"
+      ],
+      "description": "A depthOffset of 3 moves the document title to level 4 and the section to level 5, so every entry of the depth-2 outline computes level 6 or more. The render does not fail: levels clamp to 6 and each clamp is a diagnostic.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000003",
+        "container": "0a0000c1-0000-4000-8000-000000000001",
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 4,
+          "title": "Outline"
+        },
+        {
+          "level": 5,
+          "title": "Section"
+        },
+        {
+          "level": 6,
+          "title": "Alpha"
+        },
+        {
+          "level": 6,
+          "title": "Beta"
+        },
+        {
+          "level": 6,
+          "title": "Gamma"
+        },
+        {
+          "level": 6,
+          "title": "Delta"
+        },
+        {
+          "level": 6,
+          "title": "Epsilon"
+        },
+        {
+          "level": 6,
+          "title": "Zeta"
+        },
+        {
+          "level": 6,
+          "title": "Eta"
+        }
+      ],
+      "expectedDiagnosticContains": "clamped to 6"
+    },
+    {
+      "name": "type_filter_promotes_descendants_of_an_excluded_entry",
+      "rules": [
+        "R7",
+        "R9"
+      ],
+      "description": "A typeFilter section drops an excluded entry by the promoting removal. In Mixed the other-type entry 'Section note' (depth 1) has descendants Beta, Gamma and Theta; its removal lowers them by one, and the filtered anchor entry's removal lowers every deeper entry by one more, so Alpha, Beta and Delta render at level 3.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000004",
+        "container": "0a0000c2-0000-4000-8000-000000000001",
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 3,
+          "title": "Alpha"
+        },
+        {
+          "level": 3,
+          "title": "Beta"
+        },
+        {
+          "level": 4,
+          "title": "Gamma"
+        },
+        {
+          "level": 5,
+          "title": "Theta"
+        },
+        {
+          "level": 3,
+          "title": "Delta"
+        },
+        {
+          "level": 3,
+          "title": "Epsilon"
+        }
+      ]
+    },
+    {
+      "name": "type_filter_excluding_the_anchor_renders_normally",
+      "rules": [
+        "R7"
+      ],
+      "description": "A typeFilter that excludes the anchor entry does not refuse or empty the render: in Anchored the anchor is an other-type record, it is dropped from the output, and the remaining entries keep their relative depth.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000004",
+        "container": "0a0000c3-0000-4000-8000-000000000001",
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 3,
+          "title": "Alpha"
+        },
+        {
+          "level": 4,
+          "title": "Beta"
+        }
+      ]
+    },
+    {
+      "name": "arranged_section_with_field_id_refused",
+      "rules": [
+        "R10"
+      ],
+      "description": "ordering.source 'arranged' combined with ordering.fieldId is refused when the Composition is created; nothing is written.",
+      "operation": {
+        "composition": "create",
+        "definition": {
+          "id": "0a0000d1-0000-4000-8000-000000000009",
+          "namespace": "com.example.arrangement",
+          "name": "bad-arranged-field-id",
+          "version": 1,
+          "description": "",
+          "sections": [
+            {
+              "sectionId": "s",
+              "title": "Section",
+              "order": 1,
+              "source": {
+                "type": "container-subset"
+              },
+              "titleFieldId": "0a0000e1-0000-4000-8000-000000000001",
+              "ordering": {
+                "source": "arranged",
+                "fieldId": "0a0000e1-0000-4000-8000-000000000001"
+              }
+            }
+          ]
+        }
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "composition-validation"
+    },
+    {
+      "name": "arranged_section_with_subtree_refused",
+      "rules": [
+        "R10"
+      ],
+      "description": "ordering.source 'arranged' combined with containerScope 'subtree' is refused when the Composition is created; nothing is written.",
+      "operation": {
+        "composition": "create",
+        "definition": {
+          "id": "0a0000d1-0000-4000-8000-000000000009",
+          "namespace": "com.example.arrangement",
+          "name": "bad-arranged-subtree",
+          "version": 1,
+          "description": "",
+          "sections": [
+            {
+              "sectionId": "s",
+              "title": "Section",
+              "order": 1,
+              "source": {
+                "type": "container-subset",
+                "containerScope": "subtree"
+              },
+              "titleFieldId": "0a0000e1-0000-4000-8000-000000000001",
+              "ordering": {
+                "source": "arranged"
+              }
+            }
+          ]
+        }
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "composition-validation"
+    },
+    {
+      "name": "rule_section_needs_a_container_id",
+      "rules": [
+        "R10"
+      ],
+      "description": "A container-subset section may omit containerId only when ordering.source is 'arranged'; a rule section without one is refused when the Composition is created.",
+      "operation": {
+        "composition": "create",
+        "definition": {
+          "id": "0a0000d1-0000-4000-8000-000000000009",
+          "namespace": "com.example.arrangement",
+          "name": "bad-rule-no-container",
+          "version": 1,
+          "description": "",
+          "sections": [
+            {
+              "sectionId": "s",
+              "title": "Section",
+              "order": 1,
+              "source": {
+                "type": "container-subset"
+              },
+              "titleFieldId": "0a0000e1-0000-4000-8000-000000000001",
+              "ordering": {
+                "source": "rule"
+              }
+            }
+          ]
+        }
+      },
+      "expectedOutcome": "refused",
+      "expectedCode": "composition-validation"
+    },
+    {
+      "name": "rule_section_flattens_a_nested_container",
+      "rules": [
+        "R8"
+      ],
+      "description": "A rule section renders a nested container's members as one flat list in the order of ordering.fieldId (here title, ascending), ignoring the container's own order and depth: every entry is at level 3, where the arranged section of the same container nests them to level 5. The Composition names the container by literal containerId.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000005",
+        "container": null,
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 3,
+          "title": "Alpha"
+        },
+        {
+          "level": 3,
+          "title": "Beta"
+        },
+        {
+          "level": 3,
+          "title": "Delta"
+        },
+        {
+          "level": 3,
+          "title": "Epsilon"
+        },
+        {
+          "level": 3,
+          "title": "Eta"
+        },
+        {
+          "level": 3,
+          "title": "Gamma"
+        },
+        {
+          "level": 3,
+          "title": "Zeta"
+        }
+      ]
+    },
+    {
+      "name": "arranged_section_uses_its_literal_container_when_none_supplied",
+      "rules": [
+        "R9"
+      ],
+      "description": "An arranged section that names a container by literal containerId renders that container when the render supplies none: the Anchored container (Alpha 0, Beta 1).",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000006",
+        "container": null,
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 3,
+          "title": "Alpha"
+        },
+        {
+          "level": 4,
+          "title": "Beta"
+        }
+      ]
+    },
+    {
+      "name": "supplied_container_overrides_a_differing_literal",
+      "rules": [
+        "R9"
+      ],
+      "description": "When the render supplies a container that differs from the section's literal containerId (Anchored), the supplied container (Mixed) is rendered and the literal is ignored.",
+      "operation": {
+        "render": "composition",
+        "view": "0a0000d1-0000-4000-8000-000000000006",
+        "container": "0a0000c2-0000-4000-8000-000000000001",
+        "format": "markdown"
+      },
+      "expectedHeadings": [
+        {
+          "level": 4,
+          "title": "Alpha"
+        },
+        {
+          "level": 5,
+          "title": "Beta"
+        },
+        {
+          "level": 6,
+          "title": "Gamma"
+        },
+        {
+          "level": 6,
+          "title": "Theta"
+        },
+        {
+          "level": 5,
+          "title": "Delta"
+        },
+        {
+          "level": 3,
+          "title": "Epsilon"
+        }
+      ],
+      "expectedDiagnosticContains": "computed heading level 7 exceeds 6"
     }
   ]
 }

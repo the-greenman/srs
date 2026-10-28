@@ -1,0 +1,14 @@
+{
+  "instanceId": "5f6e8ce3-11a2-4b7c-90e1-a1bd855b11db",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.core",
+  "typeName": "purpose",
+  "fieldValues": {
+    "statement": "Anchor of the Anchored container.",
+    "title": "Anchor note"
+  },
+  "createdAt": "2026-10-27T16:27:54.903617369+00:00",
+  "updatedAt": "2026-10-27T16:27:54.903626383+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

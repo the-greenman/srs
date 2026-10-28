@@ -12,15 +12,28 @@ obligation.
   three-level outline (Alpha 0, Beta 1, Gamma 2, Delta 1, Epsilon 0, Zeta 1, Eta 2) with Alpha as its
   anchor, a root container whose entries give the navigation (Alpha 0, Beta 1, Epsilon 0), and two
   Compositions with one arranged `container-subset` section each and no `containerId` literal
-  (`outline-view`, and `outline-view-desc` with `direction: desc`), and one `precedes` relation,
-  Epsilon precedes Alpha, created with `relation create`, which disagrees with the root container's entry
-  order (the [R12] scenario shows navigation ignores it).
-- `scenarios.json` has 30 scenarios covering [R1], [R2], [R3], [R4], [R5], [R7], [R9], [R10], [R11], [R12],
-  [R13], [R19] and [R20]. Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running
-  against this fixture, then checked against the rule it cites; `json_projection_carries_depth`
-  ([R11]) and the six [R19]/[R20] scenarios and the nine added for the-greenman/srs#978 (move, outdent, depth
-  jump, identity descendant, navigation against a disagreeing `precedes`, the retired keys, flattening)
-  were captured from the pinned build.554 CLI.
+  (`outline-view`, and `outline-view-desc` with `direction: desc`). Two more containers serve the
+  render scenarios: `Mixed` (`0a0000c2-...`, anchor a `purpose` record; an item nested to depth 4 and
+  a second `purpose` record with descendants) and `Anchored` (`0a0000c3-...`, Alpha 0, Beta 1 and a
+  `purpose` anchor), with two more Compositions: `outline-view-clamp` (`depthOffset` 3) and
+  `outline-view-items` (arranged, `typeFilter` on the item Type), and two that name a Container by
+  literal `containerId` (allowlisted in `scripts/composition-container-literal-allowlist.json`, srs#851):
+  `outline-view-rule` (a rule section on `Outline`, ordered by title) and `outline-view-literal` (an
+  arranged section on `Anchored`). One `precedes` relation, Epsilon precedes Alpha, created with
+  `relation create`, disagrees with the root container's entry order (the [R12] scenario shows
+  navigation ignores it).
+- `scenarios.json` has 40 scenarios covering [R1] to [R5], [R7] to [R13], [R19] and [R20].
+  Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running against
+  this fixture, then checked against the rule it cites; `json_projection_carries_depth` ([R11]), the six [R19]/[R20] scenarios and
+  the ten render and Composition scenarios added for [R7], [R8], [R9] and [R10] (heading levels to
+  depth 4 and the clamp at 6, `typeFilter` promotion and an excluded anchor, the three [R10] refusals,
+  a rule section flattening a nested container, and a supplied container against a literal), and the nine added for the-greenman/srs#978 (move,
+  outdent, depth jump, identity descendant, navigation against a disagreeing `precedes`, the retired
+  keys, flattening) were captured from the pinned build.554 CLI.
+- Two keys are new for these scenarios and a runner must handle them: the operation
+  `{"composition": "create", "definition": {...}}` (the Composition is refused with
+  `composition-validation`, so the [R10] exclusions are tested where they are enforced), and the
+  expectation `expectedDiagnosticContains` (a substring that some diagnostic of the render contains).
 - A scenario with `given.files` writes those files (path under the repository, JSON content) into the
   fresh copy of `fixture-repo/` before it runs, so a dangling entry or a second container lives in
   scenario-local scratch containers (`0a0000c6-...`, `0a0000c7-...`) and no existing scenario's
@@ -41,8 +54,7 @@ These RFC-043 scenarios need an engine that does not exist in `srs-rust` today
 
 - [R14] three-way merge and [R18] slice closure (no merge or slice engine).
 - [R15] the same entries through CLI, WASM and MCP; [R16] cross-revision refusal; [R17] migration
-  gate refusals; heading clamp at level 6, `typeFilter`
-  with descendants, and a `rule` section flattening a nested container.
+  gate refusals.
 - A retired key in a stored container or Composition at revision 8 ([R4], [R8]) is covered only as a
   refused container patch; the Composition `memberOrder` and a stored `rootInstanceIds` are loaded by
   the migration, not by a CLI verb.
