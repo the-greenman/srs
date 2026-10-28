@@ -16,17 +16,31 @@ obligation.
   render scenarios: `Mixed` (`0a0000c2-...`, anchor a `purpose` record; an item nested to depth 4 and
   a second `purpose` record with descendants) and `Anchored` (`0a0000c3-...`, Alpha 0, Beta 1 and a
   `purpose` anchor), with two more Compositions: `outline-view-clamp` (`depthOffset` 3) and
-  `outline-view-items` (arranged, `typeFilter` on the item Type).
-- `scenarios.json` has 22 scenarios covering [R1], [R2], [R3], [R5], [R7], [R9], [R10], [R11] and [R12].
+  `outline-view-items` (arranged, `typeFilter` on the item Type), and two that name a Container by
+  literal `containerId` (allowlisted in `scripts/composition-container-literal-allowlist.json`, srs#851):
+  `outline-view-rule` (a rule section on `Outline`, ordered by title) and `outline-view-literal` (an
+  arranged section on `Anchored`).
+- `scenarios.json` has 31 scenarios covering [R1], [R2], [R3], [R5], [R7], [R8], [R9], [R10], [R11], [R12],
+  [R19] and [R20].
   Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running against
   this fixture, then checked against the rule it cites; `json_projection_carries_depth` ([R11]) and
-  the seven render and Composition scenarios added for [R7], [R9] and [R10] (heading levels to depth 4
-  and the clamp at 6, `typeFilter` promotion and an excluded anchor, the three [R10] refusals) were
+  the ten render and Composition scenarios added for [R7], [R8], [R9] and [R10] (heading levels to
+  depth 4 and the clamp at 6, `typeFilter` promotion and an excluded anchor, the three [R10] refusals,
+  a rule section flattening a nested container, and a supplied container against a literal) were
   captured from the pinned build.554 CLI.
 - Two keys are new for these scenarios and a runner must handle them: the operation
   `{"composition": "create", "definition": {...}}` (the Composition is refused with
   `composition-validation`, so the [R10] exclusions are tested where they are enforced), and the
   expectation `expectedDiagnosticContains` (a substring that some diagnostic of the render contains).
+- A scenario with `given.files` writes those files (path under the repository, JSON content) into the
+  fresh copy of `fixture-repo/` before it runs, so a dangling entry or a second container lives in
+  scenario-local scratch containers (`0a0000c6-...`, `0a0000c7-...`) and no existing scenario's
+  expectation moves. The [R19] scenarios read `sectionContainerId` per navigation section
+  (`expectedSectionContainers`, `null` for none) and the navigation diagnostics
+  (`expectedDiagnostics`); the [R20] scenarios run `container: "members-repair"` and check
+  `expectedMembers` / `expectedPromoted` / `expectedRemoved`, `expectedAnchorInstanceId` and
+  `expectedValidateCode` (after repair, `repo validate` still reports it), and `expectedSecondRun`
+  (the same expectations after a second repair).
 
 ## Not yet covered
 
@@ -35,12 +49,7 @@ These RFC-043 scenarios need an engine that does not exist in `srs-rust` today
 
 - [R14] three-way merge and [R18] slice closure (no merge or slice engine).
 - [R15] the same entries through CLI, WASM and MCP; [R16] cross-revision refusal; [R17] migration
-  gate refusals; [R20] repair; [R19] shared-anchor ambiguity.
-- [R8] a `rule` section flattening a nested container, and [R9] a supplied container against a
-  differing literal (and the literal used when none is supplied): both need a Composition whose
-  `container-subset` source names a Container by id, which `check-composition-container-literal.mjs`
-  forbids outside its allowlist (RFC-043 ruling M, srs#851). Growing that allowlist is a gate change,
-  so these wait on a ruling.
+  gate refusals.
 
 ## RFC-051 storage scenarios
 
