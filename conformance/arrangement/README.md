@@ -13,10 +13,19 @@ obligation.
   anchor, a root container whose entries give the navigation (Alpha 0, Beta 1, Epsilon 0), and two
   Compositions with one arranged `container-subset` section each and no `containerId` literal
   (`outline-view`, and `outline-view-desc` with `direction: desc`).
-- `scenarios.json` has 15 scenarios covering [R1], [R2], [R3], [R5], [R7], [R9], [R10], [R11] and [R12].
-  Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running against this
-  fixture, then checked against the rule it cites; `json_projection_carries_depth` ([R11]) was
-  captured from the pinned build.554 CLI.
+- `scenarios.json` has 21 scenarios covering [R1], [R2], [R3], [R5], [R7], [R9], [R10], [R11], [R12],
+  [R19] and [R20]. Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running
+  against this fixture, then checked against the rule it cites; `json_projection_carries_depth`
+  ([R11]) and the six [R19]/[R20] scenarios were captured from the pinned build.554 CLI.
+- A scenario with `given.files` writes those files (path under the repository, JSON content) into the
+  fresh copy of `fixture-repo/` before it runs, so a dangling entry or a second container lives in
+  scenario-local scratch containers (`0a0000c6-...`, `0a0000c7-...`) and no existing scenario's
+  expectation moves. The [R19] scenarios read `sectionContainerId` per navigation section
+  (`expectedSectionContainers`, `null` for none) and the navigation diagnostics
+  (`expectedDiagnostics`); the [R20] scenarios run `container: "members-repair"` and check
+  `expectedMembers` / `expectedPromoted` / `expectedRemoved`, `expectedAnchorInstanceId` and
+  `expectedValidateCode` (after repair, `repo validate` still reports it), and `expectedSecondRun`
+  (the same expectations after a second repair).
 
 ## Not yet covered
 
@@ -25,7 +34,7 @@ These RFC-043 scenarios need an engine that does not exist in `srs-rust` today
 
 - [R14] three-way merge and [R18] slice closure (no merge or slice engine).
 - [R15] the same entries through CLI, WASM and MCP; [R16] cross-revision refusal; [R17] migration
-  gate refusals; [R20] repair; [R19] shared-anchor ambiguity; heading clamp at level 6, `typeFilter`
+  gate refusals; heading clamp at level 6, `typeFilter`
   with descendants, and a `rule` section flattening a nested container.
 
 ## RFC-051 storage scenarios

@@ -387,6 +387,269 @@
       },
       "expectedOutcome": "refused",
       "expectedCode": "arrangement-pointer"
+    },
+    {
+      "name": "section_container_is_the_anchor_container",
+      "rules": [
+        "R19"
+      ],
+      "description": "The section container of a record is the Container whose anchorInstanceId equals the record's id: Alpha is the anchor of Outline, so Alpha's navigation section carries Outline as its sectionContainerId; Beta and Epsilon anchor no container and carry none. No diagnostic.",
+      "operation": {
+        "repo": "navigation"
+      },
+      "rootContainerId": "0a000000-0000-4000-8000-000000000001",
+      "identityInstanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc",
+      "expectedSectionContainers": {
+        "dc328f4b-cd1d-40f7-92ec-0c36b69894bc": "0a0000c1-0000-4000-8000-000000000001",
+        "8eef4acf-ac8f-4496-902a-5d06e034fc46": null,
+        "291abed5-1baa-429f-948e-3cb4bf267c07": null
+      },
+      "expectedDiagnostics": []
+    },
+    {
+      "name": "container_without_anchor_has_no_link",
+      "rules": [
+        "R19"
+      ],
+      "description": "A container with no anchorInstanceId has no root and no section link, which is not an error. A scratch container with no anchor holds Epsilon; Epsilon still carries no sectionContainerId and navigation reports no diagnostic.",
+      "given": {
+        "files": {
+          "containers/0a0000c6-0000-4000-8000-000000000001/container.json": {
+            "containerId": "0a0000c6-0000-4000-8000-000000000001",
+            "title": "Unanchored"
+          },
+          "containers/0a0000c6-0000-4000-8000-000000000001/entries/291abed5-1baa-429f-948e-3cb4bf267c07.json": {
+            "containerId": "0a0000c6-0000-4000-8000-000000000001",
+            "instanceId": "291abed5-1baa-429f-948e-3cb4bf267c07",
+            "key": "a0"
+          }
+        }
+      },
+      "operation": {
+        "repo": "navigation"
+      },
+      "rootContainerId": "0a000000-0000-4000-8000-000000000001",
+      "identityInstanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc",
+      "expectedSectionContainers": {
+        "dc328f4b-cd1d-40f7-92ec-0c36b69894bc": "0a0000c1-0000-4000-8000-000000000001",
+        "8eef4acf-ac8f-4496-902a-5d06e034fc46": null,
+        "291abed5-1baa-429f-948e-3cb4bf267c07": null
+      },
+      "expectedDiagnostics": []
+    },
+    {
+      "name": "shared_anchor_is_ambiguous",
+      "rules": [
+        "R19"
+      ],
+      "description": "Where more than one container names the same anchor, no section-container link is chosen (not by position, not by storage order) and the diagnostic section-container-ambiguous is reported. A scratch container also anchored at Alpha: Alpha loses its link; the diagnostic names Alpha and both containers.",
+      "given": {
+        "files": {
+          "containers/0a0000c6-0000-4000-8000-000000000001/container.json": {
+            "anchorInstanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "containerId": "0a0000c6-0000-4000-8000-000000000001",
+            "title": "Second outline"
+          },
+          "containers/0a0000c6-0000-4000-8000-000000000001/entries/dc328f4b-cd1d-40f7-92ec-0c36b69894bc.json": {
+            "containerId": "0a0000c6-0000-4000-8000-000000000001",
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "key": "a0"
+          }
+        }
+      },
+      "operation": {
+        "repo": "navigation"
+      },
+      "rootContainerId": "0a000000-0000-4000-8000-000000000001",
+      "identityInstanceId": "ca6da9bd-3230-437d-9b7f-febcbd7584dc",
+      "expectedSectionContainers": {
+        "dc328f4b-cd1d-40f7-92ec-0c36b69894bc": null,
+        "8eef4acf-ac8f-4496-902a-5d06e034fc46": null,
+        "291abed5-1baa-429f-948e-3cb4bf267c07": null
+      },
+      "expectedDiagnostics": [
+        "section-container-ambiguous: anchor dc328f4b-cd1d-40f7-92ec-0c36b69894bc is named by 2 containers (0a0000c1-0000-4000-8000-000000000001, 0a0000c6-0000-4000-8000-000000000001); no section-container link is chosen (RFC-043 [R19])"
+      ]
+    },
+    {
+      "name": "repair_removes_dangling_entries_and_promotes_descendants",
+      "rules": [
+        "R20",
+        "R7"
+      ],
+      "description": "Repair removes every entry whose instanceId does not resolve, each by [R7], and reports each removal. A scratch container holds Alpha, a dangling entry (...00ff) with Beta and Gamma beneath it (Gamma under Beta), and a second dangling entry (...00fe). Both dangling entries are removed and reported in outline order; Beta and Gamma are promoted one level, so Gamma stays one level under Beta.",
+      "given": {
+        "files": {
+          "containers/0a0000c7-0000-4000-8000-000000000001/container.json": {
+            "anchorInstanceId": "00000000-0000-4000-8000-0000000000ff",
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "title": "Repair"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/dc328f4b-cd1d-40f7-92ec-0c36b69894bc.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "key": "a0"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/00000000-0000-4000-8000-0000000000ff.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "00000000-0000-4000-8000-0000000000ff",
+            "key": "a1"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/8eef4acf-ac8f-4496-902a-5d06e034fc46.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+            "key": "a0",
+            "parent": "00000000-0000-4000-8000-0000000000ff"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/3c8311aa-410e-4052-be62-dba11656a94b.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+            "key": "a0",
+            "parent": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/00000000-0000-4000-8000-0000000000fe.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "00000000-0000-4000-8000-0000000000fe",
+            "key": "a2"
+          }
+        }
+      },
+      "operation": {
+        "container": "members-repair",
+        "containerId": "0a0000c7-0000-4000-8000-000000000001"
+      },
+      "expectedMembers": [
+        {
+          "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+        },
+        {
+          "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+        },
+        {
+          "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+          "depth": 1
+        }
+      ],
+      "expectedPromoted": [
+        "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+        "3c8311aa-410e-4052-be62-dba11656a94b"
+      ],
+      "expectedRemoved": [
+        "00000000-0000-4000-8000-0000000000ff",
+        "00000000-0000-4000-8000-0000000000fe"
+      ]
+    },
+    {
+      "name": "repair_leaves_a_dangling_pointer_reported",
+      "rules": [
+        "R20"
+      ],
+      "description": "Repair leaves identityInstanceId and anchorInstanceId untouched: the scratch container's anchorInstanceId names the dangling ...00ff, and after repair it still names it, so repo validate still reports container-pointer-unresolved. A dangling pointer is reported, not repaired.",
+      "given": {
+        "files": {
+          "containers/0a0000c7-0000-4000-8000-000000000001/container.json": {
+            "anchorInstanceId": "00000000-0000-4000-8000-0000000000ff",
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "title": "Repair"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/dc328f4b-cd1d-40f7-92ec-0c36b69894bc.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "key": "a0"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/00000000-0000-4000-8000-0000000000ff.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "00000000-0000-4000-8000-0000000000ff",
+            "key": "a1"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/8eef4acf-ac8f-4496-902a-5d06e034fc46.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+            "key": "a0",
+            "parent": "00000000-0000-4000-8000-0000000000ff"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/3c8311aa-410e-4052-be62-dba11656a94b.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+            "key": "a0",
+            "parent": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/00000000-0000-4000-8000-0000000000fe.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "00000000-0000-4000-8000-0000000000fe",
+            "key": "a2"
+          }
+        }
+      },
+      "operation": {
+        "container": "members-repair",
+        "containerId": "0a0000c7-0000-4000-8000-000000000001"
+      },
+      "expectedAnchorInstanceId": "00000000-0000-4000-8000-0000000000ff",
+      "expectedValidateCode": "container-pointer-unresolved"
+    },
+    {
+      "name": "repair_is_idempotent",
+      "rules": [
+        "R20"
+      ],
+      "description": "A second repair changes nothing: the same members, nothing removed and nothing promoted.",
+      "given": {
+        "files": {
+          "containers/0a0000c7-0000-4000-8000-000000000001/container.json": {
+            "anchorInstanceId": "00000000-0000-4000-8000-0000000000ff",
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "title": "Repair"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/dc328f4b-cd1d-40f7-92ec-0c36b69894bc.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc",
+            "key": "a0"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/00000000-0000-4000-8000-0000000000ff.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "00000000-0000-4000-8000-0000000000ff",
+            "key": "a1"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/8eef4acf-ac8f-4496-902a-5d06e034fc46.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46",
+            "key": "a0",
+            "parent": "00000000-0000-4000-8000-0000000000ff"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/3c8311aa-410e-4052-be62-dba11656a94b.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+            "key": "a0",
+            "parent": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+          },
+          "containers/0a0000c7-0000-4000-8000-000000000001/entries/00000000-0000-4000-8000-0000000000fe.json": {
+            "containerId": "0a0000c7-0000-4000-8000-000000000001",
+            "instanceId": "00000000-0000-4000-8000-0000000000fe",
+            "key": "a2"
+          }
+        }
+      },
+      "operation": {
+        "container": "members-repair",
+        "containerId": "0a0000c7-0000-4000-8000-000000000001"
+      },
+      "expectedSecondRun": {
+        "expectedMembers": [
+          {
+            "instanceId": "dc328f4b-cd1d-40f7-92ec-0c36b69894bc"
+          },
+          {
+            "instanceId": "8eef4acf-ac8f-4496-902a-5d06e034fc46"
+          },
+          {
+            "instanceId": "3c8311aa-410e-4052-be62-dba11656a94b",
+            "depth": 1
+          }
+        ],
+        "expectedPromoted": [],
+        "expectedRemoved": []
+      }
     }
   ]
 }
