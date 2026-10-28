@@ -19,15 +19,17 @@ obligation.
   `outline-view-items` (arranged, `typeFilter` on the item Type), and two that name a Container by
   literal `containerId` (allowlisted in `scripts/composition-container-literal-allowlist.json`, srs#851):
   `outline-view-rule` (a rule section on `Outline`, ordered by title) and `outline-view-literal` (an
-  arranged section on `Anchored`).
-- `scenarios.json` has 31 scenarios covering [R1], [R2], [R3], [R5], [R7], [R8], [R9], [R10], [R11], [R12],
-  [R19] and [R20].
+  arranged section on `Anchored`). One `precedes` relation, Epsilon precedes Alpha, created with
+  `relation create`, disagrees with the root container's entry order (the [R12] scenario shows
+  navigation ignores it).
+- `scenarios.json` has 40 scenarios covering [R1] to [R5], [R7] to [R13], [R19] and [R20].
   Every expectation was captured from the build.417 CLI (srs-rust 0a46716) running against
-  this fixture, then checked against the rule it cites; `json_projection_carries_depth` ([R11]) and
+  this fixture, then checked against the rule it cites; `json_projection_carries_depth` ([R11]), the six [R19]/[R20] scenarios and
   the ten render and Composition scenarios added for [R7], [R8], [R9] and [R10] (heading levels to
   depth 4 and the clamp at 6, `typeFilter` promotion and an excluded anchor, the three [R10] refusals,
-  a rule section flattening a nested container, and a supplied container against a literal) were
-  captured from the pinned build.554 CLI.
+  a rule section flattening a nested container, and a supplied container against a literal), and the nine added for the-greenman/srs#978 (move,
+  outdent, depth jump, identity descendant, navigation against a disagreeing `precedes`, the retired
+  keys, flattening) were captured from the pinned build.554 CLI.
 - Two keys are new for these scenarios and a runner must handle them: the operation
   `{"composition": "create", "definition": {...}}` (the Composition is refused with
   `composition-validation`, so the [R10] exclusions are tested where they are enforced), and the
@@ -41,6 +43,9 @@ obligation.
   `expectedMembers` / `expectedPromoted` / `expectedRemoved`, `expectedAnchorInstanceId` and
   `expectedValidateCode` (after repair, `repo validate` still reports it), and `expectedSecondRun`
   (the same expectations after a second repair).
+  Move and outdent are one CLI verb, `container members move` with `--after` or `--depth` (there is no
+  separate outdent verb); a single-entry outdent that would leave a depth jump cannot be expressed,
+  because a move carries its run, so `depth_jump_refused_on_move` pins the depth rule on the verb.
 
 ## Not yet covered
 
@@ -50,6 +55,9 @@ These RFC-043 scenarios need an engine that does not exist in `srs-rust` today
 - [R14] three-way merge and [R18] slice closure (no merge or slice engine).
 - [R15] the same entries through CLI, WASM and MCP; [R16] cross-revision refusal; [R17] migration
   gate refusals.
+- A retired key in a stored container or Composition at revision 8 ([R4], [R8]) is covered only as a
+  refused container patch; the Composition `memberOrder` and a stored `rootInstanceIds` are loaded by
+  the migration, not by a CLI verb.
 
 ## RFC-051 storage scenarios
 
