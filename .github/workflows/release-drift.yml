@@ -90,7 +90,7 @@ env:
   # head plus one entry file per member) and the rfc051-container-entries
   # registry migration. A build.545 binary refuses revision-11 data, so the
   # corpus migration and this bump land together (srs#949).
-  SRS_RUST_CLI_TAG: v0.1.0-build.554
+  SRS_RUST_CLI_TAG: v0.1.0-build.569
 
 jobs:
   check-release-drift:

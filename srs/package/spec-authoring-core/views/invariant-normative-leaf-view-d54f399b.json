@@ -1,0 +1,20 @@
+{
+  "id": "d54f399b-6170-40c7-b4e3-41476995cd35",
+  "namespace": "com.semanticops.spec",
+  "name": "invariant-normative-leaf-view",
+  "version": 1,
+  "description": "Renders a com.semanticops.spec/invariant record as a normative document leaf for the specification (srs-spec.md): invariant_number keeps its label as the citation identifier, and normative_statement reads directly under its heading with no label (labelMode: none). The rationale field is omitted: the reasons behind a constraint belong to the unified and rationale documents, not to the normative spec (srs#982). The unified composition keeps invariant-leaf-view (c20c6fff), which shows the rationale.",
+  "fieldViews": [
+    {
+      "fieldId": "1a000020-0000-4000-a000-000000000020",
+      "order": 0
+    },
+    {
+      "fieldId": "1a000003-0000-4000-a000-000000000003",
+      "order": 1,
+      "labelMode": "none"
+    }
+  ],
+  "createdAt": "2026-10-28T11:11:16.499150791+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/view.json"
+}
