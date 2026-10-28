@@ -208,16 +208,12 @@ A dot-separated, lowercase identifier that groups definitions under an authority
 
 A conforming SRS implementation MUST make all `com.semanticops.core/*` types and fields resolvable in every repository without any `packageRef` or `packageRefs` declaration in the manifest. The core base package's definitions are treated as logically present in the RFC-014 R6 package union for all repositories. An implementation that fails to resolve `com.semanticops.core/*` types and fields in a structurally valid repository is non-conformant with RFC-029.
 
-**Rationale**: Without this invariant an implementation could claim RFC-029 conformance while failing to expose core types to type resolution, making the always-available guarantee unverifiable. The invariant makes the expectation explicit and testable: a conformance suite can check whether `com.semanticops.core/purpose` resolves in any repository regardless of its package declarations.
-
 
 ##### No Type or Field with namespace com.semanticops.core MAY be declared in any repository package
 
 **Number**: I-86
 
 A repository MUST NOT declare any Type or Field under the `com.semanticops.core` namespace in a local or external package. An implementation MUST reject the repository load with a conflict error if any such declaration is encountered during package loading. This reservation covers only the `com.semanticops.core` namespace; other `com.semanticops.*` sub-namespaces are governed by their own RFC or by general package conflict rules and are not affected by this invariant.
-
-**Rationale**: The core base package's definitions are exclusively controlled by the SRS implementation, guaranteeing universal availability and consistency. Allowing repositories to declare their own `com.semanticops.core` types would create shadowing, version conflicts, and divergence between implementations. The hard conflict error (not a warning) makes this an unambiguous implementation constraint.
 
 
 
@@ -2046,8 +2042,6 @@ Non-governance projects use the same Relation layer. `supersedes` is canonical; 
 
 The `sourceRole` value set — the closed enum of the implemented schema revision, including values added by later accepted RFCs — MUST be disjoint under literal whole-key equality from the set of installed `RelationTypeDefinition` keys in the repository's effective package set. Relation-type creation MUST reject a definition whose key equals a `sourceRole` value; `repo validate` MUST report a pre-existing collision as `SOURCEROLE_RELATIONTYPE_COLLISION` (warning at rest). A namespaced key (e.g. `com.acme/evidence`) does not collide with a bare `sourceRole` value.
 
-**Rationale**: The Relation edge vocabulary and the SourceReference provenance vocabulary are unrelated type systems that historically collided (`derived-from` appeared identically in both). Disjointness makes every vocabulary string unambiguous about which mechanism it belongs to, and guards future additions on either side (e.g. RFC-017's `attaches`).
-
 
 ##### ext:recommended-relations
 
@@ -2247,16 +2241,12 @@ When the repository's container set (RFC-038 [R1]) is non-empty, each non-identi
 
 A Container's direct membership `direct(C)` is exactly the set of `instanceId` values of its `memberInstanceIds` entries, read flat whatever their depth ([R3]). An omitted `memberInstanceIds` contributes no members and MUST NOT be read as opting into Relation traversal. The set is duplicate-free; the list that carries it is ordered ([R1], [R2]), and `rootInstanceIds` is removed ([R4]).
 
-**Rationale**: RFC-034 [R1] (Change A). Both arrays keep their authoring roles: roots anchor the scope, memberInstanceIds adds explicit members. The pre-RFC-034 rule that an omitted memberInstanceIds meant membership was derived by traversing contains from the roots is retired by rfc-decision-0750c62f.
-
 
 ##### Container nesting is declared through childContainerIds and effective membership is its closure
 
 **Number**: I-147
 
 A Container is an admitted child of another Container exactly when it is distinct and its containerId appears in the other Container's childContainerIds; membership-array overlap alone MUST NOT create admission. A conforming implementation MUST compute effective membership as the recursive closure over childContainerIds (effective(C) = direct(C) united with effective(child) for every declared child), MUST deduplicate instance ids, and MUST NOT infer an ordering from either membership array or from childContainerIds order.
-
-**Rationale**: RFC-034 [R2] and [R3] (Change B). Nesting is an authoring decision and is written as one; a Container rooted at an instance that appears in another Container's membership acquires no relationship to it unless named there. childContainerIds holds containerIds, never instance ids, so I-20 is unaffected. Ordering stays with precedes and Composition (RFC-015).
 
 
 ##### Relations never define Container membership
@@ -2265,8 +2255,6 @@ A Container is an admitted child of another Container exactly when it is distinc
 
 A Relation of any type, including contains, MUST NOT cause an instance to appear in a Container's direct or effective membership.
 
-**Rationale**: RFC-034 [R4] (Change C), the consequence of rfc-decision-0750c62f: a Container is a declared selection on the expression plane and a Relation is a semantic claim. contains does not retire; it remains the part-of tree that navigation depth, layering and any tree walk are built on, and it continues to be maintained. A Container is a bookmark over that tree.
-
 
 ##### A query result is not Container membership
 
@@ -2274,16 +2262,12 @@ A Relation of any type, including contains, MUST NOT cause an instance to appear
 
 A Record-selection query MUST NOT be treated as persisted Container membership unless an authoring operation writes its selected ids as entries in the Container's `memberInstanceIds`.
 
-**Rationale**: RFC-034 [R6] (Change E). Container is the declared selection and DiscoveryQuery the computed one; two selection constructs for two goals and no third (rfc-decision-0750c62f). Materialising a query result into memberInstanceIds creates a new explicit boundary; it does not make the query the boundary's live definition.
-
 
 ##### childContainerIds entries resolve, are distinct, and form an acyclic graph
 
 **Number**: I-150
 
 Every childContainerIds entry MUST reference an existing, distinct Container, and the childContainerIds graph MUST be acyclic. A missing target, self-reference, or cycle is a validation error. For any Container whose reachable child graph contains such an error, effective-membership evaluation MUST fail with a diagnostic and MUST NOT return a partial result. A rootless child is valid. When a child has roots, those roots SHOULD occur in the parent's direct membership; a violation produces a structural-coherence diagnostic but MUST NOT remove the declared edge from effective-membership evaluation.
-
-**Rationale**: RFC-034 [R7] (Change B). Because admission is a declared edge, effective(C) is computable from C and its declared descendants alone, which keeps an RFC-026 slice self-contained. A Container may have more than one parent provided the whole graph stays acyclic; only the tree-shaped subset maps onto a folder hierarchy.
 
 
 ##### Container
@@ -2348,8 +2332,6 @@ Order that reflects curation, display preference, or layout is presentation, not
 **Number**: I-125
 
 `precedes` relations MUST be used only to express sequences where a different order would be semantically wrong (e.g. spec sections in document order, protocol stages in execution sequence). Implementations MUST NOT create `precedes` relations between instances whose ordering is presentational (layout, curation, display preference). A `precedes` relation between two container members MUST be interpreted as a semantic claim about their sequence, not as a rendering hint. (RFC-015 Change A.)
-
-**Rationale**: RFC-013 established a normative boundary between semantic order (`precedes`) and presentational order. This invariant makes that boundary an obligation rather than a convention: without it, `precedes` could silently accrue presentational uses, making the semantic graph unreliable for any consumer that treats `precedes` as a claim about correctness of order (e.g. protocol execution sequencing).
 
 
 
@@ -2419,8 +2401,6 @@ When `PackageRef.mode === "local"`, the package at the declared path must be `mo
 
 A tool MUST resolve every `typeId` and `fieldId` referenced by any Tier 2 Record against the union of all installed package version directories. This extends Invariant 50 to the multi-version case: a reference is resolved if it can be found in any installed version directory. A reference that cannot be found in any installed version directory MUST be reported as a validation error. A tool MUST NOT remove any prior-version package directory if doing so would leave any such reference unresolvable.
 
-**Rationale**: SRS records reference their type and field definitions by stable UUID. In a multi-version repository, those UUIDs may resolve to different package version directories depending on when the record was created. Requiring union resolution, rather than single-version resolution, ensures that no existing record becomes unresolvable when a new package version is installed alongside the old one. This upholds the stable-UUID guarantee: a UUID that was valid at record-creation time remains resolvable throughout the repository's lifetime.
-
 
 ##### no-base-package: repository must load without com.semanticops.base
 
@@ -2441,8 +2421,6 @@ Two distinct records of where a definition came from. Lineage is the relationshi
 **Number**: I-84
 
 When `manifest.upstreamPackage` is set, there MUST exist at least one entry in `manifest.packageRefs` (or `manifest.packageRef`) whose `packageId` matches `manifest.upstreamPackage.packageId`. A manifest where no `PackageRef` entry's `packageId` matches `upstreamPackage.packageId` MUST be reported as a validation error. Manifest-only validators MAY skip this check when no `PackageRef` entry carries `packageId` (i.e., all local-mode entries predate RFC-014 and omit the field), and SHOULD report the repository state as indeterminate rather than emitting a validation error in that case.
-
-**Rationale**: Without this invariant a manifest could declare an `upstreamPackage` for package X while listing only `PackageRef` entries for package Y, and no validator could detect the inconsistency without cross-referencing package directory files. Using `packageId` — a stable UUID — as the linkage key (rather than namespace or name, which could change) preserves the stable-UUID-as-identity-anchor principle throughout the manifest.
 
 
 ##### Import tracking
@@ -2711,8 +2689,6 @@ Every entry `instanceId` in the root container's `memberInstanceIds` MUST resolv
 **Number**: I-87
 
 The root container's `identityInstanceId` (on the container `manifest.rootContainerId` names, RFC-052), when present, MUST reference a Tier-2 Record of type `com.semanticops.core/purpose`. This invariant layers on RFC-013 I-81 (membership requirement retained; I-81 is not superseded); RFC-029 adds the type constraint on top. During the RFC-029 migration grace period (R7), an implementation MUST emit a migration warning rather than a validation error for existing repositories whose `identityInstanceId` resolves to a record that is not a Tier-2 `com.semanticops.core/purpose` Record (including Tier-0 notes). All newly-created repositories (post-RFC-029) must satisfy this invariant immediately.
-
-**Rationale**: RFC-013 I-81 left the type of the identity record unconstrained, requiring only membership in the root container. This made the identity record un-navigable by the SRS type system: a consumer could not use `resolve_type`/`record_get` without a special code path for the missing-type case. By requiring a `com.semanticops.core/purpose` Record, identity resolution becomes an ordinary typed record lookup, and the RFC-013 Tier-0-note default is formally superseded.
 
 
 ##### no-policy defaults when attachment_policy absent
@@ -3064,8 +3040,6 @@ A conformant implementation MUST reject a gzip-compressed file presented as a `.
 **Number**: I-151
 
 An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set. It MUST preserve declared edges among those Containers and MUST NOT include an unrelated Container solely because its roots or members are subsets of the included instance set.
-
-**Rationale**: RFC-034 [R9] (Change D.3), replacing RFC-026 Change C items 2 and 6. RFC-026's definition, relation, source-document and external-edge closure rules then apply to that member-instance set.
 
 
 ###### The `slice` manifest property
@@ -4044,8 +4018,6 @@ Document-level projection is addressed by `ext:views-l2`. The broader projection
 
 When `manifest.renderedPresentations` is present and non-empty, a conformant viewer MUST select as the default presentation the first entry whose `isDefault` is `true`. When no entry carries `isDefault: true`, the first entry in the array is the default. The selected Composition governs the repository's presentation. When a `renderedPresentations` entry's `compositionId` does not resolve to a Composition in the active packages, implementations MUST skip that entry and MUST emit a diagnostic; if all entries fail to resolve, behaviour falls back to implementation-defined selection as if `renderedPresentations` were absent. When `compositionId` resolves to Compositions in more than one active package, implementations MUST report a validation error (ambiguous composition reference). When `renderedPresentations` is absent or empty, viewer behaviour falls back to implementation-defined selection (existing behaviour unchanged; no conformance obligation is added for the absent case). (RFC-015 Change C.)
 
-**Rationale**: `renderedPresentations` declares which Composition(s) constitute the repository's presentations so a conformant viewer opens the document the group intended, without requiring every viewer to guess. A multi-package `compositionId` collision is reported as an error (not resolved by implementation-defined precedence) because silently picking one package's Composition over another's would be a non-deterministic, non-portable choice.
-
 
 ##### Projection
 
@@ -4487,8 +4459,6 @@ When Composition.rootTypeRefs is present and non-empty, each ExactTypeRef entry 
 
 When SectionSource.discovery-query carries containerScope, implementations MUST apply the following scoping rules: (a) When containerScope is absent or "explicit", the query is scoped to the containers listed in containerIds[] -- existing behaviour. An absent containerIds[] with explicit scope produces an empty result. (b) When containerScope is "repository", the query spans all containers in the repository; containerIds[] MUST be ignored. (c) When containerScope is "subtree", the query spans effective(C) for each container in containerIds[], the recursive closure over declared childContainerIds (RFC-034 [R8]; I-147); it follows declared child edges only and MUST NOT traverse contains Relations to discover child containers (amended by RFC-034, 2026-09-06: the former "reachable by contains relations" branch is superseded). "explicit" correspondingly evaluates direct(C), the container's own members without its nested subtree; when containerIds[] is absent or empty, the context container is used as the subtree root. An implementation that cannot determine the context container for a subtree query MUST treat it as "explicit" with an empty containerIds[] and SHOULD emit a diagnostic. Implementations MUST NOT produce a validation error when containerScope is absent; absent is equivalent to "explicit". containerScope is arrangement, not selection: it is layered on top of the section's DiscoveryQuery, not a DiscoveryQuery predicate itself (DiscoveryQuery.containerId is single-valued and takes one container's effective membership; containerScope's multi-container/subtree semantics have no DiscoveryQuery equivalent).
 
-**Rationale**: Three-value enum rather than a boolean because the subtree case has meaningfully different semantics from both explicit and repository. Backward compatibility is preserved by treating absent as explicit. Originally numbered 011-3 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-144 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Unchanged in substance by the srs#525 SectionSource -> DiscoveryQuery collapse (RFC-011 Rev 2): the containing variant was renamed type-query -> discovery-query (typeKey replaced by query.typeNamespace/query.typeName), but containerScope itself stays a SectionSource-level arrangement directive, still governed by RFC-011.
-
 
 ###### ordering.memberOrder application algorithm
 
@@ -4496,16 +4466,12 @@ When SectionSource.discovery-query carries containerScope, implementations MUST 
 
 **Retired by RFC-043 (dataModelRevision 8).** `ordering.memberOrder` is removed and this algorithm is replaced by RFC-043 [R8] to [R11]: a section declares `ordering.source` as `arranged` or `rule`, and an arranged section renders the container's own entries in their sequence and depth ([R9]). Step 2 (skipping a listed id that is no longer a member, with a diagnostic only) is reversed by RFC-043 Change G: an entry naming an unresolved instance is a validation error ([R2]) removed by the repair operation ([R20]). The mutual exclusion with `ordering.fieldId` and the restriction to `container-subset` sections are restated as errors for an arranged section ([R10]), and the `desc` reversal of step 4 is restated in [R9].
 
-**Rationale**: A departed `memberOrder` entry (step 2) is a diagnostic, not an error, because stale UUID references accumulate naturally as records are removed from containers; treating them as errors would make `memberOrder` fragile in practice. `memberOrder` on a non-`container-subset` section, by contrast, is a schema-authoring mistake with no legitimate interpretation, warranting rejection rather than silent recovery.
-
 
 ###### memberOrder combined with typeFilter
 
 **Number**: I-127
 
 **Retired by RFC-043 (dataModelRevision 8).** `ordering.memberOrder` is removed, so there is no `memberOrder` to combine with `typeFilter`; this invariant is replaced by RFC-043 [R9]: an arranged section excludes entries by `typeFilter` using the promoting removal (the entries beneath an excluded entry are promoted one level, never hidden), then applies `direction`. The silent skip of excluded ids is replaced by that removal, and every entry not excluded renders ([R11]).
-
-**Rationale**: Without a fixed application order, `typeFilter` and `memberOrder` could interact ambiguously (e.g. a listed member excluded by the type filter). Filter-then-order matches the filter-then-project pattern already used elsewhere for `typeFilter` and keeps the two concerns composable and independently reasoned about.
 
 
 ###### Composition projections key fields by Field.name
@@ -6630,16 +6596,12 @@ A portable contract for asking a repository what it holds, split deliberately in
 
 When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
 
-**Rationale**: Multi-value OR semantics mirrors typeFilter and enables queries that span multiple lifecycle stages (e.g. draft and active). The ext:lifecycle guard ensures that implementations without a lifecycle model are not broken by the field. Originally numbered 011-1 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-142 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-142 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change A) -- identifier stability preferred over renumbering (identity over label).
-
 
 ##### excludeLifecycleStates in DiscoveryQuery is an exclusion lifecycle filter applied after inclusion
 
 **Number**: I-143
 
 When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
-
-**Rationale**: Exclusion is more forward-compatible than inclusion for the decision-log pattern: specifying excludeLifecycleStates: [superseded, abandoned] automatically includes any new lifecycle states added in future without Composition updates. Inclusion-first-then-exclusion semantics allow fine-grained control when both fields are present. Originally numbered 011-2 under RFC-011's rule-set-qualified proposal-stage numbering; relocated from package/records/ into the projection root and renumbered I-143 upon RFC-011 acceptance (srs#410, rfc-decision-628cf6c4). Retained at I-143 through the srs#525 SectionSource -> DiscoveryQuery collapse (rfc-decision-cce3c00e, rfc-decision-9ee14517): the predicate moved from SectionSource.type-query to DiscoveryQuery, now governed by RFC-012 Rev 12 (formerly RFC-011 Change B) -- identifier stability preferred over renumbering (identity over label).
 
 
 ##### Structured filter predicates are exact-match
