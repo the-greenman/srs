@@ -47,14 +47,14 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 
 A named, versioned composition of Fields for a specific semantic object type.
 
-See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
+See *Generated reference: `Type`* for `Type`'s current property table (including the extension-owner column, RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger). This prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
 
 
 ## FieldAssignment
 
 A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
 
-See the `FieldAssignment` appendix table in the generated reference below for the current property list.
+See the `FieldAssignment` appendix table in *Generated reference: `Type`* for the current property list.
 
 `displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
 

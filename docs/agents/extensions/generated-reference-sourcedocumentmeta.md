@@ -27,3 +27,23 @@ Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specifica
 | `importedAt` | date-time | no | — | core | ISO-8601 timestamp at which this definition was imported. |
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/source-document-meta.json>
+
+**Compact pseudo-IDL**
+
+```typescript
+source-document-meta {
+  documentId: string // ext:repository — stable identifier for a source document, used as SourceReference.sourceId when sourceType is repository-document.
+  contentPath: string // Relative path from source-documents/ to the document file (RFC-017).
+  contentType: string // MIME type of the source document content.
+  encoding?: string // Character encoding of the content file, e.g. utf-8.
+  language?: string // BCP 47 language tag, e.g. en-GB.
+  title?: string // Human-readable title.
+  description?: string // Human-readable description of this entity.
+  processingNote?: string // Caveats about quality or completeness of the source material.
+  excerpt?: ref → `source-excerpt` (inline) // ext:repository — repository-local excerpt provenance (RFC-017).
+  date?: date // Date the source document was produced or recorded.
+  tags?: string[] // Free-form classification tags.
+  createdAt: date-time // ISO-8601 creation timestamp.
+  importedAt?: date-time // ISO-8601 timestamp at which this definition was imported.
+}
+```

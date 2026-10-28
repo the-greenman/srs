@@ -1,6 +1,6 @@
 # Cross-Field Validation
 
-> Cost of Non-Adoption: Without it, a Type can constrain each Field individually via ValidationRule but cannot express or enforce a constraint that depends on more than one Field's value together.
+> Cross-Field Validation: a section of the specification.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 

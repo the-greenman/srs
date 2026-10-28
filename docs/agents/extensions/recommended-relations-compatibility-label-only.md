@@ -1,6 +1,6 @@
 # Recommended Relations (compatibility label only)
 
-> Cost of Non-Adoption: None.
+> Historically, a recommended (not required) set of seven canonical relation types for a repository to declare.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 

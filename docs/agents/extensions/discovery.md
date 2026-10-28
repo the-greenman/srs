@@ -1,29 +1,92 @@
 # Discovery
 
-> Defines the Discovery Contract: a portable, implementation-agnostic specification of how SRS repositories are queried.
+> A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 
-**Extension ID**: ext:discovery
+A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.
 
-**Status**: live
+**Notes**: Matching runs over a deterministic text projection: an ordered sequence of segments derived from an instance by a stated rule about which fields are searchable, normalised at match time by Unicode NFC and case folding, with punctuation, diacritics and whitespace left intact.
 
-**Adds**: **Required for**: any implementation that supports querying and filtering instances across a repository — CLI, web UI, search engine, or API.
+## lifecycleStates in DiscoveryQuery is an inclusive multi-value lifecycle filter
 
-Defines the **Discovery Contract**: a portable, implementation-agnostic specification of how SRS repositories are queried. Covers structured filter axes, the Text Projection algorithm, normalization rules, and the consistency rule separating exact-match structured filters from the content-match recall floor.
+**Number**: I-142
 
-Example: the `DiscoveryQuery` shape. An instance matches a `DiscoveryQuery` if and only if it satisfies all predicates whose values are specified; unspecified predicates are wildcards.
+When DiscoveryQuery carries a non-empty lifecycleStates array, implementations MUST restrict the query result to instances whose lifecycleState matches any value in the array (OR semantics). An instance with no lifecycleState MUST be excluded when lifecycleStates is present and non-empty. When lifecycleStates is absent or empty, no filtering by this field is applied and all lifecycle states (including absent) are included. Implementations that do not declare ext:lifecycle MUST ignore lifecycleStates and MUST NOT produce a validation error on its presence.
 
-Example: the `TextSegment` shape.
 
-For Tier 2, a Field is searchable only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"` (RFC-032 Rev 7). `valueDomain` and cardinality do not restrict searchability. `format: "uuid"`, `format: "email"`, and datatypes `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, and `map` are non-searchable. Inline-composite recursion is not defined.
+## excludeLifecycleStates in DiscoveryQuery is an exclusion lifecycle filter applied after inclusion
 
-The Text Projection algorithm runs differently per tier. For Tier 2 (Record): for each `fieldValue` in `fieldValues` array order, resolve the Field and apply the RFC-032 Rev-7 searchability predicate; if eligible and non-empty, emit one `TextSegment` for a single-cardinality value or one per array element for list cardinality, in order; after all field values, emit one segment per tag, and optionally emit `displayLabel` segments after tags. For Tier 0 (Note): if `title` is non-empty, emit a leading `note-title` segment; for each `section[]` in order, emit a `note-section` segment if `content` is non-empty; after sections, emit tag segments.
+**Number**: I-143
 
-Normalization is applied at match time, not at segment construction time: apply Unicode NFC, fold to lowercase (Unicode simple case folding), and do not strip punctuation, diacritics, or whitespace.
+When DiscoveryQuery carries a non-empty excludeLifecycleStates array, implementations MUST exclude from the query result any instance whose lifecycleState matches any value in the array. When lifecycleStates and excludeLifecycleStates are both present and non-empty, inclusion filtering (I-142) MUST be applied first; exclusion filtering is then applied to the survivors. An instance with no lifecycleState is not excluded by excludeLifecycleStates (only instances with a matching non-null lifecycleState are excluded). When excludeLifecycleStates is absent or empty, no exclusion is applied. Implementations that do not declare ext:lifecycle MUST ignore excludeLifecycleStates and MUST NOT produce a validation error on its presence.
 
-Structured filter axes (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `lifecycleStates`, `excludeLifecycleStates`, `tier`) are exact-match predicates: two conforming implementations with identical data MUST return identical result sets. Content matching (`contentMatch`) is a recall-floor rule: implementations MUST include every instance whose Text Projection contains a segment whose normalized text contains the normalized query as a substring; additional results and alternative ranking are explicitly permitted. When both structured filters and `contentMatch` are specified, an instance MUST satisfy both the exact-match structured predicates AND the content recall-floor predicate.
 
-A self-contained fixture repository with expected result sets lives under `srs/conformance/discovery/`. Example: the discovery conformance fixture layout. An implementation that declares `ext:discovery` MUST pass all fixture scenarios (`exactMatch:true` scenarios exactly; `exactMatch:false` scenarios as a superset). A scenario MAY additionally carry an `expectedSegments` expectation — `{ instanceId, fieldName, segments: string[] }` — naming the exact ordered `TextSegment` sequence one field of one instance must project; when present, the implementation's segment COUNT and ORDER for that field MUST match `segments` exactly (RFC-012 R11; srs#483 closes the gap left by `expectedInstanceIds` alone, which cannot express I-120's "one segment per array element in order" rule).
+## Structured filter predicates are exact-match
 
-**Cost of Non-Adoption**: Without it, an implementation may filter and search its own repository however it likes, but offers no portably interoperable Discovery Contract: two conforming implementations queried against identical data are not guaranteed to return identical structured-filter result sets, and there is no shared Text Projection, normalization, or consistency rule for content matching to build against.
+**Number**: I-113
+
+An implementation that declares `ext:discovery` MUST include in its DiscoveryQuery result set every instance that satisfies all specified structured filter predicates (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`), and MUST NOT include any instance that fails any specified structured filter predicate. (RFC-012 R1.)
+
+
+## Content-match is a guaranteed recall floor
+
+**Number**: I-114
+
+For a `contentMatch` predicate with normalized query string `q`, an implementation that declares `ext:discovery` MUST include every instance whose Text Projection contains at least one `TextSegment` whose normalized `text` contains `q` as a substring (case-folded NFC substring match). (RFC-012 R2.)
+
+
+## Extra content-match results are permitted
+
+**Number**: I-115
+
+An implementation MAY include instances beyond the recall-floor set defined by I-114 (e.g. via stemming, phonetic matching, or semantic similarity). Returning extra results does not violate `ext:discovery` conformance. (RFC-012 R3.)
+
+
+## Result ranking is implementation-defined
+
+**Number**: I-116
+
+An implementation MAY rank DiscoveryQuery results in any order. The recall-floor guarantee of I-114 applies to inclusion in the result set only, not to rank position. (RFC-012 R4.)
+
+
+## Structured filters and content-match compose by conjunction
+
+**Number**: I-117
+
+When both structured filters and `contentMatch` are specified on a DiscoveryQuery, an instance MUST satisfy all structured filter predicates (exact-match, I-113) AND the content-match recall-floor predicate (I-114). The structured-filter constraints cannot be overridden or widened by content-match extra recall. (RFC-012 R5.)
+
+
+## containerId filter uses effective container membership
+
+**Number**: I-118
+
+A `containerId` filter predicate MUST match an instance exactly when its id is an entry `instanceId` of the named Container or, under RFC-034 [R8]'s scoping vocabulary, of a container in its `effective(C)` closure ([R18]). Entries are read flat and `depth` is ignored ([R3]); `rootInstanceIds` is removed ([R4]) and the closure itself is unchanged.
+
+
+## Multi-tag filter uses AND semantics with vocabulary resolution
+
+**Number**: I-119
+
+A `tag` predicate with multiple values MUST use AND semantics — all specified tags must be present on the instance. Both query tags and stored instance tags are canonicalized via RFC-006 key-or-alias resolution when a Vocabulary is declared for the tag key; when no Vocabulary is declared, raw string comparison applies (case-sensitive). (RFC-012 R7.)
+
+
+## Text Projection includes only Fields matching the RFC-032 searchability predicate
+
+**Number**: I-120
+
+For Tier 2, the Text Projection MUST include a Field only when `fieldType.datatype == "string"` and `fieldType.format` is absent or one of `"plain"`, `"markdown"`, or `"uri"`. `valueDomain` does not affect searchability. A single-cardinality Field emits one segment; a list-cardinality Field emits one segment per array element in order. Fields with `format: "uuid"` or `format: "email"`, or datatype `number`, `integer`, `boolean`, `date`, `date-time`, `ref`, `dependent`, or `map`, MUST NOT contribute `TextSegment`s. (RFC-012 R8; RFC-032 Rev-7 erratum.)
+
+
+## Text Projection includes tags; display labels are optional
+
+**Number**: I-121
+
+The Text Projection MUST include `tags` array entries as `TextSegment`s after field segments. An implementation MAY additionally include `FieldAssignment.displayLabel` values as segments after tags — this is not required, and two conforming implementations may differ on whether display-label segments are included. (RFC-012 R9.)
+
+
+## Text normalization is NFC + case folding, no stripping
+
+**Number**: I-122
+
+Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)

@@ -1,6 +1,6 @@
 # Lifecycle
 
-> Cost of Non-Adoption: Without it, a record has no defined-state progression to govern: no installable Lifecycle container, no LifecycleState/LifecycleTransition vocabulary, and no state machine for g…
+> Lifecycle: a section of the specification.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 

@@ -82,14 +82,14 @@ Example: the `VocabularyEntry` substrate contract.
 
 A named, versioned set of `Term` entries.
 
-See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Vocabulary`* for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 
 ## `Term`
 
 The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
 
-See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Term`* for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 
 ## The four vocabularies

@@ -1,6 +1,6 @@
 # Slices
 
-> Cost of Non-Adoption: Without it, an implementation cannot produce a standalone, independently openable subset of a repository scoped to a container; a consumer who needs only part of a repository mu…
+> Exporting a subset of a repository, scoped to a container's membership, as a standalone, independently openable .srs archive (a slice).
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 

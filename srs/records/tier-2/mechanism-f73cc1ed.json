@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`Term`",
-    "content": "The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.\n\nSee the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list."
+    "content": "The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.\n\nSee *Generated reference: `Term`* for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list."
   },
   "createdAt": "2026-09-08T18:45:12.288144050+00:00",
-  "updatedAt": "2026-09-08T18:45:12.288151527+00:00",
+  "updatedAt": "2026-10-28T19:35:32.785351525+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "45cebefe-39ce-47d9-8753-b2b03ac25a18"

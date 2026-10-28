@@ -1,6 +1,6 @@
 # JSON projection (RFC-041 Revision 4)
 
-> The JSON projection (RFC-041 Revision 4) section of the specification.
+> JSON projection (RFC-041 Revision 4): a section of the specification.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [View](/agents/presentation/projection/view.md).
 

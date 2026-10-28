@@ -12,7 +12,7 @@ When `DocumentSection.renderViewId` is absent, implementations MUST render each 
 
 **Step 3 — Labels.** Use `FieldAssignment.displayLabel`; fall back to `Field.name`.
 
-**Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string — MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037).
+**Step 4: Render.** Render only present fields. A field that Step 2 resolves as absent, including one whose `FieldValue.value` is an empty string, MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format: see *Normative Field-Row Form* (RFC-037).
 
 The baseline is a floor, not a ceiling. An L1 View via `renderViewId` always takes precedence.
 

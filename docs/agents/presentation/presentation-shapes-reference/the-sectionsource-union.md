@@ -1,6 +1,6 @@
 # The `SectionSource` union
 
-> The The `SectionSource` union section of the specification.
+> The `SectionSource` union: a section of the specification.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Presentation shapes (reference)](/agents/presentation/presentation-shapes-reference.md).
 

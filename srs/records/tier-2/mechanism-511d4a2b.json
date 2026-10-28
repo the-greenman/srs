@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`FieldAssignment`",
-    "content": "A named, versioned composition of Fields for a specific semantic object type.\n\nSee the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments."
+    "content": "A named, versioned composition of Fields for a specific semantic object type.\n\nSee *Generated reference: `Type`* for `Type`'s current property table (including the extension-owner column, RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger). This prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments."
   },
   "createdAt": "2026-09-07T19:59:47.474344885+00:00",
-  "updatedAt": "2026-09-07T20:50:39.277682820+00:00",
+  "updatedAt": "2026-10-28T19:35:33.214708869+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "4e1ca747-254d-5a7a-b0f2-d4f253189f98"

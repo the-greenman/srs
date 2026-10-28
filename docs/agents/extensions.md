@@ -6,41 +6,47 @@ Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specifica
 
 Pages under this one:
 
-- [Import Tracking](/agents/extensions/import-tracking.md): Cost of Non-Adoption: Without it, a consumer that imports packages from an upstream publisher keeps no record of what it imported or from where, and cannot detect when local content has diverged from…
-- [Cross-Field Validation](/agents/extensions/cross-field-validation.md): Cost of Non-Adoption: Without it, a Type can constrain each Field individually via ValidationRule but cannot express or enforce a constraint that depends on more than one Field's value together.
-- [Views L1](/agents/extensions/views-l1.md): Cost of Non-Adoption: Without it, a Record's Fields can be read directly but there is no named, versioned presentation layer governing which rows a rendering or export workflow shows, in what order, …
-- [Views L2](/agents/extensions/views-l2.md): Ordering support is DocumentSection.ordering.source (arranged or rule), and ordering.memberOrder is retired ([R8]): an arranged section renders the container's own entry order and depth ([R9]).
-- [Themes L1](/agents/extensions/themes-l1.md): Cost of Non-Adoption: Without it, Composition.themeRef and Composition.themeVariants must be ignored rather than applied — an implementation renders a document's semantic structure with no brand iden…
-- [Recommended Relations (compatibility label only)](/agents/extensions/recommended-relations-compatibility-label-only.md): Cost of Non-Adoption: None.
-- [Lifecycle](/agents/extensions/lifecycle.md): Cost of Non-Adoption: Without it, a record has no defined-state progression to govern: no installable Lifecycle container, no LifecycleState/LifecycleTransition vocabulary, and no state machine for g…
-- [Discovery](/agents/extensions/discovery.md): Defines the Discovery Contract: a portable, implementation-agnostic specification of how SRS repositories are queried.
-- [The `DiscoveryQuery` shape](/agents/extensions/the-discoveryquery-shape.md): The The `DiscoveryQuery` shape section of the specification.
+- [Import Tracking](/agents/extensions/import-tracking.md): Recording, for a consumer that receives packages from an upstream publisher, what was imported, whether local content has diverged from the upstream source, and whether the upstream has moved ahead s…
+- [Cross-Field Validation](/agents/extensions/cross-field-validation.md): Cross-Field Validation: a section of the specification.
+- [Views L1](/agents/extensions/views-l1.md): Views: named, versioned presentations over a Field set — which field rows appear, in what order, under what labels, with what editor hints, and whether each is visible — required for rendering and ex…
+- [Views L2](/agents/extensions/views-l2.md): Document-level projection: assembling multiple Records into a rendered document via a Composition, dispatching each section's field content to an L1 View, with its own ExportConfig attachment point f…
+- [Themes L1](/agents/extensions/themes-l1.md): A visual presentation layer for Composition: brand identity, typography, stylesheets, cover pages, and element wrapping attached to a rendered document without altering its semantic structure.
+- [Recommended Relations (compatibility label only)](/agents/extensions/recommended-relations-compatibility-label-only.md): Historically, a recommended (not required) set of seven canonical relation types for a repository to declare.
+- [Lifecycle](/agents/extensions/lifecycle.md): Lifecycle: a section of the specification.
+- [Discovery (ext:discovery)](/agents/extensions/discovery-ext-discovery.md): Discovery (ext:discovery): a section of the specification.
+- [The `DiscoveryQuery` shape](/agents/extensions/the-discoveryquery-shape.md): The `DiscoveryQuery` shape: a section of the specification.
 - [The `TextSegment` shape](/agents/extensions/the-textsegment-shape.md): Sentinels: "note-title", "note-section", "tag", "label".
-- [The discovery conformance fixture layout](/agents/extensions/the-discovery-conformance-fixture-layout.md): The The discovery conformance fixture layout section of the specification.
+- [The discovery conformance fixture layout](/agents/extensions/the-discovery-conformance-fixture-layout.md): The discovery conformance fixture layout: a section of the specification.
 - [Changelog](/agents/extensions/changelog.md): Removed surface (historical, introduced by RFC-018, srs#141): the ChangelogCollection/ChangelogEntry schema (changelog.json); the srs changelog list CLI command.
-- [Slices](/agents/extensions/slices.md): Cost of Non-Adoption: Without it, an implementation cannot produce a standalone, independently openable subset of a repository scoped to a container; a consumer who needs only part of a repository mu…
+- [Slices](/agents/extensions/slices.md): Exporting a subset of a repository, scoped to a container's membership, as a standalone, independently openable .srs archive (a slice).
 - [Generated reference: `SourceDocumentMeta`](/agents/extensions/generated-reference-sourcedocumentmeta.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/source-document-meta.json>
-- [Compact pseudo-IDL: source-document-meta](/agents/extensions/compact-pseudo-idl-source-document-meta.md): The Compact pseudo-IDL: source-document-meta section of the specification.
-- [Compact pseudo-IDL: manifest](/agents/extensions/compact-pseudo-idl-manifest.md): The Compact pseudo-IDL: manifest section of the specification.
-- [Compact pseudo-IDL: view](/agents/extensions/compact-pseudo-idl-view.md): The Compact pseudo-IDL: view section of the specification.
-- [Compact pseudo-IDL: field-view](/agents/extensions/compact-pseudo-idl-field-view.md): The Compact pseudo-IDL: field-view section of the specification.
-- [Compact pseudo-IDL: record-property-view](/agents/extensions/compact-pseudo-idl-record-property-view.md): The Compact pseudo-IDL: record-property-view section of the specification.
-- [Compact pseudo-IDL: export-config](/agents/extensions/compact-pseudo-idl-export-config.md): The Compact pseudo-IDL: export-config section of the specification.
-- [Compact pseudo-IDL: composition](/agents/extensions/compact-pseudo-idl-composition.md): The Compact pseudo-IDL: composition section of the specification.
-- [Compact pseudo-IDL: discovery-query](/agents/extensions/compact-pseudo-idl-discovery-query.md): The Compact pseudo-IDL: discovery-query section of the specification.
-- [Compact pseudo-IDL: text-segment](/agents/extensions/compact-pseudo-idl-text-segment.md): The Compact pseudo-IDL: text-segment section of the specification.
-- [Compact pseudo-IDL: expected-segments](/agents/extensions/compact-pseudo-idl-expected-segments.md): The Compact pseudo-IDL: expected-segments section of the specification.
-- [Compact pseudo-IDL: conformance-scenario](/agents/extensions/compact-pseudo-idl-conformance-scenario.md): The Compact pseudo-IDL: conformance-scenario section of the specification.
-- [Compact pseudo-IDL: theme](/agents/extensions/compact-pseudo-idl-theme.md): The Compact pseudo-IDL: theme section of the specification.
-- [Compact pseudo-IDL: srsj-envelope](/agents/extensions/compact-pseudo-idl-srsj-envelope.md): The Compact pseudo-IDL: srsj-envelope section of the specification.
-- [Compact pseudo-IDL: field-ref](/agents/extensions/compact-pseudo-idl-field-ref.md): The Compact pseudo-IDL: field-ref section of the specification.
-- [Compact pseudo-IDL: protocol-stage](/agents/extensions/compact-pseudo-idl-protocol-stage.md): The Compact pseudo-IDL: protocol-stage section of the specification.
-- [Compact pseudo-IDL: protocol](/agents/extensions/compact-pseudo-idl-protocol.md): The Compact pseudo-IDL: protocol section of the specification.
-- [Compact pseudo-IDL: relation-spec](/agents/extensions/compact-pseudo-idl-relation-spec.md): The Compact pseudo-IDL: relation-spec section of the specification.
-- [Compact pseudo-IDL: blueprint](/agents/extensions/compact-pseudo-idl-blueprint.md): The Compact pseudo-IDL: blueprint section of the specification.
+- [Generated reference: `Manifest`](/agents/extensions/generated-reference-manifest.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/manifest.json>
+- [Generated reference: `View`](/agents/extensions/generated-reference-view.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json>
+- [Generated reference: `FieldView`](/agents/extensions/generated-reference-fieldview.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/FieldView>
+- [Generated reference: `RecordPropertyView`](/agents/extensions/generated-reference-recordpropertyview.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/RecordPropertyView>
+- [Generated reference: `ExportConfig`](/agents/extensions/generated-reference-exportconfig.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/composition.json#/$defs/ExportConfig>
+- [Generated reference: `Composition`](/agents/extensions/generated-reference-composition.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/composition.json>
+- [Generated reference: `DiscoveryQuery`](/agents/extensions/generated-reference-discoveryquery.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/DiscoveryQuery>
+- [Generated reference: `TextSegment`](/agents/extensions/generated-reference-textsegment.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/TextSegment>
+- [Generated reference: `ExpectedSegments`](/agents/extensions/generated-reference-expectedsegments.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ExpectedSegments>
+- [Generated reference: `ConformanceScenario`](/agents/extensions/generated-reference-conformancescenario.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ConformanceScenario>
+- [Generated reference: `Theme`](/agents/extensions/generated-reference-theme.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/theme.json>
+- [Generated reference: `SrsjEnvelope`](/agents/extensions/generated-reference-srsjenvelope.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/srsj-envelope.json>
+- [Generated reference: `FieldRef`](/agents/extensions/generated-reference-fieldref.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef>
+- [Generated reference: `ProtocolStage`](/agents/extensions/generated-reference-protocolstage.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage>
+- [Generated reference: `Protocol`](/agents/extensions/generated-reference-protocol.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json>
+- [Generated reference: `RelationSpec`](/agents/extensions/generated-reference-relationspec.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec>
+- [Generated reference: `Blueprint`](/agents/extensions/generated-reference-blueprint.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json>
+- [Type Inheritance](/agents/extensions/type-inheritance.md): Single inheritance between Types: a specialising Type names one base Type, gains its effective field list, and adds its own, under a substitutability constraint — a system that knows the base Type bu…
+- [ext:changelog](/agents/extensions/ext-changelog.md): Status: Dormant (removed under rfc-decision-2a1e1590, 2026-08-21): the 2026-08-21 usage attestation found zero changelog/changelog.json files in the corpus; the mechanism was speculative and never ex…
+- [ext:federation](/agents/extensions/ext-federation.md): Status: Dormant (removed under rfc-decision-4f1e12e5, 2026-08-22): the 2026-08-21 usage attestation found zero registries, events, or cross-repository relations in the corpus; the mechanism was specu…
+- [Addressability (ext:addressability)](/agents/extensions/addressability-ext-addressability.md): A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — including a transcript fragment and a field on a r…
+- [Protocol](/agents/extensions/protocol.md): An epistemically ordered process for building a good Record through structured conversation: named stages, each with the question it answers, the understanding it builds, how to tell it is sufficient…
+- [Registry](/agents/extensions/registry.md): A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index.
+- [Repository](/agents/extensions/repository.md): The file-based repository format: a marker directory identifying the root, a manifest declaring the repository's stable id, its packages, its required root container and its declared extensions, and …
 - [Extension Interactions](/agents/extensions/extension-interactions.md): Declaring two named extensions together activates behavioural requirements that apply only when both are present in the same implementation.
 - [Addressability](/agents/extensions/addressability.md): A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a…
-- [Discovery](/agents/extensions/discovery-2.md): A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently.
+- [Discovery](/agents/extensions/discovery.md): A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently.
 - [Conversation boundary](/agents/extensions/conversation-boundary.md): The permanent architectural line between raw multimodal source material (speech, threads, annotations) and the negotiated semantic state SRS captures.
 - [Conversation Layer](/agents/extensions/conversation-layer.md): This is the Conversation boundary concept's own line seen from the integration side: how the conversation layer, protocol layer, SRS layer and presentation layer connect via SourceReference and Atten…
 

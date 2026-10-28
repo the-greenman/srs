@@ -4,17 +4,18 @@
  * (srs#983). docs/llms.txt and docs/agents/**.md are generated from docs/spec/srs-spec.md by
  * scripts/lib/agent-pages.mjs; this check fails when
  *   0. they are stale: regenerating them from the committed spec gives different files,
- *   1. a page under docs/agents/ reaches PAGE_LIMIT characters,
- *   2. a link in llms.txt or on a page does not resolve to a file under docs/,
- *   3. a page says "see below" or "see above" outside a code block (on a split page the target may
- *      be on another page), or
+ *   1. a page under docs/agents/ reaches PAGE_LIMIT characters (llms.txt: LLMS_LIMIT, one fetch),
+ *   2. a link or autolink in llms.txt, on a page or in the glossary does not resolve to a file
+ *      under docs/,
+ *   3. a page says "see … below" or "see … above" outside code (on a split page the target may be
+ *      on another page: name it instead), or
  *   4. a backticked identifier (`PascalCase`) on a page or in the glossary is defined nowhere in the
  *      published set: no glossary entry and no heading names it. KNOWN_UNDEFINED is the debt at
  *      srs#983's merge; it may only shrink (an entry that has become defined is reported too).
  * Each rule is exercised against a synthetic page before the real check runs, so a rule that stops
  * firing is itself a failure.
  */
-import { existsSync, readdirSync, readFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { dirname, join, posix, resolve } from "path";
 import { fileURLToPath } from "url";
 import { buildAgentPages, PAGE_LIMIT } from "./lib/agent-pages.mjs";
@@ -32,6 +33,7 @@ const KNOWN_UNDEFINED = new Set([
   "TemplateFacilitationStep", "TypedRecord", "Updated",
 ]);
 
+const LLMS_LIMIT = 100000;
 const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const unfenced = (text) => text.replace(/^```[\s\S]*?^```/gm, "");
 
@@ -47,10 +49,9 @@ function problemsIn(files, glossary, exists, knownUndefined) {
   }
   const undefinedTerms = new Set();
   for (const [path, text] of files) {
-    if (path.startsWith("agents/") && text.length >= PAGE_LIMIT) {
-      problems.push(`${path}: ${text.length} characters, the limit is under ${PAGE_LIMIT}`);
-    }
-    for (const [, target] of text.matchAll(/\]\(([^)\s]+)\)/g)) {
+    const limit = path === "llms.txt" ? LLMS_LIMIT : path.startsWith("agents/") ? PAGE_LIMIT : Infinity;
+    if (text.length >= limit) problems.push(`${path}: ${text.length} characters, the limit is under ${limit}`);
+    for (const [, target] of [...text.matchAll(/\]\(([^)\s]+)[^)]*\)|<(https:\/\/srs\.semanticops\.com[^>]*)>/g)].map((m) => [m[0], m[1] ?? m[2]])) {
       if (/^[a-z]+:/.test(target) && !target.startsWith("https://srs.semanticops.com/")) continue;
       const bare = target.replace(/^https:\/\/srs\.semanticops\.com/, "").split("#")[0];
       if (!bare) continue;
@@ -58,7 +59,9 @@ function problemsIn(files, glossary, exists, knownUndefined) {
       if (!exists(resolved)) problems.push(`${path}: link ${target} does not resolve`);
     }
     if (!path.startsWith("agents/")) continue;
-    for (const m of unfenced(text).matchAll(/see (below|above)/gi)) problems.push(`${path}: dangling pointer "${m[0]}"`);
+    for (const m of unfenced(text).replace(/`[^`\n]*`/g, "").matchAll(/\bsee\b[^.\n]{0,80}?\b(below|above)\b/gi)) {
+      problems.push(`${path}: dangling pointer "${m[0]}"`);
+    }
     for (const [, id] of unfenced(text).matchAll(/`([A-Z][a-z]+(?:[A-Z][a-z0-9]*)+|[A-Z][a-z]{3,})`/g)) {
       if (!defined.has(norm(id))) undefinedTerms.add(id);
     }
@@ -113,7 +116,8 @@ for (const path of committed.keys()) {
   if (!expected.has(path)) problems.push(`${path} is not generated from the spec: remove it`);
 }
 const glossary = readFileSync(join(DOCS, "spec", "srs-glossary.md"), "utf8");
-problems.push(...problemsIn(expected, glossary, (p) => existsSync(join(DOCS, p)), KNOWN_UNDEFINED));
+const isFile = (p) => existsSync(join(DOCS, p)) && statSync(join(DOCS, p)).isFile();
+problems.push(...problemsIn(new Map([...expected, ["spec/srs-glossary.md", glossary]]), glossary, isFile, KNOWN_UNDEFINED));
 
 if (problems.length) {
   console.log(`\n✗ Agent readability (srs#983): ${problems.length} problem(s)\n`);

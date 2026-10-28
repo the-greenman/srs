@@ -52,29 +52,35 @@ function slugify(title) {
 
 function describe(node) {
   let fenced = false;
-  for (const line of node.lines) {
+  // An extension registry entry is all bold labels; its `Adds` line says what it is.
+  const adds = node.lines.find((l) => l.startsWith("**Adds**: "));
+  for (const line of adds ? [adds.slice(10)] : node.lines) {
     if (line.startsWith("```")) fenced = !fenced;
     const t = line.trim();
-    if (fenced || !t || /^[|>`-]|^\*\*[A-Za-z ]+\*\*:/.test(t)) continue;
+    if (fenced || !t || /^[|>`-]|^\*\*[^*]+\*\*(:|$)/.test(t)) continue;
     const plain = t.replace(/`([^`]*)`/g, "$1").replace(/\*\*?([^*]+)\*\*?/g, "$1");
     const sentence = plain.match(/^.+?[.!?](?=\s|$)/)?.[0] ?? plain;
     return sentence.length > 200 ? `${sentence.slice(0, 199)}…` : sentence;
   }
-  return `The ${node.label ?? node.title} section of the specification.`;
+  return `${node.label ?? node.title}: a section of the specification.`;
 }
 
-// Sibling headings that repeat ("Compact pseudo-IDL" ×18) get the first identifier their code
-// block declares, so an index line says what the page holds; otherwise a number.
+// Sibling headings that repeat (the Discovery concept and the ext:discovery registry entry) get
+// the extension id the entry declares, so the index tells them apart; otherwise a number.
 function label(node, siblings) {
   if (siblings.filter((s) => s.title === node.title).length < 2) return node.title;
-  const declared = node.lines.join("\n").match(/^```\w*\n([\w.-]+) \{/m)?.[1];
-  return declared ? `${node.title}: ${declared}` : node.title;
+  const extensionId = node.lines.join("\n").match(/^\*\*Extension ID\*\*: (\S+)/m)?.[1];
+  return extensionId ? `${node.title} (${extensionId})` : node.title;
 }
 
 /** @returns {Map<string, string>} docs-relative path → content, including `llms.txt`. */
 export function buildAgentPages(specText, { srsVersion, dataModelRevision }) {
   const doc = parseHeadings(specText.replace(/\r\n/g, "\n"));
   const top = doc.children.length === 1 ? doc.children[0] : doc;
+  // Text before the first Part would land on no page.
+  if ([...doc.lines, ...(top === doc ? [] : top.lines)].some((l) => l.trim())) {
+    throw new Error("agent-pages: srs-spec.md has text before its first Part heading, which no page would carry");
+  }
   const version = `SRS ${srsVersion}, data model revision ${dataModelRevision}`;
   const parts = top.children;
   const pages = []; // { node, path, parent, depth }

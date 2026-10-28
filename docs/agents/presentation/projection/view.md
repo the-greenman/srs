@@ -7,14 +7,14 @@ Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specifica
 Pages under this one:
 
 - [Every fieldId in View.fieldViews[] must reference a valid Field.id](/agents/presentation/projection/view/every-fieldid-in-view-fieldviews-must-reference-a-valid-fiel.md): Every fieldId in View.fieldViews[] must reference a valid Field.id in the effective package set.
-- [FieldView.displayLabel, FieldView.displayHint, and…](/agents/presentation/projection/view/fieldview-displaylabel-fieldview-displayhint-and.md): The FieldView.displayLabel, FieldView.displayHint, and… section of the specification.
+- [FieldView.displayLabel, FieldView.displayHint, and…](/agents/presentation/projection/view/fieldview-displaylabel-fieldview-displayhint-and.md): FieldView.displayLabel, FieldView.displayHint, and…: a section of the specification.
 - [View must not override, redefine, or duplicate the semantic content…](/agents/presentation/projection/view/view-must-not-override-redefine-or-duplicate-the-semantic-co.md): A View must not override, redefine, or duplicate the semantic content of any Field or Type it references.
 - [The html multi-entry field row](/agents/presentation/projection/view/the-html-multi-entry-field-row.md): One div, one label, and one list item per entry:
 - [ext:views-l1](/agents/presentation/projection/view/ext-views-l1.md): Defines Views — versioned presentations over a field set.
 - [`FieldView`](/agents/presentation/projection/view/fieldview.md): A field reference within a View.
 - [`RecordPropertyView` (RFC-041)](/agents/presentation/projection/view/recordpropertyview-rfc-041.md): A sibling row kind to FieldView in the same View.fieldViews[] list.
 - [Conformance Rules (RFC-041)](/agents/presentation/projection/view/conformance-rules-rfc-041.md): [R1] A View's row list (fieldViews[]) admits two mutually exclusive row kinds discriminated by the presence of fieldId (FieldView) XOR property (RecordPropertyView); a row item carrying neither key, …
-- [JSON projection (RFC-041 Revision 4)](/agents/presentation/projection/view/json-projection-rfc-041-revision-4.md): The JSON projection (RFC-041 Revision 4) section of the specification.
+- [JSON projection (RFC-041 Revision 4)](/agents/presentation/projection/view/json-projection-rfc-041-revision-4.md): JSON projection (RFC-041 Revision 4): a section of the specification.
 - [`ExportConfig`](/agents/presentation/projection/view/exportconfig.md): Configuration for rendering a Record through this View as an exportable document.
 - [`View`](/agents/presentation/projection/view/view.md): A versioned presentation and export configuration over a field set.
 - [Composite rendering — renderer dispatch (RFC-036)](/agents/presentation/projection/view/composite-rendering-renderer-dispatch-rfc-036.md): composite-range Field (fieldType.datatype: "ref", mode: "inline") to a named composite renderer.

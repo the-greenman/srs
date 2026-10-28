@@ -1,6 +1,6 @@
 # FieldView.displayLabel, FieldView.displayHint, and…
 
-> The FieldView.displayLabel, FieldView.displayHint, and… section of the specification.
+> FieldView.displayLabel, FieldView.displayHint, and…: a section of the specification.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [View](/agents/presentation/projection/view.md).
 

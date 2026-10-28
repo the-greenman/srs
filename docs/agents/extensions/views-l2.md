@@ -1,6 +1,6 @@
 # Views L2
 
-> Ordering support is DocumentSection.ordering.source (arranged or rule), and ordering.memberOrder is retired ([R8]): an arranged section renders the container's own entry order and depth ([R9]).
+> Document-level projection: assembling multiple Records into a rendered document via a Composition, dispatching each section's field content to an L1 View, with its own ExportConfig attachment point f…
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 

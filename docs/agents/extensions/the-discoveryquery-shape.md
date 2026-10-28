@@ -1,6 +1,6 @@
 # The `DiscoveryQuery` shape
 
-> The The `DiscoveryQuery` shape section of the specification.
+> The `DiscoveryQuery` shape: a section of the specification.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 

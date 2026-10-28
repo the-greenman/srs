@@ -17,18 +17,5 @@ Pages under this one:
 - [Vocabulary](/agents/foundations/vocabulary.md): A controlled set of strings that appear in instance data and must mean something stable.
 - [Lifecycle](/agents/foundations/lifecycle.md): A named state machine (a closed vocabulary of states plus the transitions between them and exactly one initial state) that a Type may declare inline or reference as an installed, shareable definition.
 - [Foundation Group (Core)](/agents/foundations/foundation-group-core.md): The Foundation group is required for all conforming implementations.
-- [Compact pseudo-IDL: field](/agents/foundations/compact-pseudo-idl-field.md): The Compact pseudo-IDL: field section of the specification.
-- [`FieldAssignment` (appendix)](/agents/foundations/fieldassignment-appendix.md): Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json#/$defs/com.semanticops.srs__field-assignment__v1>
-- [Compact pseudo-IDL: type](/agents/foundations/compact-pseudo-idl-type.md): The Compact pseudo-IDL: type section of the specification.
-- [Compact pseudo-IDL: note-section](/agents/foundations/compact-pseudo-idl-note-section.md): The Compact pseudo-IDL: note-section section of the specification.
-- [Compact pseudo-IDL: note](/agents/foundations/compact-pseudo-idl-note.md): The Compact pseudo-IDL: note section of the specification.
-- [Compact pseudo-IDL: source-reference](/agents/foundations/compact-pseudo-idl-source-reference.md): The Compact pseudo-IDL: source-reference section of the specification.
-- [Compact pseudo-IDL: record](/agents/foundations/compact-pseudo-idl-record.md): The Compact pseudo-IDL: record section of the specification.
-- [Compact pseudo-IDL: relation](/agents/foundations/compact-pseudo-idl-relation.md): The Compact pseudo-IDL: relation section of the specification.
-- [Compact pseudo-IDL: container](/agents/foundations/compact-pseudo-idl-container.md): The Compact pseudo-IDL: container section of the specification.
-- [Compact pseudo-IDL: vocabulary](/agents/foundations/compact-pseudo-idl-vocabulary.md): The Compact pseudo-IDL: vocabulary section of the specification.
-- [Compact pseudo-IDL: term](/agents/foundations/compact-pseudo-idl-term.md): The Compact pseudo-IDL: term section of the specification.
-- [Compact pseudo-IDL: lifecycle](/agents/foundations/compact-pseudo-idl-lifecycle.md): The Compact pseudo-IDL: lifecycle section of the specification.
-- [Compact pseudo-IDL: relation-type-definition](/agents/foundations/compact-pseudo-idl-relation-type-definition.md): The Compact pseudo-IDL: relation-type-definition section of the specification.
 
 The core entity model a repository is built from: Field, Type, Vocabulary and Term, record tiers, Relation, and Container. Every later Part presupposes these.

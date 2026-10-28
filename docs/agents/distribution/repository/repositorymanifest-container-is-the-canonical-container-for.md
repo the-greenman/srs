@@ -1,6 +1,6 @@
 # RepositoryManifest.container is the canonical Container for the…
 
-> The RepositoryManifest.container is the canonical Container for the… section of the specification.
+> RepositoryManifest.container is the canonical Container for the…: a section of the specification.
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Repository](/agents/distribution/repository.md).
 
