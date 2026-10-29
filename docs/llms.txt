@@ -2,6 +2,12 @@
 
 > The normative specification of SRS (Semantic Record System), SRS 2.0-draft, data model revision 11, one page per concept, each under 30,000 characters. Generated from the records of the specification repository; the records, not these pages, are authoritative.
 
+## Get running
+
+- Install the srs engine: `curl -fsSL https://engine.semanticops.com/install.sh | sh`
+- [First five minutes](https://engine.semanticops.com/start.md): CLI, MCP server, output contract
+- [SemanticOps sites](https://semanticops.com/llms.txt): every site and what it is for
+
 ## Start here
 
 - [Reading this specification](/agents/reading-this-specification.md): notation, RFC 2119 keywords and the reading order of the nine Parts.
@@ -215,5 +221,6 @@
 - [Specification, one file](/spec/srs-spec.md): every page above in one large file, more than one fetch.
 - [Unified](/spec/srs-unified.md): specification and rationale together, one large file.
 - [Repository archive](/srs-spec.srs): the full specification repository as records; needs an SRS client.
+- Implementations: the reference engine at https://engine.semanticops.com
 
 <!-- generated from docs/spec/srs-spec.md by scripts/lib/agent-pages.mjs; do not edit -->
