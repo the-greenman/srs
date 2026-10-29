@@ -1,0 +1,43 @@
+# Travelling form
+
+> The shape SRS content takes when it leaves the place it was made: a zip archive that is a self-contained snapshot of a repository, a single-file JSON store, or a slice carrying one container's closur…
+
+Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Repository](/agents/distribution/repository.md).
+
+Pages under this one:
+
+- [archive must include every instance in the authoritative store's…](/agents/distribution/repository/travelling-form/archive-must-include-every-instance-in-the-authoritative-sto.md): An archive must include every instance discovered by enumerating the repository's authoritative store — the instance set (RFC-038 [R1], [R17]) — not a manifest instanceIndex, which is retired (RFC-03…
+- [archive that includes a Relation containing a SourceReference with…](/agents/distribution/repository/travelling-form/archive-that-includes-a-relation-containing-a-sourcereferenc.md): An archive that includes a Relation containing a SourceReference with sourceType: "repository-document" must include that document's sidecar and content file, just as if the reference appeared within…
+- [deterministic-ZIP archive production](/agents/distribution/repository/travelling-form/deterministic-zip-archive-production.md): A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, last mod timestamps zeroed (0x0000), compression method …
+- [byte-identical archive per implementation across invocations](/agents/distribution/repository/travelling-form/byte-identical-archive-per-implementation-across-invocations.md): Given identical repository content, a conformant archive producer MUST produce a byte-for-byte identical .srs file across invocations of the same implementation.
+- [reject gzip-compressed .srsj files](/agents/distribution/repository/travelling-form/reject-gzip-compressed-srsj-files.md): A conformant implementation MUST reject a gzip-compressed file presented as a .srsj JSON Store.
+- [A container slice closes over the root's childContainerIds descendants and effective members](/agents/distribution/repository/travelling-form/a-container-slice-closes-over-the-root-s-childcontainerids-d.md): An RFC-026 container slice MUST include the closure root, its transitive childContainerIds descendants, and the root's effective member set.
+- [The `slice` manifest property](/agents/distribution/repository/travelling-form/the-slice-manifest-property.md): The property ext:slices adds to RepositoryManifest:
+- [`SourceReference` additions](/agents/distribution/repository/travelling-form/sourcereference-additions.md): When ext:repository is declared, SourceReference.sourceType gains the value "repository-document".
+- [Archive format](/agents/distribution/repository/travelling-form/archive-format.md): An archive is a self-contained, shareable snapshot of a live repository.
+- [Import / re-import semantics](/agents/distribution/repository/travelling-form/import-re-import-semantics.md): Import operations are identity-based, not path- or filename-based.
+- [JSON Store](/agents/distribution/repository/travelling-form/json-store.md): A single-file, self-contained JSON serialization of a complete SRS repository (.srsj), carrying identical semantic content to the filesystem repository layout defined by ext:repository.
+- [The top-level shape of a `.srsj` file](/agents/distribution/repository/travelling-form/the-top-level-shape-of-a-srsj-file.md): The top-level keys of a JSON Store file:
+- [ext:json-store](/agents/distribution/repository/travelling-form/ext-json-store.md): Defines the SRS JSON Store format (.srsj): a single-file, self-contained serialization of a complete SRS repository.
+- [Bundled readme](/agents/distribution/repository/travelling-form/bundled-readme.md): A package bundle and a .srsj archive MAY carry one readme as readme, an object with exactly two required string properties, path and content (RFC-045 [R2]).
+- [Bundled readme path rules](/agents/distribution/repository/travelling-form/bundled-readme-path-rules.md): A readme.path MUST be non-empty, MUST use / as separator, MUST NOT begin with /, MUST NOT contain \, : or any character U+0000 to U+001F or U+007F, and MUST NOT contain an empty, .
+- [Bundled readme write rule](/agents/distribution/repository/travelling-form/bundled-readme-write-rule.md): An implementation that writes a carried readme out, to a file system or as a .srs archive, MUST NOT write any file it generates on its own account (a marker placeholder, a scaffold) at the readme's p…
+- [Purpose and trade-offs](/agents/distribution/repository/travelling-form/purpose-and-trade-offs.md): The JSON Store is valuable when portability matters more than human readability of individual files: emailing a repository, committing a snapshot to version control as a single artifact, embedding a …
+- [File format](/agents/distribution/repository/travelling-form/file-format.md): A .srsj file is a pretty-printed UTF-8 JSON object with the following top-level structure:
+- [Path conventions in `data`](/agents/distribution/repository/travelling-form/path-conventions-in-data.md): Keys in data follow the same relative-path conventions as ext:repository:
+- [Conformance requirements](/agents/distribution/repository/travelling-form/conformance-requirements.md): 1.
+- [Source documents](/agents/distribution/repository/travelling-form/source-documents.md): Binary source document content is not included in the JSON Store.
+- [Interoperability](/agents/distribution/repository/travelling-form/interoperability.md): A .srsj file is semantically equivalent to the .srs ZIP archive defined by ext:repository, with the following differences:
+- [ext:slices](/agents/distribution/repository/travelling-form/ext-slices.md): A container slice carries the records reachable from a container's membership, their type and field definitions, intra-slice relations, and referenced source documents.
+- [Scope](/agents/distribution/repository/travelling-form/scope.md): Scope: a section of the specification.
+- [Manifest extensions (`ext:slices`)](/agents/distribution/repository/travelling-form/manifest-extensions-ext-slices.md): When ext:slices is declared in a slice archive's manifest.declaredExtensions, RepositoryManifest gains one optional property:
+- [Container-membership closure](/agents/distribution/repository/travelling-form/container-membership-closure.md): The closure root is the container identified by spec.id.
+- [Slice package closure](/agents/distribution/repository/travelling-form/slice-package-closure.md): A container slice carries every package of the source's package set that it uses, whole and unchanged: the same files at the same path relative to the repository root, with the same id and version, n…
+- [Dangling-edge policy](/agents/distribution/repository/travelling-form/dangling-edge-policy.md): Cross-boundary relations MUST NOT appear in the slice's relations collection.
+- [Validation relaxations](/agents/distribution/repository/travelling-form/validation-relaxations.md): An RFC-026-aware validator MUST NOT treat the following as errors when a slice block is present: externalRelationRefs UUIDs absent from the repository's tree-authoritative instance enumeration (RFC-0…
+- [Slice closure boundary resolves against the container set](/agents/distribution/repository/travelling-form/slice-closure-boundary-resolves-against-the-container-set.md): Slice closure boundary resolves against the container set: a section of the specification.
+- [Slice relation-endpoint tests resolve against the instance set](/agents/distribution/repository/travelling-form/slice-relation-endpoint-tests-resolve-against-the-instance-s.md): A conformant slice producer MUST NOT place a relation in the archive's relations collection when its sourceInstanceId or targetInstanceId is absent from the repository's tree-authoritative instance e…
+
+The shape SRS content takes when it leaves the place it was made: a zip archive that is a self-contained snapshot of a repository, a single-file JSON store, or a slice carrying one container's closure as an independently openable archive. The standing test is that anything a repository is allowed to hold must be expressible in the corresponding travelling form — a capability that exists only in place is captivity, not a feature. Round-tripping between forms must lose nothing.
+
+**Notes**: Import is identity-based, never path-based. Same key and same content is a no-op; same key and different content is a conflict to surface, because silent overwrite and silent discard are both non-conformant.

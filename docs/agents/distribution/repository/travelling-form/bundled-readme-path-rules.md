@@ -1,0 +1,9 @@
+# Bundled readme path rules
+
+> A readme.path MUST be non-empty, MUST use / as separator, MUST NOT begin with /, MUST NOT contain \, : or any character U+0000 to U+001F or U+007F, and MUST NOT contain an empty, .
+
+Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Travelling form](/agents/distribution/repository/travelling-form.md).
+
+A `readme.path` MUST be non-empty, MUST use `/` as separator, MUST NOT begin with `/`, MUST NOT contain `\`, `:` or any character U+0000 to U+001F or U+007F, and MUST NOT contain an empty, `.` or `..` segment or a segment ending in `.` or a space. In a package bundle it MUST NOT be `package.json`. In a `.srsj` it MUST NOT be `manifest.json` or `.srs`, MUST NOT equal, lie inside, or be a proper ancestor of a key of `data`, and MUST NOT equal or lie inside `records`, `notes`, `typed-records`, `relations`, `containers`, the envelope manifest's `sourceDocumentsPath` (`source-documents` when absent) or its `changelogPath` when present (each compared after removing a leading `./` and any trailing `/`), or any local package root (the root itself when `package.json` is a key of `data`; every directory `D` such that `D/package.json` is a key of `data`). These exclusions are compared ASCII-case-insensitively; there is no Unicode normalisation. A path inside `.srs/` is allowed. The rules are checked by implementations, not by the JSON Schema, so a schema-valid form can still carry an invalid readme. (RFC-045 [R4])
+
+A `readme` that violates the path rules, the content rule (where the implementation's JSON parser accepts the document at all) or an implementation's size limit MUST be reported as an error with code `readme-invalid`, naming the travelling form, the `path` value and the rule broken; it MUST NOT be written anywhere and MUST NOT be carried into any travelling form written from this one; and the load, unpack or rewrite MUST otherwise proceed.

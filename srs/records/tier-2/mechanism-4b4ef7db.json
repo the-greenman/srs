@@ -6,9 +6,9 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "Container",
-    "content": "A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes \"this project\" — that the Relation graph alone cannot answer.\n\nContainers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts \"A is part of B\" (a semantic claim); a Container asserts \"these instances form a unit for boundary purposes\" (a scope claim). Both are needed; neither replaces the other.\n\nSee the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.\n\n`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20."
+    "content": "A lightweight grouping boundary over a collection of instances. Containers answer scoping questions — which instances belong together, what constitutes \"this project\" — that the Relation graph alone cannot answer.\n\nContainers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts \"A is part of B\" (a semantic claim); a Container asserts \"these instances form a unit for boundary purposes\" (a scope claim). Both are needed; neither replaces the other.\n\nSee *Generated reference: `Container`* for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.\n\n`Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20."
   },
   "createdAt": "2026-09-07T19:59:44.969570808+00:00",
-  "updatedAt": "2026-09-07T19:59:44.969574475+00:00",
+  "updatedAt": "2026-10-28T19:35:33.040020676+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

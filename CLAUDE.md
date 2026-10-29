@@ -167,7 +167,7 @@ Before touching a conformance rule, a schema element, or any normative statement
 - **Door 2 — New normative meaning.** No ruling covers it. RFC via `.claude/commands/rfc.md` (Stage 1.5 Charter Check mandatory). Draft proposes only; folds land at acceptance with the integration manifest.
 - **Door 3 — Amend an Accepted RFC's own surface.** Adding or changing a conformance rule, schema element, or normative statement that lives under an existing RFC's banner is an RFC **revision**: bump the Revision, add the history row, keep the `.md` and the canonical records saying the same thing — in the SAME PR as the record/schema change. Precedent: RFC-038 Revisions 8/9; RFC-041 Revision 3 (the fix for #517's [R7] drift).
 
-**Hard rule:** conformance rules and `docs/schema/2.0/` never change without one of these three citations. Rendered `docs/spec/**` is never edited by hand — only `publish-spec.mjs` regenerates it.
+**Hard rule:** conformance rules and `docs/schema/2.0/` never change without one of these three citations. Rendered `docs/spec/**`, `docs/agents/**` and `docs/llms.txt` are never edited by hand — only `publish-spec.mjs` regenerates them.
 
 ## Project & priority management
 

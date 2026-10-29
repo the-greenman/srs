@@ -1,0 +1,13 @@
+# Bundled readme
+
+> A package bundle and a .srsj archive MAY carry one readme as readme, an object with exactly two required string properties, path and content (RFC-045 [R2]).
+
+Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Travelling form](/agents/distribution/repository/travelling-form.md).
+
+A package bundle and a `.srsj` archive MAY carry one readme as `readme`, an object with exactly two required string properties, `path` and `content` (RFC-045 [R2]). `path` is the file's actual path within the artifact, relative to the package directory in a bundle and to the repository root in a `.srsj`; `content` is the file's bytes decoded as UTF-8 with no other change, and MUST consist only of Unicode scalar values. A producer MUST NOT set `readme` from a file whose bytes are not valid UTF-8, from a symbolic link, or from a file reached through a symbolic link, and MUST record a `path` that satisfies the path rules below. The spec does not require a readme, name one, or say how a producer chooses it: which file is the readme is a tooling convention.
+
+The content is opaque (RFC-045 [R1]). An implementation MUST NOT derive validity, identity, lifecycle state, relations, membership, ordering or any other model fact from it, MUST NOT validate it as Markdown or any other format, and MUST NOT compare it with any record, `description` or identity record. The only checks it MAY make on `content` are the content rule, the byte comparison of the write rule, and an implementation-defined size limit, whose violation it MUST report as `readme-invalid` and never handle by silently dropping the readme. A travelling form without `readme` is conformant, and an implementation MUST NOT report the absence of a readme as an error or a warning.
+
+Keeping it (RFC-045 [R5]). An implementation that reads a package bundle or `.srsj` carrying a valid `readme` and writes a travelling form of the same artifact from it (a re-export or re-pack, any rewrite by an upgrade or migration, or a conversion from `.srsj` to `.srs`) MUST carry the readme with `path` and `content` unchanged, unless the user explicitly instructs it to remove or replace the readme. In a `.srs` the readme is carried as a regular-file entry at `path`. A new artifact made from part of one (an RFC-003 subset export, an RFC-026 slice) is not the same artifact. A `.srs` marks no readme, so a readme file in one is ordinary application content, preserved by RFC-038 [R10].
+
+Where the path may point, and what happens to an invalid readme: see Bundled readme path rules. How it is written out: see Bundled readme write rule.

@@ -11,6 +11,7 @@ The `docs/` directory is published at [srs.semanticops.com](https://srs.semantic
 ## Reading the spec
 
 - [docs/spec/srs-spec.md](docs/spec/srs-spec.md): the normative specification.
+- [docs/llms.txt](docs/llms.txt): the normative specification for agents, one page per concept under [docs/agents/](docs/agents/), each under 30,000 characters.
 - [docs/spec/srs-rationale.md](docs/spec/srs-rationale.md): design rationale and the thinking behind decisions.
 - [docs/spec/srs-unified.md](docs/spec/srs-unified.md): specification and rationale interleaved, for a single-pass read.
 - [docs/spec/srs-glossary.md](docs/spec/srs-glossary.md): the terms the specification defines.

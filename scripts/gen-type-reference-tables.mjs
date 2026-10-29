@@ -243,12 +243,14 @@ function renderContent(ctx, typeName, profile) {
   ];
   if (typeName === "type") {
     sections.push(
-      `#### \`FieldAssignment\` (appendix)\n\n${propertyTable(ctx, FIELD_ASSIGNMENT_TYPE_NAME)}`,
+      `**\`FieldAssignment\` (appendix)**\n\n${propertyTable(ctx, FIELD_ASSIGNMENT_TYPE_NAME)}`,
       `Raw JSON Schema: <${rawSchemaLink(FIELD_ASSIGNMENT_TYPE_NAME)}>`
     );
   }
   if (profile === "property-table-and-pseudo-idl") {
-    sections.push(`#### Compact pseudo-IDL\n\n${pseudoIdl(ctx, typeName)}`);
+    // Bold labels, not headings: this content renders at whatever depth its record sits, and a fixed
+    // `####` here closed the record's parent heading in the rendered spec (srs#983).
+    sections.push(`**Compact pseudo-IDL**\n\n${pseudoIdl(ctx, typeName)}`);
     if (typeName === "type") {
       sections.push(pseudoIdl(ctx, FIELD_ASSIGNMENT_TYPE_NAME));
     }

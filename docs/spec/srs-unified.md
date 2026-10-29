@@ -385,7 +385,7 @@ A `reference`-mode value is a target instance id, and MUST NOT be interpreted as
 
 The atomic reusable semantic unit. Fields are defined once and composed into Types. A Field's `aiGuidance` and `fieldType` — including every constraint the latter carries — belong to the Field, not to any Type that includes it.
 
-See the generated reference immediately below for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Field`* for `Field`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger). This prose no longer hand-duplicates the property list.
 
 
 
@@ -517,14 +517,14 @@ lifecycleRef?: UUID        // LINEAGE reference (rfc-decision-c8704763) — reso
 
 A named, versioned composition of Fields for a specific semantic object type.
 
-See the generated reference immediately below for `Type`'s current property table (including the extension-owner column — RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger) — this prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
+See *Generated reference: `Type`* for `Type`'s current property table (including the extension-owner column, RFC-031 OQ1), optional pseudo-IDL, and a link to the raw JSON Schema (RFC-040 Change J / #274 ratified ledger). This prose no longer hand-duplicates the property list, including the extension-owned facets it could previously only gesture at as comments.
 
 
 ##### FieldAssignment
 
 A Field reference within a Type. Declares this field's composition order and requiredness within the Type, without redefining field semantics.
 
-See the `FieldAssignment` appendix table in the generated reference below for the current property list.
+See the `FieldAssignment` appendix table in *Generated reference: `Type`* for the current property list.
 
 `displayLabel` is strictly for rendering. If a materially different label or meaning is needed, a distinct Field with its own lineage is required.
 
@@ -845,14 +845,14 @@ Example: the `VocabularyEntry` substrate contract.
 
 A named, versioned set of `Term` entries.
 
-See the generated reference below for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Vocabulary`* for `Vocabulary`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 
 ##### `Term`
 
 The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
 
-See the generated reference below for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Term`* for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 
 ##### The four vocabularies
@@ -1148,7 +1148,7 @@ The Foundation group is required for all conforming implementations.
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/field.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 field {
@@ -1201,7 +1201,7 @@ field {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json>
 
-#### `FieldAssignment` (appendix)
+**`FieldAssignment` (appendix)**
 
 | Property | Type / cardinality | Required | Constraints / domain | Extension owner | Description |
 |---|---|---|---|---|---|
@@ -1213,7 +1213,7 @@ Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json>
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/type.json#/$defs/com.semanticops.srs__field-assignment__v1>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 type {
@@ -1268,7 +1268,7 @@ field-assignment {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/note.json#/$defs/NoteSection>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 note-section {
@@ -1301,7 +1301,7 @@ note-section {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/note.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 note {
@@ -1336,7 +1336,7 @@ note {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/record.json#/$defs/SourceReference>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 source-reference {
@@ -1375,7 +1375,7 @@ source-reference {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/record.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 record {
@@ -1398,7 +1398,7 @@ record {
 
 A first-class typed link between instances. Relations allow implementations to construct semantic graphs for navigation, analysis, projection, and reasoning.
 
-See the generated reference below for `Relation`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
+See *Generated reference: `Relation`* for `Relation`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 Relations span tiers. A Note may be the target of `derived-from` Relations from the Records it graduated into.
 
@@ -1464,7 +1464,7 @@ Custom types not covered by these should use `namespace/name` format (e.g. `com.
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/relation.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 relation {
@@ -1503,7 +1503,7 @@ relation {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/container.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 container {
@@ -1547,7 +1547,7 @@ container {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/vocabulary.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 vocabulary {
@@ -1592,7 +1592,7 @@ vocabulary {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/term.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 term {
@@ -1637,7 +1637,7 @@ term {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/lifecycle.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 lifecycle {
@@ -1685,7 +1685,7 @@ lifecycle {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/relation-type.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 relation-type-definition {
@@ -1801,14 +1801,14 @@ A Tier 0 instance: a titled set of named free-text sections with no Type binding
 
 A named text section within a Note.
 
-See the generated reference below for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `NoteSection`* for `NoteSection`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 
 ###### `Note`
 
 A lightweight instance with no Type binding.
 
-See the generated reference below for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Note`* for `Note`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 `tags` are free-form labels that allow Notes to be grouped and discovered by topic. A tag is a key that *may* resolve to a `Term` in an open `Vocabulary`, giving it a label, aliases, roles, and lineage — without changing the fact that the instance stores only the string (V2). Undefined tags in an open vocabulary are valid and unenriched. Use tags for navigation and filtering; use Relations for semantic claims.
 
@@ -1916,7 +1916,7 @@ objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
 
 An instantiated Type with field values.
 
-See the generated reference below for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Record`* for `Record`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 `typeNamespace` and `typeName` are denormalised convenience fields. If they conflict with the resolved Type, the `typeId`/`typeVersion` identity takes precedence and the Record is considered invalid until corrected.
 
@@ -2069,7 +2069,7 @@ The V1 mandatory resolution requirement (every `Relation.relationType` must reso
 
 A substrate specialisation that gives semantic meaning and validation rules to a class of relations. `key` is the string stored in `Relation.relationType`; this unifies the key-role field across all three substrate specialisations (RFC-006). `label` and `description` are tightened to required.
 
-See the generated reference below for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `RelationTypeDefinition`* for `RelationTypeDefinition`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#541, the #274 ratified ledger extended to this entity). This prose no longer hand-duplicates the property list.
 
 Relation type definitions live in `package.relationTypes[]` (distributable bundle) or `package/relation-types/` (repository layout). They are resolved repo-globally — all installed relation type definitions form a single flat namespace. Key uniqueness (V5) applies across this flat set.
 
@@ -2149,7 +2149,7 @@ A source-document sidecar entry (RFC-038 [R25], amending RFC-017 [R12]; the entr
 
 A pointer from a field value or instance back to source material.
 
-See the generated reference below for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `SourceReference`* for `SourceReference`'s current property table (modelled once and shared across `Record`, `Note`, and `Relation`), optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 `"transcript-chunk"` and `"transcript-segment"` are intended for implementations that have a stable conversation or time-stream layer with durable chunk or segment identifiers. A standalone repository that stores transcript exports, chat dumps, email threads, or similar source material directly under `source-documents/` should generally cite those files using `sourceType: "repository-document"` (see `ext:repository`) rather than inventing pseudo-chunk IDs.
 
@@ -2292,7 +2292,7 @@ A lightweight grouping boundary over a collection of instances. Containers answe
 
 Containers are not semantic objects with Fields. They do not own semantic state; Records do. A `contains` Relation asserts "A is part of B" (a semantic claim); a Container asserts "these instances form a unit for boundary purposes" (a scope claim). Both are needed; neither replaces the other.
 
-See the generated reference below for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Container`* for `Container`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 `Container.containerId` is not an instance ID and must not appear in `Relation.sourceInstanceId` or `targetInstanceId`. See Invariant 20.
 
@@ -2624,14 +2624,14 @@ Each entry in Blueprint.rootTypes MUST be an ExactTypeRef: both typeId (UUID) an
 
 Declares an expected Relation between two Record types within a Blueprint.
 
-See the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
+See *Generated reference: `RelationSpec`* for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had).
 
 
 ##### `Blueprint`
 
 The definition of a complete document type — which Types it contains, what Relations exist between resulting Records, and what "complete" means. A Blueprint is the artefact handed to an extraction pipeline.
 
-See the generated reference below for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list.
+See *Generated reference: `Blueprint`* for `Blueprint`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
 **Blueprint vs View:**
 
@@ -3368,7 +3368,7 @@ An RFC-026-aware validator MUST NOT treat the following as errors when a `slice`
 
 **Number**: I-152
 
-`slice.spec.id` MUST identify a `containerId` present in the repository's tree-authoritative container enumeration (RFC-038 [R1]), not a manifest `containerIndex`, which is retired (RFC-038 [R2]). A validator applying the RFC-026 Change E relaxations MUST NOT require that enumeration to be complete for a partial slice's included sub-containers, and MUST NOT treat that incompleteness as an error. (RFC-026 [R5](a), Change E item 3, amended by RFC-038 [R25].)
+`slice.spec.id` MUST identify a `containerId` present in the repository's tree-authoritative container enumeration (RFC-038 [R1]), not a manifest `containerIndex`, which is retired (RFC-038 [R2]). A validator applying the RFC-026 Change E relaxations MUST NOT require that enumeration to be complete for a partial slice's included sub-containers, and MUST NOT treat that incompleteness as an error. (RFC-026 [R5] (a), Change E item 3, amended by RFC-038 [R25].)
 
 
 ###### Slice relation-endpoint tests resolve against the instance set
@@ -4375,7 +4375,7 @@ When `DocumentSection.renderViewId` is absent, implementations MUST render each 
 
 **Step 3 — Labels.** Use `FieldAssignment.displayLabel`; fall back to `Field.name`.
 
-**Step 4 — Render.** Render only present fields. A field that Step 2 resolves as absent — including one whose `FieldValue.value` is an empty string — MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format — see *Normative Field-Row Form* below (RFC-037).
+**Step 4: Render.** Render only present fields. A field that Step 2 resolves as absent, including one whose `FieldValue.value` is an empty string, MUST NOT emit a row, and neither MUST a field whose value sequence has no surviving entries. Implementations MUST NOT emit a label with an empty value. The sole exception is `DocumentSection.emptyBehavior` `"show-placeholder"` with the field `required: true`, which MUST emit a row whose value position carries the literal placeholder `(empty)`. Multi-entry values render as a block list, never comma-joined. The emitted form of a field row, and the separation between consecutive rows, is normative per output format: see *Normative Field-Row Form* (RFC-037).
 
 The baseline is a floor, not a ceiling. An L1 View via `renderViewId` always takes precedence.
 
@@ -4402,7 +4402,7 @@ For `format: "markdown"`, `"html"`, or `"adoc"`:
 |---|---|---|
 | Document title | `1 + depthOffset` | When `preamble` is absent |
 | Section title | `2 + depthOffset` | When `DocumentSection.title` is set |
-| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section and present in the record's Type's effective field set, or (RFC-020, Rule [N+37]) as a fallback in either absence, see below |
+| Per-record heading | `3 + depthOffset` | When `titleFieldId` is set on the section and present in the record's Type's effective field set, or (RFC-020, Rule [N+37]) as a fallback in either absence |
 | Field label | Bold/formatted text, not a heading; exact per-format form per *Normative Field-Row Form* (RFC-037) | Always |
 
 For `format: "text"` or implementation-defined values, heading level semantics do not apply.
@@ -5699,7 +5699,7 @@ srs/conformance/discovery/
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/source-document-meta.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 source-document-meta {
@@ -5750,7 +5750,7 @@ source-document-meta {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/manifest.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 manifest {
@@ -5799,7 +5799,7 @@ manifest {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 view {
@@ -5840,7 +5840,7 @@ view {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/FieldView>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 field-view {
@@ -5874,7 +5874,7 @@ field-view {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/view.json#/$defs/RecordPropertyView>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 record-property-view {
@@ -5902,7 +5902,7 @@ record-property-view {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/composition.json#/$defs/ExportConfig>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 export-config {
@@ -5942,7 +5942,7 @@ export-config {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/composition.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 composition {
@@ -5989,7 +5989,7 @@ composition {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/DiscoveryQuery>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 discovery-query {
@@ -6023,7 +6023,7 @@ discovery-query {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/TextSegment>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 text-segment {
@@ -6050,7 +6050,7 @@ text-segment {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ExpectedSegments>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 expected-segments {
@@ -6080,7 +6080,7 @@ expected-segments {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/discovery.json#/$defs/ConformanceScenario>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 conformance-scenario {
@@ -6122,7 +6122,7 @@ conformance-scenario {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/theme.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 theme {
@@ -6162,7 +6162,7 @@ theme {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/srsj-envelope.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 srsj-envelope {
@@ -6189,7 +6189,7 @@ srsj-envelope {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/FieldRef>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 field-ref {
@@ -6222,7 +6222,7 @@ field-ref {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json#/$defs/ProtocolStage>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 protocol-stage {
@@ -6262,7 +6262,7 @@ protocol-stage {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/protocol.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 protocol {
@@ -6297,7 +6297,7 @@ protocol {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json#/$defs/RelationSpec>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 relation-spec {
@@ -6333,7 +6333,7 @@ relation-spec {
 
 Raw JSON Schema: <https://srs.semanticops.com/schema/2.0/blueprint.json>
 
-#### Compact pseudo-IDL
+**Compact pseudo-IDL**
 
 ```typescript
 blueprint {

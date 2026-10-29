@@ -6,9 +6,9 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "RelationSpec",
-    "content": "Declares an expected Relation between two Record types within a Blueprint.\n\nSee the generated reference below for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer) — this prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had)."
+    "content": "Declares an expected Relation between two Record types within a Blueprint.\n\nSee *Generated reference: `RelationSpec`* for `RelationSpec`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list (and no longer risks drifting from the current `ExactTypeRef`-based schema, as the superseded prose here had)."
   },
   "createdAt": "2026-09-07T19:59:46.772597156+00:00",
-  "updatedAt": "2026-09-07T19:59:46.772600800+00:00",
+  "updatedAt": "2026-10-28T19:35:32.868412392+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
