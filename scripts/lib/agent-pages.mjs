@@ -20,6 +20,16 @@ export const PAGE_LIMIT = 30000;
 // Room left for the header each page carries (title, description, links up and down).
 const HEADER_ALLOWANCE = 4000;
 
+// The SemanticOps sites' shared Get running block (srs-context decision d871837a, semanticops.com#44):
+// every site's llms.txt opens with it, byte for byte. Change the standard first, then this copy.
+const GET_RUNNING = [
+  "## Get running",
+  "",
+  "- Install the srs engine: `curl -fsSL https://engine.semanticops.com/install.sh | sh`",
+  "- [First five minutes](https://engine.semanticops.com/start.md): CLI, MCP server, output contract",
+  "- [SemanticOps sites](https://semanticops.com/llms.txt): every site and what it is for",
+];
+
 function parseHeadings(text) {
   const lines = text.split("\n");
   const root = { level: 0, title: "", lines: [], children: [] };
@@ -134,6 +144,8 @@ export function buildAgentPages(specText, { srsVersion, dataModelRevision }) {
       "",
       `> The normative specification of SRS (Semantic Record System), ${version}, one page per concept, each under ${PAGE_LIMIT.toLocaleString("en")} characters. Generated from the records of the specification repository; the records, not these pages, are authoritative.`,
       "",
+      ...GET_RUNNING,
+      "",
       "## Start here",
       "",
       `- ${link(reading)}: notation, RFC 2119 keywords and the reading order of the nine Parts.`,
@@ -150,6 +162,7 @@ export function buildAgentPages(specText, { srsVersion, dataModelRevision }) {
       "- [Specification, one file](/spec/srs-spec.md): every page above in one large file, more than one fetch.",
       "- [Unified](/spec/srs-unified.md): specification and rationale together, one large file.",
       "- [Repository archive](/srs-spec.srs): the full specification repository as records; needs an SRS client.",
+      "- Implementations: the reference engine at https://engine.semanticops.com",
       "",
       "<!-- generated from docs/spec/srs-spec.md by scripts/lib/agent-pages.mjs; do not edit -->",
       "",
