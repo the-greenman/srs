@@ -2,10 +2,10 @@
 
 # RFC-049: Repository addressing — the Address in the core, and a first registry
 
-**Status**: Draft (Revision 8)
+**Status**: Draft (Revision 10)
 **Affects**: the core, Foundation group (the `Address` moves out of `ext:addressability` and gains an optional `repositoryId`); `ext:addressability` (keeps the live cursor, `AttentionState`); `ext:repository` (one rule: a repository declares no boundary or neighbours); `ext:registry` (its existing `Registry` catalog grows to entries by **kind**: `package`, carried across from today's entry, and `repository`, new); a new schema for the registry document (`docs/schema/2.0/registry.json`, proposed); implementations that resolve an Address in another repository, and srs-rust's shipped `srs registry` commands. Builds on **RFC-003 (Accepted)** ([C5] canonical JSON), **RFC-026 (Accepted)** (slices: a new `repositoryId` and a recorded origin), **RFC-038 (Accepted)** (tree-authoritative repositories), **RFC-044 (Accepted)** (package dependencies keyed by `packageId`) and `rfc-decision-5f18603e` (federation's return is committed, after its removal by `rfc-decision-4f1e12e5`). Scheduled by programme decision 31e9fd27 (ratified 2026-10-16) as step 1 of federation's return. Leaves package distribution and binding to **RFC-047 (Draft)**.
-**Author**: Owner direction on the-greenman/srs-rust#683 (2026-10-08) and owner rulings of 2026-10-30; drafted by Claude Code
-**Date**: 2026-10-08 (Revisions 4–8: 2026-10-30)
+**Author**: Owner direction on the-greenman/srs-rust#683 (2026-10-08) and owner rulings of 2026-10-30 and 2026-11-02; drafted by Claude Code
+**Date**: 2026-10-08 (Revisions 4–8: 2026-10-30; Revisions 9–10: 2026-11-02)
 
 ---
 
@@ -13,6 +13,8 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 10 | 2026-11-02 | Final check of the writes (0 blocking; review loop closed) folded: the `read-only` refusal binds every implementation that loads a registry, routing or not ([R16]); refusal codes have one order ([R17], also for [R5]); `write-refused` for a valid write the target or its transport refuses; "the request's repository" defined for multi-repository servers. Second review of the writes (1 blocking, 3 should-fix, 3 nits) also folded: [R16] binds only implementations that do not route writes, so each refused write has exactly one code; treating `remote` entries as read-only moved into [R17] with the `read-only` code; a request relying on a default that did not load is `not-in-boundary` ([R13]); citation, held-write parenthetical, D2 trigger 2 wording and the foreclosure of multi-repository writes tidied. First review of the write additions (2 blocking, 7 should-fix, 3 nits; none declined; posted on #913) folded. **[R16] split:** a Core rule (a write is applied only to the repository it names; one an implementation does not route is refused, `write-not-routed`; no write changes two repositories) and an `ext:registry` rule [R17] (routing, verifying the target's id before writing, the closed list of write refusals, `readOnly` however the target is named). [R6] covers writes. `readOnly` binds the implementation that loads the registry; an absent flag grants nothing the target refuses; `remote` entries MAY be treated as read-only. A non-boolean `readOnly` is `entry-malformed`. D2 trigger 2 has not fired (`readOnly` is publishable). W1–W3 defined in D6 and added as Alternatives G and H. Integration rows 17 and 19, the Reference bullet and the Rationale updated for writes. |
+| 9 | 2026-11-02 | Owner ruling on Open Question 1 (writes): **W1 with a read-only flag.** An implementation may route a write by `repositoryId` to any boundary member, as an ordinary write to that one repository; a `repository` entry may be marked `readOnly`, and writes to it are refused (`read-only`). Reference copies of external repositories are the motivating case. Access control (IAM) stays far off and out of scope. New [R16], decision D6, `readOnly` in [R14]. Open Questions: none. |
 | 8 | 2026-10-30 | Review round 5 (one combined review: **0 blocking**, 6 should-fix, 4 nits; review loop closed; none declined; posted on #913) folded. Own-id exception extended to the request's repository, and an `ext:registry` implementation using no registry keeps the one-repository boundary ([R8]). `bundled` locators are `entry-malformed` in a registry ([R3], [R15]). The `registryRevision` deviation from `rfc-decision-628cf6c4`'s parenthetical named in *Contradictions found*. A target below the supported revision and not migrated is `revision-unsupported` ([R5]). A default whose entry did not load is governed in [R13]. Counts of the srs-rust changes corrected (seven). Ordering overlap, `packageId` case, malformed entries in conflicts, and charter bookkeeping fixed. |
 | 7 | 2026-10-30 | Review round 4 folded (one combined review: 1 blocking, 9 should-fix, 4 nits; none declined; posted on #913). **The registry carries its own generation counter, `registryRevision`,** which moves only when the registry's shape changes, instead of the corpus's `dataModelRevision`: sharing the corpus counter would have forced a no-op 11→12 revision on every repository and made older binaries refuse registries a newer one writes. Resolution outcome codes moved to a Core rule ([R5]); locator-taking moved into Core [R8]; [R2] limited to what is checkable (locators). Own-id exception carried into [R5]/[R8]. `locator-unusable` is a resolution outcome only. Unknown entry fields are kept, not malformed. Missing migration step added to load refusals; the load code renamed `registry-revision-unsupported`. LOCATOR shape cited from `ThemeReference` (`packageRef` has not reached it); `bundled` not used in registries. Package identity check left to RFC-047. Address equality and container context reconciled with design note 008. Ids compared without regard to case. What breaks gains the WASM registry bindings and srs-rust's `DocumentAddress`. Citation slips fixed. |
 | 6 | 2026-10-30 | Review round 3 folded (Spec Integrity 15 findings, 0 blocking; Completeness 20, 5 blocking; none declined; posted on #913). **The locator is the charter's LOCATOR shape** (`rfc-decision-c8704763`: `{mode, path|url|id}`), not an opaque string; `repositoryId` is a KEYED reference scoped by the registry. **The `downloadUrl`→`locator` rename applies `rfc-decision-628cf6c4`**: a deterministic migration of pre-RFC catalogs on read, and the registry stamped with `dataModelRevision` under RFC-003 [C6]'s reader rule (absent ⇒ 0, re-stamp across steps that change no registry shape). RFC-047's manifest `bindings[]` stay legal as references by id ([R2]); `childRegistries` is referral. [R2] restated as two checkable halves. The boundary and `not-in-boundary` are Core; an implementation without `ext:registry` serves one repository for resolution. Self-id always resolves as absent ([R13]). Stored conversation tags name the session's repository. [R12] is Address equality, not record identity. Kind shapes made normative ([R14]). Outcome codes split into load and resolution ([R5], [R15]). [R9] ordering made total; unknown top-level fields kept. Only three spaces. Resolution of non-member records and unset fields stated. Shipped srs-rust behaviour changes listed. Every decision's triggers say where they are checked. Integration counts made exact (22 records change, 7 checked unchanged). **One question for the owner: writes to non-default repositories (srs-rust#683).** |
@@ -32,7 +34,7 @@
 This is a complex decision. The consequence map below places the options; the owner's rulings of 2026-10-30 chose among them (see *Decisions*).
 
 **Governing cell preferences.**
-- **Reference: declared strength over convenient reach.** Deciding cell for Change A. A reference to another repository names it by id inside the Address; reaching it goes through a declared registry entry and is read-only. Cross-repository relations, which need their own declared strength, are the next RFC.
+- **Reference: declared strength over convenient reach.** Deciding cell for Change A. A reference to another repository names it by id inside the Address; resolving it goes through a declared registry entry and is read-only; a write is routed to one repository through the same entry ([R16], [R17]). Cross-repository relations, which need their own declared strength, are the next RFC.
 - **Identity: identifier over label.** Every registry entry is keyed by an identifier, never by its label or locator. A record's home is named by `repositoryId`, which tells apart the same `instanceId` held in two repositories (an origin and its slice, RFC-026).
 - **Repository: catalog over circumstance.** Which repositories an implementation can reach becomes a declared catalog, not whatever paths a process was started with.
 - **Conformance: one way over many.** Deciding cell for Change B. Repositories and packages both need "an identity resolves to a place". The catalog `ext:registry` already defines and srs-rust already ships becomes the one mechanism for both.
@@ -80,7 +82,7 @@ Emergence: a registry with entry kinds is where later federation pieces attach (
 
 ## Abstract
 
-Two things change. The **Address**, the stable identifier for anything that can be referred to, moves from the optional `ext:addressability` into the core and gains an optional `repositoryId`, so it can name a thing in another repository. `AttentionState`, the live cursor, stays in the extension unchanged. And `ext:registry`'s existing **`Registry`** catalog grows into a registry of **entries by kind**: every entry states a `kind`, an identity and a `locator`. Today's package entry is carried across as the `package` kind; this RFC adds the `repository` kind. The repository entries of a registry form a **boundary**: the repositories an Address can be resolved in. Resolution is read-through and read-only.
+Two things change. The **Address**, the stable identifier for anything that can be referred to, moves from the optional `ext:addressability` into the core and gains an optional `repositoryId`, so it can name a thing in another repository. `AttentionState`, the live cursor, stays in the extension unchanged. And `ext:registry`'s existing **`Registry`** catalog grows into a registry of **entries by kind**: every entry states a `kind`, an identity and a `locator`. Today's package entry is carried across as the `package` kind; this RFC adds the `repository` kind. The repository entries of a registry form a **boundary**: the repositories an Address can be resolved in. Resolution is read-through and read-only; a write may be routed to one repository in the boundary unless its entry is marked read-only.
 
 On acceptance, nothing stored yet carries an Address with a foreign `repositoryId`: no Relation or SourceReference shape holds an Address. What changes now is the registry document and how an implementation resolves an Address or a repository-scoped read, which is what multi-repository MCP serving (srs-rust#683) needs. Cross-repository relations, the first stored carrier, are step 2 of decision 31e9fd27.
 
@@ -93,6 +95,7 @@ Packages and repositories are used in opposite directions (owner, 2026-10-30):
 - **A package catalog faces outward.** A publisher lists static, versioned packages; other groups subscribe and take updates. Subscription is binding (RFC-047), not the registry.
 - **A repository registry faces inward.** At first it is the operator's own list of repositories, loaded by one MCP server so all of them are reachable through one interface. It carries entries only.
 - **Later, a published repository** appears in someone else's registry with an HTTP or MCP locator, and is read live, not installed.
+- **Reference copies.** The registry's point is one server over a set of known repositories (owner, 2026-11-02). Some are local copies of external reference repositories that must not be changed: their entries are marked read-only, and the server reads them but never writes to them.
 
 One mechanism serves all three because each needs the same thing: an identity resolves to a place, through an entry someone vouches for. What differs is per kind (versions, checksums, install versus live read) or per document (publication metadata, optional).
 
@@ -160,7 +163,7 @@ Consequences. What becomes possible now: an implementation resolves an Address, 
 
 **The `package` kind** is today's `RegistryEntry`, carried across with two changes, both a rename under `rfc-decision-628cf6c4`: `kind: "package"` is stated, and the optional `downloadUrl` becomes the required `locator` (`{mode: "remote", url: <the old downloadUrl>}`), because an entry that cannot say where its package is cannot be resolved. Its identity is `packageId` and `packageVersion`. Every other field is unchanged. A catalog written before this RFC is brought forward on read by a deterministic migration ([R9]); an old entry with no `downloadUrl` has no locator and fails as `entry-malformed`. RFC-047 develops the kind (discovery metadata, integrity checking, binding).
 
-**The `repository` kind** is new. Its identity is **`id`**, the repository's `manifest.repositoryId` (required in every conforming manifest, unchanged on copy or export). Its locator leads to a repository. The repository entries of a registry fill the implementation's **boundary**. Because a clone keeps its source's id, at most one copy of a repository can be in a boundary: listing a worktree and its main checkout gives two entries with one identity, and **both** fail ([R4]), so neither is reachable. Splitting work off into its own repository is a slice (RFC-026), which mints a new id, so it is not a copy in this sense. A directory whose manifest lacks `repositoryId` is not a conforming repository and cannot be an entry.
+**The `repository` kind** is new. Its identity is **`id`**, the repository's `manifest.repositoryId` (required in every conforming manifest, unchanged on copy or export). Its locator leads to a repository. The repository entries of a registry fill the implementation's **boundary**. Because a clone keeps its source's id, at most one copy of a repository can be in a boundary: listing a worktree and its main checkout gives two entries with one identity, and **both** fail ([R4]), so neither is reachable. Splitting work off into its own repository is a slice (RFC-026), which mints a new id, so it is not a copy in this sense. A directory whose manifest lacks `repositoryId` is not a conforming repository and cannot be an entry. An entry may carry **`readOnly: true`**: the operator's statement that this server never writes to that repository ([R16]). It is a fact about the operator's server, not about the repository, so it lives in the registry and never in the repository, in the spirit of [R2]. It binds the implementation that loads the registry. Absent means this server does not refuse on its own account, which is how a single-repository server behaves today; it grants nothing the target or its transport refuses, and an implementation MAY treat every `remote` entry as read-only. A consumer copying entries from someone else's published catalog sets the flag for its own server. `readOnly` reveals nothing private, so it belongs in the document (D2 trigger 2 has not fired); credentials and other private settings stay in implementation configuration.
 
 **Where it lives and who vouches for it.** The registry lives outside everything it lists. Its **operator**, whoever runs the implementation that loads it, vouches for its entries; nothing else is claimed about ownership. Credentials and other settings an operator must keep private are not part of the registry; an implementation keeps them in its own configuration, keyed by entry identity.
 
@@ -185,7 +188,7 @@ What breaks, all in srs-rust, its mirrors and one srs documentation page (no reg
 6. Documentation describing the old shape: `srs-usage.md` (srs repository) and `docs/dogfooding.md` (srs-rust).
 7. srs-rust's `DocumentAddress` (`srs-core/src/types/address.rs`) requires `container_id`, has no `repository_id`, does not check that `fieldId` needs `recordId`, and still carries `revision_id` from the removed revisions (`rfc-decision-2a1e1590`); it follows [R0].
 
-### Change C — resolution is read-through and read-only
+### Change C — resolution is read-through and read-only; writes are routed
 
 Resolving an Address with a `repositoryId`, or any read an implementation scopes by repository id (the record, container, type, map, tree and other resources an MCP server serves), reads from the target repository through the existing per-repository services. The result equals the same request made against the target directly ([R10]). Resolution writes nothing and makes nothing part of the resolving repository. An implementation may cache only where every result still satisfies [R10].
 
@@ -195,13 +198,13 @@ Resolving an Address with a `repositoryId`, or any read an implementation scopes
 - With `fieldId`, it resolves to that field of the record. A field the record's Type does not assign is `target-not-found`; a field the Type assigns but the record leaves unset resolves, with no value.
 - `process` and `conversation` Addresses resolve through the target's own support for those spaces, or give `space-unsupported`.
 
-The resolution outcomes and their codes are [R5]; the per-entry outcomes of loading a registry are [R15]. Every resolution failure is a result of that resolution, reported as a structured error code (srs-rust ADR-053 surface), and none makes the construct holding the Address invalid ([R11]).
+The resolution outcomes and their codes are [R5]; write refusals are [R16] and [R17]; the per-entry outcomes of loading a registry are [R15]. Every resolution failure is a result of that resolution, reported as a structured error code (srs-rust ADR-053 surface), and none makes the construct holding the Address invalid ([R11]).
 
 This scopes resolution, not the future. A later RFC may let a repository declare that it holds **mirrors** of records from another repository: an essay split off from a research repository may see itself as a mirror of the records it took. That is a separate, declared act, not resolution. A mirror naming its origin is provenance, like a slice's recorded origin, so [R2] does not forbid it.
 
 A relation's endpoints remain instances in its own repository until the next RFC.
 
-**Writes are not resolution.** Nothing in this RFC writes across repositories: no write spans two repositories, and resolution never writes ([R7]). Whether an implementation serving several repositories may accept a write addressed by `repositoryId` to a repository other than its default — an ordinary write to that one repository, through that repository's own services and rules — is the one question this revision leaves to the owner (*Open Questions*).
+**Writes are routed, never resolved.** Resolution never writes ([R7]). Separately, an implementation serving several repositories MAY accept a write addressed by `repositoryId` to any member of its boundary: it is an ordinary write to that one repository, through that repository's own services and type and relation contracts, exactly as if the client had connected to it alone. No write spans two repositories. Before writing, the server checks that the repository it reached is the one the entry names (`id-mismatch` otherwise). A write to an entry marked `readOnly` is refused before anything is written (`read-only`), and a write to a repository outside the boundary is `not-in-boundary`. An implementation that does not route writes refuses one naming another repository (`write-not-routed`) and never applies it elsewhere ([R16], [R17]). Who may write is not decided here: there is no access control beyond the operator's read-only flag.
 
 ### Change D — conflicts are fatal to the entries, mismatches are errors
 
@@ -233,7 +236,7 @@ Each rule names its conformance class: **Core** (Foundation group), **`ext:repos
 > - `target-not-found`: the repository resolves but the container, record or field addressed is not in it, or the record is not a member of the given container (Change C);
 > - `space-unsupported`: the Address's space is not supported by the target or the resolving implementation.
 >
-> **[R6]** *(`ext:registry`)* If the repository reached through a `repository` entry reports a different id from the entry's, the implementation MUST fail resolution through that entry with `id-mismatch` and MUST NOT use either id as an override.
+> **[R6]** *(`ext:registry`)* If the repository reached through a `repository` entry reports a different id from the entry's, the implementation MUST fail resolution or a write through that entry with `id-mismatch` and MUST NOT use either id as an override.
 >
 > **[R7]** *(`ext:registry`)* Resolution MUST NOT write to or alter the target repository, and MUST NOT make the target's content part of the resolving repository. (This governs resolution only; declared mirroring is left to a later RFC.)
 >
@@ -247,15 +250,19 @@ Each rule names its conformance class: **Core** (Foundation group), **`ext:repos
 >
 > **[R12]** *(Core)* Two Addresses are equal when they have the same space, the same `repositoryId` (an absent one standing for the repository that holds the Address, [R13]) and the same identity components; in the `document` space, when `recordId` is present, `containerId` is context and does not take part. A context is still checked when the Address is resolved, so of two equal Addresses the one whose container does not hold the record resolves to `target-not-found` ([R5]): equality says what is named, resolution says whether the context given is right. Address equality says which repository's copy is meant; it does not define record identity, which is the `instanceId` wherever a record is held.
 >
-> **[R13]** *(Core)* An Address without `repositoryId` names a thing in the repository that holds it, and an Address whose `repositoryId` is the holder's own id names the same thing; it resolves as if the id were absent, whether or not that repository is a registry entry. A transient Address that no repository holds (a request to an implementation) names a thing in the repository the request is made against; an implementation serving more than one repository MUST name one default repository, a `repository` entry of its registry, for requests that carry no `repositoryId`, and MUST state it where it describes itself to clients; if the default's entry did not load, it MUST report that and refuse the requests that rely on the default. A conversation-layer tag names things in the repository of the session that wrote it.
+> **[R13]** *(Core)* An Address without `repositoryId` names a thing in the repository that holds it, and an Address whose `repositoryId` is the holder's own id names the same thing; it resolves as if the id were absent, whether or not that repository is a registry entry. A transient Address that no repository holds (a request to an implementation) names a thing in the repository the request is made against; an implementation serving more than one repository MUST name one default repository, a `repository` entry of its registry, for requests that carry no `repositoryId`, and MUST state it where it describes itself to clients; if the default's entry did not load, it MUST report that and refuse the requests that rely on the default with `not-in-boundary`. A conversation-layer tag names things in the repository of the session that wrote it.
 >
 > **[R14]** *(`ext:registry`)* The kinds this RFC defines require these fields beyond `kind` and `locator`:
 > - `package`: `packageId` (UUID), `packageName`, `packageVersion`, `publisher`, `publishedAt`, `fieldCount`, `typeCount`; it MAY carry `label`, `description`, `homepage`, `tags`, `viewCount`, `schemaCount`, `protocolCount`, `relationTypeCount` and `checksum`. `downloadUrl` is not a field of the kind; [R9]'s migration replaces it.
-> - `repository`: `id` (UUID); it MAY carry `label`.
+> - `repository`: `id` (UUID); it MAY carry `label` and `readOnly` (boolean; absent means `false`, [R16]).
 >
 > Other fields on an entry are kept on rewrite ([R9]) and never used.
 >
-> **[R15]** *(`ext:registry`)* Loading a registry reports, per entry and affecting only the entries named: `entry-malformed` (an entry missing `kind`, a valid `locator` or a field [R14] requires, or with a `bundled` locator), `duplicate-identity` (every entry in a [R4] conflict) and `kind-unsupported` (an entry whose kind the implementation does not support, which it keeps but does not use). It refuses the whole document, loading nothing, only when the document is not a JSON object with an `entries` array (`registry-malformed`), or its `registryRevision` is above the supported revision or below it with no transformer for a step (`registry-revision-unsupported`, [R9]).
+> **[R15]** *(`ext:registry`)* Loading a registry reports, per entry and affecting only the entries named: `entry-malformed` (an entry missing `kind`, a valid `locator` or a field [R14] requires, with a `bundled` locator, or with a `readOnly` that is not a boolean, which fails safe: the entry is outside the boundary and cannot be written), `duplicate-identity` (every entry in a [R4] conflict) and `kind-unsupported` (an entry whose kind the implementation does not support, which it keeps but does not use). It refuses the whole document, loading nothing, only when the document is not a JSON object with an `entries` array (`registry-malformed`), or its `registryRevision` is above the supported revision or below it with no transformer for a step (`registry-revision-unsupported`, [R9]).
+
+> **[R16]** *(Core)* A write that carries a `repositoryId` equal to the repository the request is made against (for an implementation serving more than one repository, its default, [R13]) is treated as one without it. A write is applied only to the one repository it names, and no write changes more than one repository. An implementation that does not route writes to other repositories (one without `ext:registry`, or one that does not take up [R17]'s MAY) MUST refuse a write naming another repository, writing nothing, with `write-not-routed`, and MUST NOT apply it to any other repository. Any implementation that loads a registry MUST refuse, writing nothing, with `read-only`, a write to a repository whose entry has `readOnly: true`, or whose locator is `remote` when it treats `remote` entries as read-only (which it MAY), however the target was named, including as the default. For a write naming another repository, `write-not-routed` comes first.
+>
+> **[R17]** *(`ext:registry`)* An implementation MAY route a write that carries a `repositoryId` to a member of its boundary, as a write to that one repository through that repository's own services and contracts. Before writing it MUST verify that the repository reached reports the entry's `id` ([R6]). It MUST refuse a write, writing nothing, with the first of these that holds, in this order: `not-in-boundary` (the id is not in its boundary); `read-only` ([R16]; decided from the entry, so a read-only target is never reached); `locator-unusable`; `id-mismatch`; `revision-unsupported` (as in [R5]); `write-refused` (the target or its transport refuses a write that is valid, for example a permission error, a lock, or a remote endpoint that does not accept writes); or the target repository's own validation diagnostics when the write itself is invalid there. Resolution outcomes in [R5] that can hold together are reported in the same order.
 
 ([R1] of Revisions 2–3, a rule on `srs://` strings, is withdrawn; the number is not reused.)
 
@@ -282,7 +289,7 @@ Level test (`rfc-decision-c20fcff8`): the kind, identity, uniqueness, ordering, 
 
 ## Decisions
 
-Each ruling of 2026-10-30, with its reason and the signals that would show it wrong, each with the place it is checked. On acceptance D1–D5 each become an `rfc-decision` record, these triggers its `review_trigger`. The *Other rulings* are not separate records: they are scope settings folded into D2 and the rules, with no alternative left that a later reader would need explained.
+Each ruling of 2026-10-30 and 2026-11-02, with its reason and the signals that would show it wrong, each with the place it is checked. On acceptance D1–D6 each become an `rfc-decision` record, these triggers its `review_trigger`. The *Other rulings* are not separate records: they are scope settings folded into D2 and the rules, with no alternative left that a later reader would need explained.
 
 ### D1 — The Address is core; `AttentionState` stays a cursor
 
@@ -301,7 +308,7 @@ Each ruling of 2026-10-30, with its reason and the signals that would show it wr
 **Costs accepted.** The seven changes listed under Change B: six in srs-rust and its mirrors (registry types, per-entry parsing, `registry get` as discovery, the URI parser's code and case, the WASM registry bindings, `DocumentAddress`) and one srs documentation page (`srs-usage.md`), with payload schemas mirrored in srs-vscode; `registryId` stays as inert optional metadata; one document shape serves a public catalog and a private list.
 **Review triggers.**
 1. **The shared rules bend per kind.** The `package` kind (RFC-047) or a later kind needs an exception to more than one shared rule: identity unique within a kind, per-entry failure, label never resolves, LOCATOR shape, one deterministic form. Then split into separate catalogs that share an entry convention. *Checked at:* RFC-047's review.
-2. **Private settings need a place in the document.** The operator's repository list needs content that must never be published (credentials, tokens, per-machine options). Then public catalogs and private lists get separate document roles that keep the entry core. *Checked at:* srs-rust#683's implementation and the first `remote` repository entry.
+2. **Private settings need a place in the document.** The operator's repository list needs content that must never be published (credentials, tokens, private per-machine options). Then public catalogs and private lists get separate document roles that keep the entry core. *Checked at:* srs-rust#683's implementation and the first `remote` repository entry.
 3. **Subscription leaks in.** Binding needs subscription state (last-seen version, update policy) stored in registry entries. Then "the registry says where, binding says whether to follow" is wrong. *Checked at:* RFC-047's review.
 4. **Catalogs we must read omit `kind`.** Registries outside our control that we must consume carry entries without `kind` at `registryRevision` 1 or above. Then requiring `kind` was wrong and a default is needed. *Checked at:* the first external catalog consumed.
 5. **A document-level field is needed per kind.** A published repository catalog needs document metadata a package catalog cannot carry, or the reverse. *Checked at:* the first published repository, which is also the trigger to reopen srs#218.
@@ -336,6 +343,17 @@ Each ruling of 2026-10-30, with its reason and the signals that would show it wr
 2. RFC-047's bindings need a locator inside the manifest, not just a source id. *Checked at:* RFC-047's review.
 3. Repositories published for others need to advertise related repositories. *Checked at:* the first published repository.
 
+### D6 — Writes are routed to one repository; entries can be read-only
+
+**Statement.** An implementation may route a write by `repositoryId` to any repository in its boundary, as an ordinary write to that one repository under its own contracts; a `repository` entry may be marked `readOnly`, and writes to it are refused. No access control beyond that flag.
+**Options.** W1: route a write to any boundary member (chosen, with the flag). W2: writes only to the default repository, every other member read-only (Alt G). W3: the spec says nothing and implementations decide (Alt H).
+**Why.** The point of the registry is one server that handles a set of known repositories (owner): reading and writing through one interface answers SP-87 ("an agent works in one repository at a time") fully, where W2 would half-solve it. Some of those repositories are copies of external reference repositories that must not be changed (owner), so read-only is needed now, per entry, as the operator's statement about the server. W3 would let the implementation lead the spec, and would leave a write naming another repository free to land in the default.
+**Costs accepted.** The registry becomes the list of repositories the server can change, not only read; protection against an unintended write is one flag the operator must remember to set; nothing distinguishes one client from another.
+**Review triggers.**
+1. A write lands in a repository the operator did not mean to change despite the flag (for example, a reference copy listed without `readOnly`). Then consider read-only as the default for some locator modes, or for repositories whose origin is elsewhere. *Checked at:* srs-rust#683's use, and the first friction finding against it.
+2. Different clients of one server need different rights to the same repository. That is access control (IAM), out of scope here and far off (owner); it would arrive as its own RFC, and the flag would become one of its rules. *Checked at:* the first shared (multi-user) server.
+3. A write needs to change two repositories together. Then "no write spans two repositories" is the wrong boundary. *Checked at:* the cross-repository relations RFC.
+
 ### Other rulings
 
 | Question | Ruling | Why |
@@ -361,7 +379,7 @@ Each ruling of 2026-10-30, with its reason and the signals that would show it wr
 - A second catalog beside the `ext:registry` registry, for repositories or packages.
 - A second locator form: registry locators use the LOCATOR shape.
 - An Address that carries a locator: the Address names, the registry locates.
-- Resolution that writes, copies or merges ([R7]).
+- Resolution that writes, copies or merges ([R7]); a write that changes more than one repository (reopened only through D6 trigger 3), a write applied to a repository other than the one it names, and any write to a `readOnly` entry ([R16], [R17]).
 - A registry entry without `kind`, a `package` entry without a locator, resolving by name.
 - A `document` Address with `fieldId` and no `recordId`.
 - Serving a git worktree and its main checkout from one registry (D4).
@@ -375,6 +393,7 @@ Each ruling of 2026-10-30, with its reason and the signals that would show it wr
 - **Referral**, an entry whose locator names another registry (RFC-047's `childRegistries`); [R6] would be relaxed for it, and `not-in-boundary` is where "ask the next registry" attaches.
 - **A cursor across repositories**, `repositoryId` on `AttentionState`.
 - **A boundary id** and **a re-id rule for copies**, when something needs them.
+- **Access control** (who may read or write which repository through a server), beyond the operator's read-only flag (D6).
 
 ## Integration on acceptance (Door 2)
 
@@ -398,17 +417,17 @@ Each ruling of 2026-10-30, with its reason and the signals that would show it wr
 | 14 | `mechanism-99976f0e` (self-contained profile) | States that a foreign Address needs no registry and stays valid ([R11]) |
 | 15 | `mechanism-7c556f28` (`ext:repository` conformance) | Gains [R2] |
 | 16 | `tables/t004-which-extensions-to-implement` | "Publish a definition catalog → `ext:registry`" becomes "Catalog packages or serve several repositories → `ext:registry`" |
-| 17 | `extension-a6c209c1` (`ext:registry`) | `extension_adds` widened to entries by kind; `extension_cost_of_non_adoption` widened (without it an implementation catalogs no packages and serves exactly one repository); "no opinion on registry authority" replaced by the operator-as-office rule for resolution; several catalogs still allowed for discovery |
+| 17 | `extension-a6c209c1` (`ext:registry`) | `extension_adds` widened to entries by kind, routed writes to one boundary member, and read-only entries; `extension_cost_of_non_adoption` widened (without it an implementation catalogs no packages and serves exactly one repository); "no opinion on registry authority" replaced by the operator-as-office rule for resolution; several catalogs still allowed for discovery |
 | 18 | `concept-d755fb20` (Registry) | As row 17 |
-| 19 | `mechanism-cd486126` (`Registry`) | Document fields optional; one registry per resolution context; the sentence "does not define registry authority, authentication, or federation" replaced |
+| 19 | `mechanism-cd486126` (`Registry`) | Document fields optional; one registry per resolution context; the sentence "does not define registry authority, authentication, or federation" replaced; the operator's `readOnly` flag named as the only write control |
 | 20 | `example-2d432ba0` (the `Registry` shape) | Updated |
 | 21 | `mechanism-0b3e1575` and `example-137b1d3b` (`RegistryEntry` and its shape) | Become the shared entry and the `package` kind shape (counted as one row: the mechanism and its example) |
 
 Checked, unchanged: `invariant-034`; `example-821ada90` (the `AttentionState` shape); `mechanism-de203359` (`ext:protocol` × `ext:addressability`); `design-notes/040` (sub-field addressing); `mechanism-cac02817`, `mechanism-c6699224` and `table-e6e67001` (the consumer's registry, see *Contradictions found*).
 
-New: a `repository` kind mechanism and its example; 15 conformance records, [R0] and [R2]–[R15] ([R1] is withdrawn); `schema:registry.json`; two compass source-of-truth rows (the Address, MEANING plane, instances; the registry, OPERATION plane, adapters); one `rfc-decision` record per decision D1–D5. This RFC is Door 2: new normative meaning, owner-merge.
+New: a `repository` kind mechanism and its example (showing `readOnly`); 17 conformance records, [R0] and [R2]–[R17] ([R1] is withdrawn); `schema:registry.json`; two compass source-of-truth rows (the Address, MEANING plane, instances; the registry, OPERATION plane, adapters); one `rfc-decision` record per decision D1–D6. This RFC is Door 2: new normative meaning, owner-merge.
 
-Follow-ups filed on acceptance: the six srs-rust changes under Change B (one issue) and the `srs-usage.md` update (srs); srs-rust ADR-037 §6 pointer to the core Address; RFC-047 rebase (srs#871); the `protocolRunId`/`runId` naming mismatch in Invariant 34; the D2 trigger-6 review on the srs-programme roadmap.
+Follow-ups filed on acceptance: write routing, the id check before writing and the `readOnly` flag, as part of srs-rust#683 (additive, so not under *What breaks*); the six srs-rust changes under Change B (one issue) and the `srs-usage.md` update (srs); srs-rust ADR-037 §6 pointer to the core Address; RFC-047 rebase (srs#871); the `protocolRunId`/`runId` naming mismatch in Invariant 34; the D2 trigger-6 review on the srs-programme roadmap.
 
 ---
 
@@ -416,7 +435,7 @@ Follow-ups filed on acceptance: the six srs-rust changes under Change B (one iss
 
 The reasons for each choice are in *Decisions*. Three that cut across them:
 
-**Addressing before relations or writes.** Every later federation feature needs to say which repository it means; nothing else is needed for multi-repository serving. It is the smallest slice that is both useful and forecloses little.
+**Addressing before relations or cross-repository writes.** Every later federation feature needs to say which repository it means. Multi-repository serving needs only that, plus writes routed to one repository at a time; a write spanning two repositories needs much more and waits. It is the smallest slice that is both useful and forecloses little.
 
 **The registry outside the repositories.** A repository that lists its neighbours stops being complete on its own; the registry states those facts once, where the operator keeps them.
 
@@ -450,8 +469,16 @@ Rejected (D3).
 
 Rejected: `rfc-decision-5f18603e` requires the redesign to be grounded in practice; the removed design bundled addressing with events and cross-repository relations that had no usage.
 
+### Alt G — Writes only to the default repository (W2)
+
+Rejected (D6): it half-solves SP-87; an agent would still switch servers to write.
+
+### Alt H — The spec says nothing about writes (W3)
+
+Rejected (D6): the implementation would lead the spec, and a write naming another repository could land in the default.
+
 ---
 
 ## Open Questions
 
-1. **Writes to a non-default repository (srs-rust#683).** This RFC specifies reads and resolution only. Should an implementation serving several repositories accept a write addressed by `repositoryId` to a boundary member other than its default, as an ordinary write to that one repository through its own services and rules? Options and consequences are in the PR's *Decisions you need to make*. Everything else is ruled (see *Decisions*).
+None. Revision 3's acceptance gate and Open Questions 1–6, the registry choice and the writes question are ruled (see *Decisions*).
