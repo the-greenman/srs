@@ -1,0 +1,40 @@
+{
+  "instanceId": "83cbc4e0-ceb7-480f-8f7e-810ded7cf6c9",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A repository declares no boundary and no neighbours ([R2])",
+    "decision_date": "2026-10-30",
+    "decision_rationale": "A repository that lists its neighbours stops being complete on its own, and every repository would carry facts that belong to whoever assembled the boundary. The rule's two halves keep references open: naming another repository by id (an Address, a binding, a slice origin) is allowed; only declaring membership, and taking locators from content, is not. Revision 3's \"MUST NOT name another repository's id\" would have forbidden step 2's relations, and a version forbidding any locator in content would have invalidated `rfc-decision-1e5df0d9`, which links into muSrs.",
+    "decision_statement": "In the owner's words: a repository does not declare which boundary it belongs to or who its neighbours are.",
+    "decision_scope": "What a repository may say about other repositories: no boundary membership and no locators; references by id stay allowed.",
+    "governing_values": [
+      "portability",
+      "local-autonomy"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Neighbours declared in each repository's manifest (content depends on neighbours; each repository vouches for others). Forbidding any other repository's id (would forbid cross-repository relations).",
+    "accepted_costs": "A repository cannot say \"my research lives over there\"; the operator's registry says it.",
+    "evidence_refs": [
+      "the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)",
+      "rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D5",
+      "srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)",
+      "programme decision 31e9fd27 (federation returns, ratified 2026-10-16)"
+    ],
+    "review_trigger": "1. Declared mirrors (Change C) need more than an origin, such as a standing subscription to the origin with a locator, which would be a declaration of a neighbour. *Checked at:* the mirrors RFC.\n2. RFC-047's bindings need a locator inside the manifest, not just a source id. *Checked at:* RFC-047's review.\n3. Repositories published for others need to advertise related repositories. *Checked at:* the first published repository."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:portability"
+  ],
+  "createdAt": "2026-11-02T12:01:40.311649998+00:00",
+  "updatedAt": "2026-11-02T12:02:17.168548357+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -7,9 +7,9 @@
   "fieldValues": {
     "canonical_key": "record:concepts/registry",
     "title": "Registry",
-    "description": "A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. A Registry states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one."
+    "description": "One catalog of entries by kind, each mapping an identity to a locator: published definition packages (`package`) and the repositories an implementation may reach (`repository`), RFC-049. For resolving an Address, the operator who loads a registry vouches for its entries, and an implementation uses one registry; for discovery, a consumer may index several catalogs."
   },
   "createdAt": "2026-09-08T19:49:06.098003720+00:00",
-  "updatedAt": "2026-09-08T19:49:06.098013122+00:00",
+  "updatedAt": "2026-11-02T12:00:11.589377893+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

@@ -1,0 +1,18 @@
+{
+  "instanceId": "33729cca-d4ec-443e-8fb6-f35f8ffeb1ab",
+  "typeId": "2a000009-0000-4000-a000-000000000009",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "example",
+  "fieldValues": {
+    "title": "A registry of repositories",
+    "content": "One MCP server's own list: two working repositories and a read-only copy of an external reference repository (RFC-049).\n\n```json\n{\n  \"entries\": [\n    { \"id\": \"0b6f3c2e-5d1a-4f7b-9c8e-2a4d6e8f0a1b\", \"kind\": \"repository\", \"label\": \"essays\", \"locator\": { \"mode\": \"local\", \"path\": \"../essays\" } },\n    { \"id\": \"4172fada-bc3e-4d2f-8a1b-6c5d4e3f2a10\", \"kind\": \"repository\", \"label\": \"research\", \"locator\": { \"mode\": \"local\", \"path\": \"../research\" } },\n    { \"id\": \"e07b9a64-31c2-4e8d-b5f0-7a9c1d2e3f40\", \"kind\": \"repository\", \"label\": \"reference standard\", \"locator\": { \"mode\": \"local\", \"path\": \"../vendor/standard\" }, \"readOnly\": true }\n  ],\n  \"registryRevision\": 1\n}\n```"
+  },
+  "createdAt": "2026-11-02T12:01:09.878408357+00:00",
+  "updatedAt": "2026-11-02T12:22:04.685494030+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

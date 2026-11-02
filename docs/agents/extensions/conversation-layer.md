@@ -24,4 +24,6 @@ Three conversation types are in scope:
 | Threaded conversation | Tree of replies | Thread root anchored to a document element Address |
 | Web UI annotations | Attached to content | Anchored to a Field or Record Address |
 
+A stored tag names things in the repository of the session that wrote it, never in whatever repository later reads it (RFC-049 [R13]).
+
 Transcript chunks referenced in `SourceReference` are source material — addressable evidence, not Notes or Records, per Conversation boundary's rule.
