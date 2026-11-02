@@ -1,0 +1,40 @@
+{
+  "instanceId": "bfa1c1cb-7c7d-43ae-ab33-d8483980a453",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "The Address is core; `AttentionState` stays a cursor",
+    "decision_date": "2026-10-30",
+    "decision_rationale": "Addressability and federation are foundational (owner). Cross-repository links are relations, and a core relation cannot rest on an optional extension. The cursor holds a pointer to an Address; it is not the Address (owner), as the concept record already says.",
+    "decision_statement": "The Address moves to the core (Foundation group) with an optional `repositoryId`; `AttentionState` stays in `ext:addressability` unchanged.",
+    "decision_scope": "Where the Address is defined (core, Foundation group, instead of ext:addressability), its repositoryId component, the optional containerId, and Address equality; AttentionState stays in ext:addressability unchanged.",
+    "governing_values": [
+      "semantic-integrity",
+      "shared-coherence"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Keep the Address in ext:addressability (a core relation would rest on an optional extension). Merge the cursor into the Address (the concept record forbids merging them).",
+    "accepted_costs": "14 records change for the move (Integration table, rows 1–14); `ext:addressability` narrows to the cursor; one tightening ([R0], `fieldId` needs `recordId`) with no stored data affected.",
+    "evidence_refs": [
+      "the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)",
+      "rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D1",
+      "srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)",
+      "programme decision 31e9fd27 (federation returns, ratified 2026-10-16)"
+    ],
+    "review_trigger": "1. Step 2's relation needs an Address the union cannot express, such as a definition (Type, Field) in another repository, which no space covers. *Checked at:* the cross-repository relations RFC.\n2. A core construct needs a cursor, not an Address, to cross repositories. *Checked at:* the cross-repository relations RFC and any conversation-layer RFC.\n3. The cursor turns out unusable without parts of the Address it no longer gets from its extension. *Checked at:* srs-rust's `attention_service.rs`, the one implementation of `AttentionState`, when it is next changed."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:reference"
+  ],
+  "createdAt": "2026-11-02T12:01:39.872445068+00:00",
+  "updatedAt": "2026-11-02T12:02:16.211341522+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

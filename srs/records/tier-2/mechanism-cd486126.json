@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`Registry`",
-    "content": "A registry's published index.\n\nExample: the `Registry` shape.\n\nMultiple Registries may coexist. A consumer may index multiple catalogs. The specification does not define registry authority, authentication, or federation."
+    "content": "Entries by kind, held in one document outside everything it lists (RFC-049).\n\nExample: the `Registry` shape.\n\n`entries` is required; every other document field is optional and nothing resolves by any of them. A published catalog fills in its name, version and update time; an operator's own list of repositories carries entries only. The document carries its own generation counter, `registryRevision`: this shape is 1, and an unstamped catalog is 0 and is migrated on read.\n\nThe operator who loads a registry vouches for its entries. That is the registry's only authority, and the operator's `readOnly` flag on a repository entry is its only write control. Several catalogs may coexist, and a consumer may index several for discovery; for resolution an implementation uses exactly one registry. Lookup by a label or display name is discovery and returns every match; resolving goes by identity only. Failure is per entry. Schema: `docs/schema/2.0/registry.json`."
   },
   "createdAt": "2026-09-08T19:49:07.147435992+00:00",
-  "updatedAt": "2026-09-08T19:49:07.147445634+00:00",
+  "updatedAt": "2026-11-02T12:22:04.092901242+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f"

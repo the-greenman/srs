@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`RegistryEntry`",
-    "content": "One entry in a Registry catalog.\n\nExample: the `RegistryEntry` shape."
+    "content": "One entry in a registry (RFC-049). Every entry states its `kind`, carries the identity fields its kind defines, a `locator` in the charter's LOCATOR shape (`{mode: \"local\", path}` or `{mode: \"remote\", url}`; a registry carries no artifacts, so `bundled` is not valid), and an optional display-only `label`. A relative `path` resolves against the directory holding the registry. The kinds are `package` (identity `packageId` and `packageVersion`) and `repository` (identity `id`). Other fields are kept on rewrite and never used.\n\nExample: the `RegistryEntry` shape (`package` kind)."
   },
   "createdAt": "2026-09-08T19:49:06.504441253+00:00",
-  "updatedAt": "2026-09-08T19:49:06.504447733+00:00",
+  "updatedAt": "2026-11-02T12:00:11.993208713+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f"

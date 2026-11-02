@@ -10,6 +10,7 @@ Pages under this one:
 - [Namespace](/agents/foundations/namespace.md): A dot-separated, lowercase identifier that groups definitions under an authority and keeps names from colliding between independent publishers.
 - [Version lineage](/agents/foundations/version-lineage.md): A positive integer scoped to one UUID's history, expressing how a definition has evolved while remaining the same definition.
 - [Canonical reference](/agents/foundations/canonical-reference.md): How one definition points at another.
+- [Address](/agents/foundations/address.md): A stable identifier for anything that can be referred to, across document, process and conversation space and across repositories.
 - [Field](/agents/foundations/field.md): The atomic reusable semantic unit: one named, versioned, UUID-identified piece of meaning, defined once and composed into any number of Types.
 - [AI guidance](/agents/foundations/ai-guidance.md): Structured instruction carried on a definition telling a language model what the definition captures and how to populate it: a required purpose, and optional extraction, negativeGuidance, and worked …
 - [Type](/agents/foundations/type.md): A named, versioned, UUID-identified composition of Fields describing one kind of semantic object.

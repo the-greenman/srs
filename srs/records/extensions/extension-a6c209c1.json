@@ -9,8 +9,8 @@
     "title": "Registry",
     "content": "",
     "extension_status": "live",
-    "extension_adds": "A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. It states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.",
-    "extension_cost_of_non_adoption": "Without it, Field, Type and other definitions have no published, discoverable catalog for a multi-publisher ecosystem to index; a consumer has no registry to look up an unfamiliar definition against."
+    "extension_adds": "A registry: one catalog of entries by kind, each mapping an identity to a locator, held outside everything it lists (RFC-049). Two kinds are defined: `package` (published, versioned definition packages, the catalog a multi-publisher ecosystem indexes) and `repository` (the repositories an implementation may resolve into and route writes to, its boundary; an entry may be read-only). For resolution the operator who loads the registry vouches for its entries; a consumer may still index several catalogs for discovery.",
+    "extension_cost_of_non_adoption": "Without it, an implementation catalogs no packages and serves exactly one repository: definitions have no published catalog to look up an unfamiliar package against, and an Address naming another repository is never resolved (it stays valid, RFC-049 [R11])."
   },
   "tags": [
     "concern:extensibility",
@@ -18,6 +18,6 @@
     "topic:extensions"
   ],
   "createdAt": "2026-09-17T12:32:21.921434257+00:00",
-  "updatedAt": "2026-09-17T12:32:21.921441809+00:00",
+  "updatedAt": "2026-11-02T12:00:11.441258951+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

@@ -1,0 +1,20 @@
+{
+  "instanceId": "0f56fef0-2ce0-4609-be07-286f702dece1",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/address",
+    "title": "Address",
+    "description": "A stable identifier for anything that can be referred to, across document, process and conversation space and across repositories. The Address is core (RFC-049): an implementation resolves an Address only within its boundary, the set of repositories the implementation declares; an Address it cannot resolve stays valid.",
+    "notes": "The Address names; a registry locates (ext:registry). The live cursor that points at an Address while a session runs, AttentionState, is ext:addressability's, and must not be confused with the Address itself."
+  },
+  "createdAt": "2026-11-02T12:01:09.456528257+00:00",
+  "updatedAt": "2026-11-02T13:00:23.475790378+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

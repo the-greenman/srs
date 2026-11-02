@@ -60,11 +60,13 @@ Implementations declare conformance as:
 
 Example: a core conformance declaration.
 
-**Core** requires the Foundation group and Distribution group in full. No extension is required for core conformance. Extensions are independently adoptable; some declare dependencies on other extensions.
+**Core** requires the Foundation group and Distribution group in full. Naming, resolving and writing things in other repositories is in the Foundation group (RFC-049). No extension is required for core conformance. Extensions are independently adoptable; some declare dependencies on other extensions.
 
 Table: the extension identifier and dependency reference.
 
 `ext:protocol` and `ext:addressability` are formally independent but are a functional co-dependency: a Protocol without `AttentionState` produces no live conversation tagging; `AttentionState` without Protocol stages has no stage context to capture. Implementations supporting live conversation tagging should declare both.
+
+`ext:registry` is a capability an implementation declares in its conformance claim; it is never declared in a repository's `declaredExtensions` (RFC-049).
 
 **Blueprint is a core package definition**, not a declarable extension. `Blueprint` is included in `Package.blueprints[]` when needed; no `ext:blueprint` declaration is required or defined.
 
@@ -77,7 +79,7 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 | --- | --- |
 | Define and exchange Field and Type definitions | Core only |
 | Track definition origin and imports | `ext:import-tracking` |
-| Publish a definition catalog | `ext:registry` |
+| Catalog packages, or serve several repositories from one implementation | `ext:registry` |
 | Governance with lifecycle states | `ext:lifecycle` |
 | Present and export Records | `ext:views-l1` |
 | Assemble multi-Record documents | `ext:views-l2` |
@@ -240,6 +242,91 @@ A Type version referenced by any instance in the repository MUST NOT be deleted.
 How one definition points at another. The human-facing canonical string form is `namespace/name@version`, with `/` and `@` reserved as separators that may not appear inside a component or a name. The stored machine form is UUID-anchored: a bare UUID for a lineage reference, or an ExactTypeRef pairing `typeId` with an explicit `typeVersion` where the pointer must be version-exact. The string form is for display and is never what gets stored, so a rename never breaks a stored pointer.
 
 **Examples**: `core/decision_statement@2`; `{ typeId: <uuid>, typeVersion: 3 }`
+
+
+#### Address
+
+A stable identifier for anything that can be referred to, across document, process and conversation space and across repositories. The Address is core (RFC-049): an implementation resolves an Address only within its boundary, the set of repositories the implementation declares; an Address it cannot resolve stays valid.
+
+**Notes**: The Address names; a registry locates (ext:registry). The live cursor that points at an Address while a session runs, AttentionState, is ext:addressability's, and must not be confused with the Address itself.
+
+##### `Address`
+
+A stable identifier for any element across document space, process space and conversation space. The Address is core, in the Foundation group (RFC-049); `ext:addressability` adds only the live cursor that points at one, `AttentionState`.
+
+Example: the `Address` union.
+
+Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because an assertion about one that references the other needs both to be nameable.
+
+**Spaces.** The union has exactly three spaces: `document` (`containerId`, `recordId`, `fieldId`), `process` (`runId`, `stageId`, given content by `ext:protocol`) and `conversation` (`sessionId`, `chunkId`, `annotationId`, given content by the conversation layer). A `document` Address carries at least one of `containerId` and `recordId`, and `fieldId` only with `recordId`. `containerId` is context, not identity: a record need not be named through a container, and a container that is given is checked when the Address is resolved.
+
+**`repositoryId`.** Every Address may carry the `manifest.repositoryId` of the repository holding the thing addressed, a KEYED reference resolved against the implementation's boundary (`rfc-decision-c8704763`). Absent, or equal to the holder's own id, it means the repository that holds the Address; for a request that no repository holds, the repository the request is made against. Two Addresses are equal when they agree on space, `repositoryId` (an absent one standing for the holder's) and identity components; `containerId` does not count when `recordId` is present. Equality says which repository's copy is meant; record identity is still the `instanceId` wherever a record is held. An Address that cannot be resolved where it is read is still a valid Address.
+
+
+##### The `Address` union
+
+`Address`, in pseudo-IDL (core, RFC-049):
+
+```typescript
+type Address =
+  | {
+      space: "document"
+      repositoryId?: UUID  // the holding repository; absent = the holder's own
+      containerId?: UUID   // context; at least one of containerId, recordId
+      recordId?: UUID
+      fieldId?: UUID       // only with recordId
+    }
+  | {
+      space: "process"
+      repositoryId?: UUID
+      runId: UUID          // Protocol run ID; requires ext:protocol
+      stageId?: string
+    }
+  | {
+      space: "conversation"
+      repositoryId?: UUID
+      sessionId: UUID
+      chunkId?: UUID
+      annotationId?: UUID
+    }
+```
+
+
+##### Boundary, resolution and routed writes
+
+Every implementation resolves an Address that names a repository, and every read it scopes by repository id, only within its **boundary**: without `ext:registry`, the one repository it serves; with a registry, the `repository` entries that loaded from the one registry it uses for resolution (RFC-049). Resolution is read-through and read-only. Its failures are results of that resolution, never invalidity of what holds the Address, and they are reported in one fixed order: `not-in-boundary`, then the entry's and the target's own outcomes.
+
+A write is a separate act. It is applied to exactly one named repository, and no write changes two repositories. An implementation that does not route writes refuses one that names another repository. No implementation writes to a repository whose registry entry is read-only, however the target is named.
+
+
+##### Conformance Rules (RFC-049): the Address
+
+**[R0]** *(Core)* The `Address` is a core construct: a union of exactly three spaces, `document`, `process` and `conversation`. Every Address MAY carry one optional `repositoryId`, a repository's `manifest.repositoryId` written as a lower-case canonical UUID. A `document`-space Address MUST carry at least one of `containerId` and `recordId`, and MUST NOT carry `fieldId` without `recordId`.
+
+**[R11]** *(Core)* An Address whose `repositoryId` is outside the boundary, whose resolution fails, or whose space the implementation does not support is still a valid Address. Failure to resolve it is a resolution result and MUST NOT make the record, relation or other construct that holds it invalid, and an implementation that rewrites a construct holding an Address MUST write the Address unchanged.
+
+**[R12]** *(Core)* Two Addresses are equal when they have the same space, the same `repositoryId` (an absent one standing for the repository that holds the Address, [R13]) and the same identity components; in the `document` space, when `recordId` is present, `containerId` is context and does not take part. A context is still checked when the Address is resolved, so of two equal Addresses the one whose container does not hold the record resolves to `target-not-found` ([R5]): equality says what is named, resolution says whether the context given is right. Address equality says which repository's copy is meant; it does not define record identity, which is the `instanceId` wherever a record is held.
+
+
+##### Conformance Rules (RFC-049): resolution and the boundary
+
+**[R5]** *(Core)* Resolving an Address, or any read an implementation scopes by repository id, has one of these outcomes besides success, each a result of that one resolution:
+- `not-in-boundary`: the repository id is not in the implementation's boundary ([R8]), including an id whose registry entries failed at load ([R15]);
+- `locator-unusable` (only with `ext:registry`): the entry's locator mode or URL scheme is not one the implementation can reach, or it does not lead to a repository;
+- `id-mismatch` (only with `ext:registry`): see [R6];
+- `revision-unsupported`: the target repository's `dataModelRevision` is above what the implementation supports, or below it and not migrated;
+- `target-not-found`: the repository resolves but the container, record or field addressed is not in it, or the record is not a member of the given container (RFC-049 Change C);
+- `space-unsupported`: the Address's space is not supported by the target or the resolving implementation.
+
+**[R8]** *(Core)* Every implementation resolves an Address with a `repositoryId`, and every read it scopes by repository id, only within its **boundary**, and reports `not-in-boundary` for any other repository id, except the id of the repository that holds the Address or that the request is made against ([R13]). An implementation without `ext:registry`, or with it but using no registry for resolution, has a boundary of exactly one repository, the one it serves. An implementation using a registry for resolution has as its boundary the `repository` entries that loaded from the one registry it uses for resolution, and resolves only through them. No implementation takes a locator for resolution from any repository's content.
+
+
+##### Conformance Rules (RFC-049): requests and writes
+
+**[R13]** *(Core)* An Address without `repositoryId` names a thing in the repository that holds it, and an Address whose `repositoryId` is the holder's own id names the same thing; it resolves as if the id were absent, whether or not that repository is a registry entry. A transient Address that no repository holds (a request to an implementation) names a thing in the repository the request is made against; an implementation serving more than one repository MUST name one default repository, a `repository` entry of its registry, for requests that carry no `repositoryId`, and MUST state it where it describes itself to clients; if the default's entry did not load, it MUST report that and refuse the requests that rely on the default with `not-in-boundary`. A conversation-layer tag names things in the repository of the session that wrote it.
+
+**[R16]** *(Core)* A write that carries a `repositoryId` equal to the repository the request is made against (for an implementation serving more than one repository, its default, [R13]) is treated as one without it. A write is applied only to the one repository it names, and no write changes more than one repository. An implementation that does not route writes to other repositories (one without `ext:registry`, or one that does not take up [R17]'s MAY) MUST refuse a write naming another repository, writing nothing, with `write-not-routed`, and MUST NOT apply it to any other repository. Any implementation that loads a registry MUST refuse, writing nothing, with `read-only`, a write to a repository whose entry has `readOnly: true`, or whose locator is `remote` when it treats `remote` entries as read-only (which it MAY), however the target was named, including as the default. For a write naming another repository, `write-not-routed` comes first.
+
 
 
 #### Field
@@ -3727,29 +3814,31 @@ Views (`ext:views-l1`) no longer contain facilitation logic. A View is a present
 
 #### Registry
 
-A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. A Registry states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.
+One catalog of entries by kind, each mapping an identity to a locator: published definition packages (`package`) and the repositories an implementation may reach (`repository`), RFC-049. For resolving an Address, the operator who loads a registry vouches for its entries, and an implementation uses one registry; for discovery, a consumer may index several catalogs.
 
 ##### The `RegistryEntry` shape
 
-`RegistryEntry`, in pseudo-IDL:
+Kind `package`, in pseudo-IDL. Before RFC-049 this was the only entry, and its optional `downloadUrl` is now `locator`:
 
 ```typescript
 {
-  packageId: UUID
-  packageName: string
+  kind: "package"
+  locator: { mode: "remote", url: string } | { mode: "local", path: string }
+  packageId: UUID           // identity, with packageVersion
   packageVersion: string
+  packageName: string       // display; lookup by it is discovery
   publisher: string
-  description?: string
   publishedAt: ISO8601
-  homepage?: string
-  tags?: string[]
   fieldCount: integer       // min: 0
   typeCount: integer        // min: 0
+  label?: string
+  description?: string
+  homepage?: string
+  tags?: string[]
   viewCount?: integer
   schemaCount?: integer
   protocolCount?: integer
   relationTypeCount?: integer
-  downloadUrl?: string
   checksum?: string         // SHA-256 hex digest for integrity verification
 }
 ```
@@ -3757,35 +3846,95 @@ A published, discoverable catalog of Field, Type and other definitions that a mu
 
 ##### The `Registry` shape
 
-`Registry`, in pseudo-IDL:
+Only `entries` is required (RFC-049).
 
 ```typescript
 {
-  schemaVersion: string
-  registryId: UUID
-  registryName: string
-  catalogVersion: string    // registry's own version (semver)
-  updatedAt: ISO8601
+  entries: RegistryEntry[]    // required; may be empty
+  registryRevision?: integer  // the registry's own shape counter; this shape is 1
+  schemaVersion?: string
+  registryId?: UUID           // inert metadata; nothing resolves by it
+  registryName?: string
+  catalogVersion?: string     // the catalog's own version (semver)
+  updatedAt?: ISO8601
   homepage?: string
-  entries: RegistryEntry[]
+  // the top level is closed (rfc-decision-2e0cd70a); a writer still keeps unknown top-level properties on rewrite ([R9])
 }
 ```
 
 
 ##### `RegistryEntry`
 
-One entry in a Registry catalog.
+One entry in a registry (RFC-049). Every entry states its `kind`, carries the identity fields its kind defines, a `locator` in the charter's LOCATOR shape (`{mode: "local", path}` or `{mode: "remote", url}`; a registry carries no artifacts, so `bundled` is not valid), and an optional display-only `label`. A relative `path` resolves against the directory holding the registry. The kinds are `package` (identity `packageId` and `packageVersion`) and `repository` (identity `id`). Other fields are kept on rewrite and never used.
 
-Example: the `RegistryEntry` shape.
+Example: the `RegistryEntry` shape (`package` kind).
 
 
 ##### `Registry`
 
-A registry's published index.
+Entries by kind, held in one document outside everything it lists (RFC-049).
 
 Example: the `Registry` shape.
 
-Multiple Registries may coexist. A consumer may index multiple catalogs. The specification does not define registry authority, authentication, or federation.
+`entries` is required; every other document field is optional and nothing resolves by any of them. A published catalog fills in its name, version and update time; an operator's own list of repositories carries entries only. The document carries its own generation counter, `registryRevision`: this shape is 1, and an unstamped catalog is 0 and is migrated on read.
+
+The operator who loads a registry vouches for its entries. That is the registry's only authority, and the operator's `readOnly` flag on a repository entry is its only write control. Several catalogs may coexist, and a consumer may index several for discovery; for resolution an implementation uses exactly one registry. Lookup by a label or display name is discovery and returns every match; resolving goes by identity only. Failure is per entry. Schema: `docs/schema/2.0/registry.json`.
+
+
+##### `repository` registry entry
+
+One repository an implementation may resolve into and route writes to (RFC-049). Its identity is `id`, the repository's `manifest.repositoryId`; its locator leads to the repository (`local` path, relative to the registry file, or `remote` URL such as an HTTP or MCP endpoint). The `repository` entries that load form the implementation's boundary. Before reading or writing through an entry, the implementation verifies that the repository reached reports the entry's `id`.
+
+`readOnly: true` is the operator's statement that this server never writes to that repository, for example a local copy of an external reference repository. It binds the implementation that loads the registry; absent, the server does not refuse on its own account, which grants nothing the target or its transport refuses, and an implementation MAY treat every `remote` entry as read-only. A clone keeps its source's id, so at most one copy of a repository can be in a boundary: two entries with one identity both fail.
+
+Example: a registry of repositories.
+
+
+##### A registry of repositories
+
+One MCP server's own list: two working repositories and a read-only copy of an external reference repository (RFC-049).
+
+```json
+{
+  "entries": [
+    { "id": "0b6f3c2e-5d1a-4f7b-9c8e-2a4d6e8f0a1b", "kind": "repository", "label": "essays", "locator": { "mode": "local", "path": "../essays" } },
+    { "id": "4172fada-bc3e-4d2f-8a1b-6c5d4e3f2a10", "kind": "repository", "label": "research", "locator": { "mode": "local", "path": "../research" } },
+    { "id": "e07b9a64-31c2-4e8d-b5f0-7a9c1d2e3f40", "kind": "repository", "label": "reference standard", "locator": { "mode": "local", "path": "../vendor/standard" }, "readOnly": true }
+  ],
+  "registryRevision": 1
+}
+```
+
+
+##### Conformance Rules (RFC-049): registry entries
+
+**[R3]** *(`ext:registry`)* Every registry entry MUST carry a `kind`, a `locator` in the LOCATOR shape with mode `local` (`{mode: local, path}`) or `remote` (`{mode: remote, url}`); a registry carries no artifacts, so `bundled` is not valid in it; and the fields its kind requires ([R14]). An entry's `label`, and any other display field, MUST NOT be used to resolve anything; lookup by them is discovery and returns every matching entry.
+
+**[R4]** *(`ext:registry`)* The identity of a `package` entry is `packageId` and `packageVersion`; of a `repository` entry, `id`. Two entries of a kind the implementation supports with the same identity both fail ([R15]); neither is used. An entry that carries its identity takes part in such a conflict even if it is otherwise malformed.
+
+**[R14]** *(`ext:registry`)* The kinds this RFC defines require these fields beyond `kind` and `locator`:
+- `package`: `packageId` (UUID), `packageName`, `packageVersion`, `publisher`, `publishedAt`, `fieldCount`, `typeCount`; it MAY carry `label`, `description`, `homepage`, `tags`, `viewCount`, `schemaCount`, `protocolCount`, `relationTypeCount` and `checksum`. `downloadUrl` is not a field of the kind; [R9]'s migration replaces it.
+- `repository`: `id` (UUID); it MAY carry `label` and `readOnly` (boolean; absent means `false`, [R16]).
+
+Other fields on an entry are kept on rewrite ([R9]) and never used.
+
+
+##### Conformance Rules (RFC-049): loading, resolving and writing through a registry
+
+**[R6]** *(`ext:registry`)* If the repository reached through a `repository` entry reports a different id from the entry's, the implementation MUST fail resolution or a write through that entry with `id-mismatch` and MUST NOT use either id as an override.
+
+**[R7]** *(`ext:registry`)* Resolution MUST NOT write to or alter the target repository, and MUST NOT make the target's content part of the resolving repository. (This governs resolution only; declared mirroring is left to a later RFC.)
+
+**[R10]** *(`ext:registry`)* A read resolved through a `repository` entry MUST return the same result as the same request made directly against the target repository.
+
+**[R15]** *(`ext:registry`)* Loading a registry reports, per entry and affecting only the entries named: `entry-malformed` (an entry missing `kind`, a valid `locator` or a field [R14] requires, with a `bundled` locator, or with a `readOnly` that is not a boolean, which fails safe: the entry is outside the boundary and cannot be written), `duplicate-identity` (every entry in a [R4] conflict) and `kind-unsupported` (an entry whose kind the implementation does not support, which it keeps but does not use). It refuses the whole document, loading nothing, only when the document is not a JSON object with an `entries` array (`registry-malformed`), or its `registryRevision` is above the supported revision or below it with no transformer for a step (`registry-revision-unsupported`, [R9]).
+
+**[R17]** *(`ext:registry`)* An implementation MAY route a write that carries a `repositoryId` to a member of its boundary, as a write to that one repository through that repository's own services and contracts. Before writing it MUST verify that the repository reached reports the entry's `id` ([R6]). It MUST refuse a write, writing nothing, with the first of these that holds, in this order: `not-in-boundary` (the id is not in its boundary); `read-only` ([R16]; decided from the entry, so a read-only target is never reached); `locator-unusable`; `id-mismatch`; `revision-unsupported` (as in [R5]); `write-refused` (the target or its transport refuses a write that is valid, for example a permission error, a lock, or a remote endpoint that does not accept writes); or the target repository's own validation diagnostics when the write itself is invalid there. Resolution outcomes in [R5] that can hold together are reported in the same order.
+
+
+##### Conformance Rules (RFC-049): the registry document
+
+**[R9]** *(`ext:registry`)* The registry's held form and its travelling form are one JSON document, written by RFC-003 [C5]'s rules: UTF-8 without a byte-order mark, every object's members in ascending order of member name by Unicode code point at every depth, no duplicate names, array order kept except `entries`. `entries` MUST be ordered by `kind`; within a kind the writer supports, by the kind's identity fields in the order [R4] lists them, an absent field first; and every remaining tie and every entry of a kind the writer does not support by the entry's own [C5] serialization. All comparisons are of the text as written, by Unicode code point. The same build of a writer MUST write byte-identical files for identical content. A writer MUST stamp `registryRevision`, an integer that counts registry shapes only, with the revision of the shape it writes; this RFC's shape is `registryRevision` 1. A writer that rewrites a registry MUST keep entries, entry fields and top-level properties it does not understand, unchanged. A reader MUST read an absent stamp as revision 0, MUST refuse, loading nothing, a registry stamped above its supported revision, and MUST bring a registry stamped below it forward through a registry-form transformer for each intervening step, refusing it when a step has none. The step from 0 to 1 has this transformer: on every entry without `kind`, add `kind: "package"`, and replace `downloadUrl` by `locator: {mode: "remote", url: <downloadUrl>}` (an entry without `downloadUrl` gets no locator and fails as `entry-malformed`). How a registry is supplied (flag, file, environment) is the implementation's.
 
 
 
@@ -5478,7 +5627,7 @@ client-side `Composition` renderer in a covered format is not exempt.
 
 ## Extensions
 
-How a repository declares which independently adoptable capability modules it implements, and the behavioural requirements that activate only when two declared extensions are present together. Most extensions have a natural home and their capability is documented there, beside the concept they extend — ext:lifecycle beside Lifecycle, ext:views-l1 beside View, and so on. Addressability and Discovery are documented here in full because each is itself a whole capability with no single host concept elsewhere. This Part also documents the conversation/SRS boundary that several of these extensions build on.
+How a repository declares which independently adoptable capability modules it implements, and the behavioural requirements that activate only when two declared extensions are present together. Most extensions have a natural home and their capability is documented there, beside the concept they extend — ext:lifecycle beside Lifecycle, ext:views-l1 beside View, and so on. Addressability (the live cursor; the Address itself is core, in Part: Foundations) and Discovery are documented here in full because each is itself a whole capability with no single host concept elsewhere. This Part also documents the conversation/SRS boundary that several of these extensions build on.
 
 Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
@@ -5501,7 +5650,7 @@ Extensions are optional, independently adoptable capability modules. Each declar
 | Views L2 | `ext:views-l2` | `ext:views-l1` |
 <!-- srs-generated:extension-index:end -->
 
-**Notes**: No extension is required for core conformance, and an implementation adopts only what it needs. The table below is the full list of live extensions and their dependencies; each extension's own capability is documented beside the concept it extends instead of here, unless it has no single host concept — Addressability and Discovery are the two exceptions, documented in full elsewhere in this Part.
+**Notes**: No extension is required for core conformance, and an implementation adopts only what it needs. The table below is the full list of live extensions and their dependencies; each extension's own capability is documented beside the concept it extends instead of here, unless it has no single host concept — Addressability (its live cursor; the Address itself is core, in Part: Foundations, RFC-049) and Discovery are the two exceptions, documented in full elsewhere in this Part.
 
 ##### Import Tracking
 
@@ -6382,9 +6531,9 @@ blueprint {
 
 **Status**: live
 
-**Adds**: A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — including a transcript fragment and a field on a record, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, stamped onto conversation material as it is produced, so that asking for everything said while attention was on a given field becomes a query, not a search. For live facilitation, declare together with `ext:protocol`.
+**Adds**: The live cursor over the core Address (RFC-049): the current focus of an active process run, `AttentionState`, stamped onto conversation material as it is produced, so that asking for everything said while attention was on a given field becomes a query, not a search, together with the context-query behaviour built on it. The Address itself, which makes a transcript fragment and a field on a record co-addressable, is core. For live facilitation, declare together with `ext:protocol`.
 
-**Cost of Non-Adoption**: Without it, there is no single addressing scheme spanning document, process and conversation space: a transcript fragment and a field on a record are not co-addressable, so an assertion linking them cannot be made, and there is no live cursor stamped onto conversation material as it is produced — asking for everything said while attention was on a given field is not answerable as a query.
+**Cost of Non-Adoption**: Without it, there is no live cursor stamped onto conversation material as it is produced: asking for everything said while attention was on a given field is not answerable as a query, and context assembly is retrospective only. Addresses themselves remain available, because the Address is core.
 
 
 ##### Protocol
@@ -6404,9 +6553,9 @@ blueprint {
 
 **Status**: live
 
-**Adds**: A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. It states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.
+**Adds**: A registry: one catalog of entries by kind, each mapping an identity to a locator, held outside everything it lists (RFC-049). Two kinds are defined: `package` (published, versioned definition packages, the catalog a multi-publisher ecosystem indexes) and `repository` (the repositories an implementation may resolve into and route writes to, its boundary; an entry may be read-only). For resolution the operator who loads the registry vouches for its entries; a consumer may still index several catalogs for discovery.
 
-**Cost of Non-Adoption**: Without it, Field, Type and other definitions have no published, discoverable catalog for a multi-publisher ecosystem to index; a consumer has no registry to look up an unfamiliar definition against.
+**Cost of Non-Adoption**: Without it, an implementation catalogs no packages and serves exactly one repository: definitions have no published catalog to look up an unfamiliar package against, and an Address naming another repository is never resolved (it stays valid, RFC-049 [R11]).
 
 
 ##### Repository
@@ -6470,7 +6619,7 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 #### Addressability
 
-A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
+A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be named, in this repository or another (RFC-049) — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. The stable Address is core. Alongside it, `ext:addressability` provides the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
 
 **Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
 
@@ -6493,6 +6642,8 @@ Without co-addressability, the transcript/SRS separation is clean in principle b
 `Address` is the addressing scheme that makes co-addressability possible. A transcript chunk and a Field Revision are in the same address space — they can reference each other because both have resolvable addresses.
 
 **Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
+
+**Note (2026-11-02, RFC-049):** the Address is now core, and a record's Address no longer requires a container. Addresses that differ only in their container are equal (RFC-049 [R12]); the container is context, checked when the Address is resolved. This replaces "multiple valid document-space Addresses — one per Container context": a record has one Address per repository holding it, and any container given is the context of a reading.
 
 
 ##### Why Revision is addressable
@@ -6517,6 +6668,8 @@ Any implementation that facilitates live sessions — where conversation materia
 
 **Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
 
+**Note (2026-11-02, RFC-049):** `ext:addressability` is now the live cursor over the core Address; the Address itself, and naming things in another repository, are core.
+
 
 ##### Sub-field addressing
 
@@ -6524,32 +6677,6 @@ Any implementation that facilitates live sessions — where conversation materia
 Web UI comments and annotations attached to specific text within a Field value require addressing below the Field level. `ext:addressability` currently addresses at Field granularity. Sub-field text selection addressing is architecturally possible (the Address space accommodates it) but is deferred as a separate extension.
 
 ---
-
-
-##### The `Address` union
-
-`Address`, in pseudo-IDL:
-
-```typescript
-type Address =
-  | {
-      space: "document"
-      containerId: UUID
-      recordId?: UUID
-      fieldId?: UUID
-    }
-  | {
-      space: "process"
-      runId: UUID          // Protocol run ID; requires ext:protocol
-      stageId?: string
-    }
-  | {
-      space: "conversation"
-      sessionId: UUID
-      chunkId?: UUID
-      annotationId?: UUID
-    }
-```
 
 
 ##### The `AttentionState` shape
@@ -6571,21 +6698,12 @@ type Address =
 
 **Required for**: any implementation with live facilitation or multi-session extraction.
 
-Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
-
-
-##### `Address`
-
-A stable, resolvable identifier for any element across document space, process space, and conversation space.
-
-Example: the `Address` union.
-
-Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
+Defines the live cursor over the core Address (`AttentionState`) and the mechanisms that connect conversation material to document elements through it. The Address itself is core (RFC-049).
 
 
 ##### `AttentionState`
 
-The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
+The current focus of an active Protocol run: a live cursor across the address space. `AttentionState` and the core `Address` are structurally related but serve distinct roles: an `Address` is a stable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances. A cursor with a `fieldId` and no `recordId` (allowed by Invariant 34) resolves to its container's Address; the `fieldId` is dropped from the resolved Address, not from the cursor (RFC-049). Its shape is unchanged by RFC-049 and it carries no `repositoryId`: a stored tag names things in the repository of the session that wrote it.
 
 Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
 
@@ -6596,7 +6714,7 @@ Example: the `AttentionState` shape.
 
 ##### Context Query (behavioural requirement)
 
-A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
+A conforming `ext:addressability` implementation must be able to assemble relevant material given an address (the core `Address`, RFC-049) and a purpose. This is a behavioural requirement, not a data shape.
 
 **Required query patterns:**
 
@@ -6754,6 +6872,8 @@ Three conversation types are in scope:
 | Threaded conversation | Tree of replies | Thread root anchored to a document element Address |
 | Web UI annotations | Attached to content | Anchored to a Field or Record Address |
 
+A stored tag names things in the repository of the session that wrote it, never in whatever repository later reads it (RFC-049 [R13]).
+
 Transcript chunks referenced in `SourceReference` are source material — addressable evidence, not Notes or Records, per Conversation boundary's rule.
 
 
@@ -6857,6 +6977,8 @@ An implementation declaring `ext:repository` MUST:
 - Enforce Invariants 45–55
 - Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
 
+**RFC-049 [R2]** *(`ext:repository`)* A repository does not declare which boundary it belongs to or who its neighbours are. No property that the specification or an extension defines on a manifest or a container may carry a locator to another repository. Naming another repository by id (an Address, a binding's source, a slice's recorded origin) is a reference, not a declaration; content in `meta` and field values that mention or link to another repository are inert, because no implementation takes a locator from repository content (RFC-049 [R8]).
+
 An implementation that can produce archives but not consume them (or vice versa) MUST declare this limitation explicitly. Partial repository support is not conformant.
 
 
@@ -6870,7 +6992,7 @@ An implementation declaring this profile MUST satisfy all `ext:repository` confo
 
 - `packageRef` MUST be present with `mode: "local"`. Absent or external package references are not permitted.
 - The local package MUST be `mode: "bundled"` (Invariant 50 is always in effect).
-- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
+- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit. An Address in it that names another repository needs no registry: it stays valid and is not resolved (RFC-049 [R11]).
 - An archive produced under this profile MUST be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
 
 This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.

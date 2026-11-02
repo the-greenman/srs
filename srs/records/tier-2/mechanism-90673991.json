@@ -1,0 +1,18 @@
+{
+  "instanceId": "90673991-2bfa-48e0-a6c3-b3fdec5a4db8",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Conformance Rules (RFC-049): the registry document",
+    "content": "**[R9]** *(`ext:registry`)* The registry's held form and its travelling form are one JSON document, written by RFC-003 [C5]'s rules: UTF-8 without a byte-order mark, every object's members in ascending order of member name by Unicode code point at every depth, no duplicate names, array order kept except `entries`. `entries` MUST be ordered by `kind`; within a kind the writer supports, by the kind's identity fields in the order [R4] lists them, an absent field first; and every remaining tie and every entry of a kind the writer does not support by the entry's own [C5] serialization. All comparisons are of the text as written, by Unicode code point. The same build of a writer MUST write byte-identical files for identical content. A writer MUST stamp `registryRevision`, an integer that counts registry shapes only, with the revision of the shape it writes; this RFC's shape is `registryRevision` 1. A writer that rewrites a registry MUST keep entries, entry fields and top-level properties it does not understand, unchanged. A reader MUST read an absent stamp as revision 0, MUST refuse, loading nothing, a registry stamped above its supported revision, and MUST bring a registry stamped below it forward through a registry-form transformer for each intervening step, refusing it when a step has none. The step from 0 to 1 has this transformer: on every entry without `kind`, add `kind: \"package\"`, and replace `downloadUrl` by `locator: {mode: \"remote\", url: <downloadUrl>}` (an entry without `downloadUrl` gets no locator and fails as `entry-malformed`). How a registry is supplied (flag, file, environment) is the implementation's."
+  },
+  "createdAt": "2026-11-02T12:22:05.741514143+00:00",
+  "updatedAt": "2026-11-02T12:22:05.741522531+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

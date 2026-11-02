@@ -1,0 +1,39 @@
+{
+  "instanceId": "a34d5c42-3828-4a50-bc15-7aa33aec50b4",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "At most one copy of a repository per boundary",
+    "decision_date": "2026-10-30",
+    "decision_rationale": "Splitting work off is a slice, which already mints a new id and records its origin. Two repositories sharing an id are clones or worktrees: the same repository at another version, which a re-id rule would mis-model as a different repository.",
+    "decision_statement": "A clone keeps its source's `repositoryId`, so only one of them can be a boundary member; no re-id rule is added.",
+    "decision_scope": "Copies of one repository in a boundary: at most one, because a clone keeps its repositoryId; no re-id rule.",
+    "governing_values": [
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "A re-id rule giving a diverged copy a new id (mis-models a worktree, which is the same repository at another version).",
+    "accepted_costs": "Listing a worktree and its main checkout in one registry makes both entries fail ([R4]), so neither is reachable; if one is the default, the implementation reports that its default has no usable entry. Each needs its own registry or process.",
+    "evidence_refs": [
+      "the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)",
+      "rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D4",
+      "srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)",
+      "programme decision 31e9fd27 (federation returns, ratified 2026-10-16)"
+    ],
+    "review_trigger": "1. The owner or an agent regularly needs a worktree and its main checkout in one session. *Checked at:* srs-rust#683's first use with worktrees (`scripts/wt`), and any friction finding filed against it.\n2. Forks that diverge but are not slices need to coexist with their source in one boundary. *Checked at:* the first such fork."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:identity"
+  ],
+  "createdAt": "2026-11-02T12:01:40.191123002+00:00",
+  "updatedAt": "2026-11-02T13:00:23.962054416+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

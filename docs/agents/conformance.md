@@ -92,6 +92,8 @@ An implementation declaring `ext:repository` MUST:
 - Enforce Invariants 45–55
 - Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === "local"`. The repository is fully operable with only its own files.
 
+**RFC-049 [R2]** *(`ext:repository`)* A repository does not declare which boundary it belongs to or who its neighbours are. No property that the specification or an extension defines on a manifest or a container may carry a locator to another repository. Naming another repository by id (an Address, a binding's source, a slice's recorded origin) is a reference, not a declaration; content in `meta` and field values that mention or link to another repository are inert, because no implementation takes a locator from repository content (RFC-049 [R8]).
+
 An implementation that can produce archives but not consume them (or vice versa) MUST declare this limitation explicitly. Partial repository support is not conformant.
 
 
@@ -105,7 +107,7 @@ An implementation declaring this profile MUST satisfy all `ext:repository` confo
 
 - `packageRef` MUST be present with `mode: "local"`. Absent or external package references are not permitted.
 - The local package MUST be `mode: "bundled"` (Invariant 50 is always in effect).
-- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit.
+- No external registry, TSS, Protocol stack, Addressability infrastructure, AttentionState, or live conversation store is required or assumed. The repository directory (or archive) is the complete and sufficient deployment unit. An Address in it that names another repository needs no registry: it stays valid and is not resolved (RFC-049 [R11]).
 - An archive produced under this profile MUST be openable and fully processable by a consumer with no prior installation, no network access, and no running services.
 
 This profile is appropriate for: standalone tools, file-based backups, air-gapped or offline deployments, inter-organisational exchange, and any context where zero-dependency portability is required.

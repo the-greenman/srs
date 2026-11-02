@@ -68,6 +68,8 @@ Without co-addressability, the transcript/SRS separation is clean in principle b
 
 **Multi-Container addressing**: A Record may belong to more than one Container simultaneously (a task may exist in both a project Container and a sprint Container). That Record therefore has multiple valid document-space Addresses — one per Container context. This is intentional: `containerId` in a document-space `Address` is not a uniqueness constraint, it is a *context specifier*. `AttentionState.containerId` records which Container was active during a live session, making the contextual anchor explicit. When a session-tagged transcript chunk is later queried, the Container in the `AttentionState` tells you not just *what Record* was being discussed but *in which context* it was being discussed.
 
+**Note (2026-11-02, RFC-049):** the Address is now core, and a record's Address no longer requires a container. Addresses that differ only in their container are equal (RFC-049 [R12]); the container is context, checked when the Address is resolved. This replaces "multiple valid document-space Addresses — one per Container context": a record has one Address per repository holding it, and any container given is the context of a reading.
+
 
 ### Why Revision is addressable
 
@@ -243,6 +245,8 @@ Declaring nothing beyond Core is a valid answer for a repository that only creat
 Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
 
 **Diff rendering:** implementations rendering Revision history for governance review should support a diff view that shows field-level removals alongside additions, not only the current value. The Revision chain already provides the data needed for three useful modes: final (current value only), all markup (current value plus prior content shown as removed and new content as added), and original (the value at a specified Revision). This is a rendering pattern, not a separate data shape.
+
+**Note (2026-11-02, RFC-049):** `ext:addressability` is now the live cursor over the core Address; the Address itself, and naming things in another repository, are core.
 
 
 ### Blueprint vs View — the extraction gap

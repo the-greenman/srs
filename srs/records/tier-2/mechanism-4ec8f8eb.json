@@ -1,0 +1,18 @@
+{
+  "instanceId": "4ec8f8eb-b196-4b28-abac-87a495e892db",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "`repository` registry entry",
+    "content": "One repository an implementation may resolve into and route writes to (RFC-049). Its identity is `id`, the repository's `manifest.repositoryId`; its locator leads to the repository (`local` path, relative to the registry file, or `remote` URL such as an HTTP or MCP endpoint). The `repository` entries that load form the implementation's boundary. Before reading or writing through an entry, the implementation verifies that the repository reached reports the entry's `id`.\n\n`readOnly: true` is the operator's statement that this server never writes to that repository, for example a local copy of an external reference repository. It binds the implementation that loads the registry; absent, the server does not refuse on its own account, which grants nothing the target or its transport refuses, and an implementation MAY treat every `remote` entry as read-only. A clone keeps its source's id, so at most one copy of a repository can be in a boundary: two entries with one identity both fail.\n\nExample: a registry of repositories."
+  },
+  "createdAt": "2026-11-02T12:01:09.748293051+00:00",
+  "updatedAt": "2026-11-02T12:22:04.825864536+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

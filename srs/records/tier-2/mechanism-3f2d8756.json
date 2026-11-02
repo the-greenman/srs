@@ -1,0 +1,18 @@
+{
+  "instanceId": "3f2d8756-e506-406b-89f3-8febfc646465",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Conformance Rules (RFC-049): the Address",
+    "content": "**[R0]** *(Core)* The `Address` is a core construct: a union of exactly three spaces, `document`, `process` and `conversation`. Every Address MAY carry one optional `repositoryId`, a repository's `manifest.repositoryId` written as a lower-case canonical UUID. A `document`-space Address MUST carry at least one of `containerId` and `recordId`, and MUST NOT carry `fieldId` without `recordId`.\n\n**[R11]** *(Core)* An Address whose `repositoryId` is outside the boundary, whose resolution fails, or whose space the implementation does not support is still a valid Address. Failure to resolve it is a resolution result and MUST NOT make the record, relation or other construct that holds it invalid, and an implementation that rewrites a construct holding an Address MUST write the Address unchanged.\n\n**[R12]** *(Core)* Two Addresses are equal when they have the same space, the same `repositoryId` (an absent one standing for the repository that holds the Address, [R13]) and the same identity components; in the `document` space, when `recordId` is present, `containerId` is context and does not take part. A context is still checked when the Address is resolved, so of two equal Addresses the one whose container does not hold the record resolves to `target-not-found` ([R5]): equality says what is named, resolution says whether the context given is right. Address equality says which repository's copy is meant; it does not define record identity, which is the `instanceId` wherever a record is held."
+  },
+  "createdAt": "2026-11-02T12:22:05.267408290+00:00",
+  "updatedAt": "2026-11-02T12:22:05.267415747+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

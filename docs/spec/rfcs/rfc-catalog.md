@@ -1322,3 +1322,37 @@ mechanism:container-entry-order-keys
 Rev 15 (Door 3 correction, owner ruling on srs-rust#1438 A1, the-greenman/srs#954; effective at dataModelRevision 11): [R8] works in two passes. An operation on a container with detached entries first re-attaches them exactly as [R11] does, with [R11]'s keys, then keys its own writes under [R9] against that re-attached state; the result is the same bytes as the re-attachment followed by the operation. Example: attached top-level `t` (`a0`) and orphans `b`, `o`; inserting `n` after `t` gives `b` = `a1`, `o` = `a2`, `n` = `a0V` (one pass would give `n` = `a1`, `b` = `a2`, `o` = `a3`, which does not conform).
 
 
+**Title**: RFC-049: Repository addressing — the Address in the core, and a first registry
+
+**RFC Number**: 049
+
+**Status**: Accepted
+
+**Author**: Peter Brownell (owner direction on srs-rust#683, 2026-10-08; rulings 2026-10-30 and 2026-11-02; accepted 2026-11-02, the-greenman/srs#913); drafted by Claude Code
+
+**Affected Components**: The core Foundation group (the Address moves out of ext:addressability, gains an optional repositoryId and an optional containerId; the boundary, resolution outcomes and routed writes are Core rules [R5], [R8], [R11]-[R13], [R16]); ext:addressability (narrowed to the live cursor, AttentionState, unchanged in shape); ext:repository ([R2]: a repository declares no boundary and carries no locator to another repository); ext:registry (the existing Registry catalog grown to entries by kind, package and repository, with LOCATOR locators, registryRevision, per-entry failure, read-only repository entries and the rules [R3], [R4], [R6], [R7], [R9], [R10], [R14], [R15], [R17]); docs/schema/2.0/registry.json (new). Landed in one phase on the owner's instruction; implementation is srs-rust#1547 and srs-rust#683 under holon the-greenman/semanticops.com#53. Decision records: D1 rfc-decision-bfa1c1cb, D2 rfc-decision-1fc67e39, D3 rfc-decision-c16e9c75, D4 rfc-decision-a34d5c42, D5 rfc-decision-83cbc4e0, D6 rfc-decision-a42ec697.
+
+<!-- srs-integration:v1
+cell:reference
+cell:identity
+cell:repository
+cell:conformance
+cell:portability
+ext:addressability
+ext:registry
+ext:repository
+schema:registry.json
+concept:Address
+mechanism:Boundary, resolution and routed writes
+mechanism:`repository` registry entry
+mechanism:`Registry`
+mechanism:`Address`
+-->
+
+**Dependency Refs**: Builds on RFC-003 ([C5], [C6]), RFC-026 (slice origin and new repositoryId), RFC-033 (absent stamp is 0), RFC-038, RFC-044 (packageId dependencies). Leaves package distribution and binding to RFC-047 (Draft). Scheduled by programme decision 31e9fd27. Consults rfc-decision-4f1e12e5, rfc-decision-5f18603e, rfc-decision-8948e43f, rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-0118e938, rfc-decision-16b20c56, rfc-decision-c20fcff8, rfc-decision-e99a9437, rfc-decision-7caca3a1, rfc-decision-5f8204bc, rfc-decision-628cf6c4, rfc-decision-a8dcbfe5, rfc-decision-c8704763, rfc-decision-2a1e1590, rfc-decision-1e5df0d9.
+
+**Proposal Artifact Path**: rfcs/rfc-049-repository-addressing-boundary-directory.md
+
+**Content**: Makes the Address core and lets it name a thing in another repository (an optional repositoryId), and grows ext:registry's catalog into one registry of entries by kind, so one implementation can serve a declared set of repositories: reading and routing writes by repositoryId, refusing writes to read-only entries, and preserving Addresses it cannot resolve. srs:// strings stay tooling. Step 1 of federation's return (decision 31e9fd27); answers SP-87 and prepares SP-86. Full text: rfcs/rfc-049-repository-addressing-boundary-directory.md.
+
+

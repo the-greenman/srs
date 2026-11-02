@@ -1,0 +1,18 @@
+{
+  "instanceId": "f92fa295-1ece-4563-9e84-957fd57aae5d",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Conformance Rules (RFC-049): registry entries",
+    "content": "**[R3]** *(`ext:registry`)* Every registry entry MUST carry a `kind`, a `locator` in the LOCATOR shape with mode `local` (`{mode: local, path}`) or `remote` (`{mode: remote, url}`); a registry carries no artifacts, so `bundled` is not valid in it; and the fields its kind requires ([R14]). An entry's `label`, and any other display field, MUST NOT be used to resolve anything; lookup by them is discovery and returns every matching entry.\n\n**[R4]** *(`ext:registry`)* The identity of a `package` entry is `packageId` and `packageVersion`; of a `repository` entry, `id`. Two entries of a kind the implementation supports with the same identity both fail ([R15]); neither is used. An entry that carries its identity takes part in such a conflict even if it is otherwise malformed.\n\n**[R14]** *(`ext:registry`)* The kinds this RFC defines require these fields beyond `kind` and `locator`:\n- `package`: `packageId` (UUID), `packageName`, `packageVersion`, `publisher`, `publishedAt`, `fieldCount`, `typeCount`; it MAY carry `label`, `description`, `homepage`, `tags`, `viewCount`, `schemaCount`, `protocolCount`, `relationTypeCount` and `checksum`. `downloadUrl` is not a field of the kind; [R9]'s migration replaces it.\n- `repository`: `id` (UUID); it MAY carry `label` and `readOnly` (boolean; absent means `false`, [R16]).\n\nOther fields on an entry are kept on rewrite ([R9]) and never used."
+  },
+  "createdAt": "2026-11-02T12:22:05.552818974+00:00",
+  "updatedAt": "2026-11-02T12:22:05.552824467+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

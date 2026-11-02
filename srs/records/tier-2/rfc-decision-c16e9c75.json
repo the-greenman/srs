@@ -1,0 +1,40 @@
+{
+  "instanceId": "c16e9c75-6e53-439f-90a1-42bf2560271d",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "`srs://` stays tooling",
+    "decision_date": "2026-10-30",
+    "decision_rationale": "The main form of a cross-repository link is a relation (owner), so the stored form is Address components. The resource paths change often (ADR-037 carries 18 amendments since July 2026, several adding resource paths: `type/`, `tree`, `agent-index`, `context/`). A string rule can be added later at little cost; removing one breaks emitters.",
+    "decision_statement": "The spec defines no string form for an Address; `srs://` remains srs-rust tooling (ADR-037 §6); srs#218 stays parked.",
+    "decision_scope": "Whether the specification defines a string form for an Address: it does not; srs:// stays implementation tooling.",
+    "governing_values": [
+      "practical-expression",
+      "evolution"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Specify the repository segment of srs:// strings (Revision 3). Specify a full canonical serialization (locks a path list amended 18 times since July 2026).",
+    "accepted_costs": "No standard string to paste into prose; agents may still guess malformed strings (finding bbe9faf9, `srs://default/…`), which [R8] answers with `not-in-boundary`.",
+    "evidence_refs": [
+      "the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)",
+      "rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D3",
+      "srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)",
+      "programme decision 31e9fd27 (federation returns, ratified 2026-10-16)"
+    ],
+    "review_trigger": "1. A repository is published and its elements need public URLs. *Checked at:* the first published repository.\n2. Links start being stored as strings inside field content across repositories. *Checked at:* the cross-repository relations RFC, which must say why a relation does not cover such a link.\n3. Two implementations need to exchange `srs://` strings and disagree on them. *Checked at:* the first second implementation of the MCP surface (srs-web's browser MCP shares srs-mcp-core today, so it does not count)."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:reference"
+  ],
+  "createdAt": "2026-11-02T12:01:40.084292992+00:00",
+  "updatedAt": "2026-11-02T12:02:16.676578428+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

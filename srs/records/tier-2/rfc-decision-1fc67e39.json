@@ -1,0 +1,40 @@
+{
+  "instanceId": "1fc67e39-51cf-44e7-a301-2b16e896d565",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "One registry, grown from the existing `ext:registry` catalog (option B)",
+    "decision_date": "2026-10-30",
+    "decision_rationale": "Packages face outward and repositories inward (*Uses*), but both need an identity to resolve to a place through an entry someone vouches for, so the rules are written once. What differs is per kind or per document. Growing the shipped catalog keeps what exists (against option A, which discards and re-adds it) and avoids two catalogs for one goal (against option C). `kind` is required, not defaulted, so no permanent \"absent means package\" rule is locked in; the one-time migration ([R9]) carries old catalogs forward instead.",
+    "decision_statement": "There is one registry mechanism. Its document is the `Registry` that `ext:registry` already defines and srs-rust ships. Every entry states `kind` and carries a `locator` in the charter's LOCATOR shape; catalog fields are optional and resolve nothing. Today's entry becomes the `package` kind, its `downloadUrl` renamed `locator` by migration; this RFC adds the `repository` kind. Subscription to updates is binding (RFC-047), never part of the registry.",
+    "decision_scope": "The registry mechanism: one ext:registry catalog of entries by kind (package, repository), its document shape, identity, LOCATOR locators, registryRevision, per-entry failure and the rename of downloadUrl to locator. Not package distribution or binding (RFC-047).",
+    "governing_values": [
+      "shared-coherence",
+      "evolution"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Option A, a new minimal registry document replacing the shipped catalog (discards and re-adds the package catalog). Option C, a repository directory beside the catalog (two catalogs for one goal).",
+    "accepted_costs": "The seven changes listed under Change B: six in srs-rust and its mirrors (registry types, per-entry parsing, `registry get` as discovery, the URI parser's code and case, the WASM registry bindings, `DocumentAddress`) and one srs documentation page (`srs-usage.md`), with payload schemas mirrored in srs-vscode; `registryId` stays as inert optional metadata; one document shape serves a public catalog and a private list.",
+    "evidence_refs": [
+      "the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)",
+      "rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D2",
+      "srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)",
+      "programme decision 31e9fd27 (federation returns, ratified 2026-10-16)"
+    ],
+    "review_trigger": "1. **The shared rules bend per kind.** The `package` kind (RFC-047) or a later kind needs an exception to more than one shared rule: identity unique within a kind, per-entry failure, label never resolves, LOCATOR shape, one deterministic form. Then split into separate catalogs that share an entry convention. *Checked at:* RFC-047's review.\n2. **Private settings need a place in the document.** The operator's repository list needs content that must never be published (credentials, tokens, private per-machine options). Then public catalogs and private lists get separate document roles that keep the entry core. *Checked at:* srs-rust#683's implementation and the first `remote` repository entry.\n3. **Subscription leaks in.** Binding needs subscription state (last-seen version, update policy) stored in registry entries. Then \"the registry says where, binding says whether to follow\" is wrong. *Checked at:* RFC-047's review.\n4. **Catalogs we must read omit `kind`.** Registries outside our control that we must consume carry entries without `kind` at `registryRevision` 1 or above. Then requiring `kind` was wrong and a default is needed. *Checked at:* the first external catalog consumed.\n5. **A document-level field is needed per kind.** A published repository catalog needs document metadata a package catalog cannot carry, or the reverse. *Checked at:* the first published repository, which is also the trigger to reopen srs#218.\n6. **Generality nobody uses (soft).** A year after acceptance, no registry holds more than one kind and no tool reads more than one: stop extending the generic core, do not undo it. *Checked at:* a review scheduled in the srs-programme roadmap when this RFC is accepted."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:conformance"
+  ],
+  "createdAt": "2026-11-02T12:01:39.979340723+00:00",
+  "updatedAt": "2026-11-02T12:02:16.445448961+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

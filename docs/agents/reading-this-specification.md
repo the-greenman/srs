@@ -62,11 +62,13 @@ Implementations declare conformance as:
 
 Example: a core conformance declaration.
 
-**Core** requires the Foundation group and Distribution group in full. No extension is required for core conformance. Extensions are independently adoptable; some declare dependencies on other extensions.
+**Core** requires the Foundation group and Distribution group in full. Naming, resolving and writing things in other repositories is in the Foundation group (RFC-049). No extension is required for core conformance. Extensions are independently adoptable; some declare dependencies on other extensions.
 
 Table: the extension identifier and dependency reference.
 
 `ext:protocol` and `ext:addressability` are formally independent but are a functional co-dependency: a Protocol without `AttentionState` produces no live conversation tagging; `AttentionState` without Protocol stages has no stage context to capture. Implementations supporting live conversation tagging should declare both.
+
+`ext:registry` is a capability an implementation declares in its conformance claim; it is never declared in a repository's `declaredExtensions` (RFC-049).
 
 **Blueprint is a core package definition**, not a declarable extension. `Blueprint` is included in `Package.blueprints[]` when needed; no `ext:blueprint` declaration is required or defined.
 
@@ -79,7 +81,7 @@ Example declaration: `SRS Core + ext:lifecycle + ext:protocol + ext:views-l1 + e
 | --- | --- |
 | Define and exchange Field and Type definitions | Core only |
 | Track definition origin and imports | `ext:import-tracking` |
-| Publish a definition catalog | `ext:registry` |
+| Catalog packages, or serve several repositories from one implementation | `ext:registry` |
 | Governance with lifecycle states | `ext:lifecycle` |
 | Present and export Records | `ext:views-l1` |
 | Assemble multi-Record documents | `ext:views-l2` |

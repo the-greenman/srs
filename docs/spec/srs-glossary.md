@@ -11,9 +11,18 @@
 **Key**: record:concepts/ai-guidance
 
 
+### Address
+
+**Definition**: A stable identifier for anything that can be referred to, across document, process and conversation space and across repositories. The Address is core (RFC-049): an implementation resolves an Address only within its boundary, the set of repositories the implementation declares; an Address it cannot resolve stays valid.
+
+**Notes**: The Address names; a registry locates (ext:registry). The live cursor that points at an Address while a session runs, AttentionState, is ext:addressability's, and must not be confused with the Address itself.
+
+**Key**: record:concepts/address
+
+
 ### Addressability
 
-**Definition**: A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
+**Definition**: A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be named, in this repository or another (RFC-049) — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. The stable Address is core. Alongside it, `ext:addressability` provides the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
 
 **Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
 
@@ -113,6 +122,8 @@ Three conversation types are in scope:
 | Threaded conversation | Tree of replies | Thread root anchored to a document element Address |
 | Web UI annotations | Attached to content | Anchored to a Field or Record Address |
 
+A stored tag names things in the repository of the session that wrote it, never in whatever repository later reads it (RFC-049 [R13]).
+
 Transcript chunks referenced in `SourceReference` are source material — addressable evidence, not Notes or Records, per Conversation boundary's rule.
 
 **Key**: record:concepts/conversation-layer
@@ -170,7 +181,7 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 ### Extensions
 
-**Definition**: How a repository declares which independently adoptable capability modules it implements, and the behavioural requirements that activate only when two declared extensions are present together. Most extensions have a natural home and their capability is documented there, beside the concept they extend — ext:lifecycle beside Lifecycle, ext:views-l1 beside View, and so on. Addressability and Discovery are documented here in full because each is itself a whole capability with no single host concept elsewhere. This Part also documents the conversation/SRS boundary that several of these extensions build on.
+**Definition**: How a repository declares which independently adoptable capability modules it implements, and the behavioural requirements that activate only when two declared extensions are present together. Most extensions have a natural home and their capability is documented there, beside the concept they extend — ext:lifecycle beside Lifecycle, ext:views-l1 beside View, and so on. Addressability (the live cursor; the Address itself is core, in Part: Foundations) and Discovery are documented here in full because each is itself a whole capability with no single host concept elsewhere. This Part also documents the conversation/SRS boundary that several of these extensions build on.
 
 **Key**: part:extensions
 
@@ -179,7 +190,7 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 
 **Definition**: Extensions are optional, independently adoptable capability modules. Each declares its identifier, dependencies, and the types it defines.
 
-**Notes**: No extension is required for core conformance, and an implementation adopts only what it needs. The table below is the full list of live extensions and their dependencies; each extension's own capability is documented beside the concept it extends instead of here, unless it has no single host concept — Addressability and Discovery are the two exceptions, documented in full elsewhere in this Part.
+**Notes**: No extension is required for core conformance, and an implementation adopts only what it needs. The table below is the full list of live extensions and their dependencies; each extension's own capability is documented beside the concept it extends instead of here, unless it has no single host concept — Addressability (its live cursor; the Address itself is core, in Part: Foundations, RFC-049) and Discovery are the two exceptions, documented in full elsewhere in this Part.
 
 **Key**: record:concepts/extensions-overview
 
@@ -416,7 +427,7 @@ The nine Parts read front to back, each presupposing what came before it:
 
 ### Registry
 
-**Definition**: A published, discoverable catalog of Field, Type and other definitions that a multi-publisher ecosystem can index. A Registry states no opinion on registry authority, authentication or federation between competing catalogs; a consumer may index more than one.
+**Definition**: One catalog of entries by kind, each mapping an identity to a locator: published definition packages (`package`) and the repositories an implementation may reach (`repository`), RFC-049. For resolving an Address, the operator who loads a registry vouches for its entries, and an implementation uses one registry; for discovery, a consumer may index several catalogs.
 
 **Key**: record:concepts/registry
 
