@@ -6,10 +6,10 @@
   "typeName": "example",
   "fieldValues": {
     "title": "The `Registry` shape",
-    "content": "`Registry`, in pseudo-IDL:\n\n```typescript\n{\n  schemaVersion: string\n  registryId: UUID\n  registryName: string\n  catalogVersion: string    // registry's own version (semver)\n  updatedAt: ISO8601\n  homepage?: string\n  entries: RegistryEntry[]\n}\n```"
+    "content": "Only `entries` is required (RFC-049).\n\n```typescript\n{\n  entries: RegistryEntry[]    // required; may be empty\n  registryRevision?: integer  // the registry's own shape counter; this shape is 1\n  schemaVersion?: string\n  registryId?: UUID           // inert metadata; nothing resolves by it\n  registryName?: string\n  catalogVersion?: string     // the catalog's own version (semver)\n  updatedAt?: ISO8601\n  homepage?: string\n  // the top level is closed (rfc-decision-2e0cd70a); a writer still keeps unknown top-level properties on rewrite ([R9])\n}\n```"
   },
   "createdAt": "2026-09-06T17:00:42.708322971+00:00",
-  "updatedAt": "2026-09-06T17:05:14.142168217+00:00",
+  "updatedAt": "2026-11-02T13:00:23.627161943+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "c90aef1e-af6e-550e-ad07-1d5f1bfdf67f"

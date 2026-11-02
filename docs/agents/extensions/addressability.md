@@ -1,10 +1,10 @@
 # Addressability
 
-> A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a…
+> A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be named, in this repository or another (RFC-049) — and so that …
 
 Specification: SRS 2.0-draft, data model revision 11. Part of the [SRS specification index](/llms.txt). Up: [Extensions](/agents/extensions.md).
 
-A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be resolved — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. Alongside the stable address sits the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
+A single addressing scheme spanning document space, process space and conversation space, so that anything that can be referred to can be named, in this repository or another (RFC-049) — and so that a transcript fragment and a field on a record are co-addressable, which is what makes an assertion linking them possible. The stable Address is core. Alongside it, `ext:addressability` provides the live cursor: the current focus of an active process run, which moves continuously and is stamped onto conversation material as it is produced. Because it is stamped at production time, asking for everything said while attention was on this field becomes a query, not a search.
 
 **Notes**: A stable address and a live cursor are structurally similar and must not be merged: one identifies an element, the other records where focus currently is. Likewise a cursor is set live and a source reference is set retrospectively.
 
@@ -13,32 +13,6 @@ A single addressing scheme spanning document space, process space and conversati
 **Number**: 34
 
 `AttentionState.containerId` must reference a valid `Container.containerId`. Other Address components (`recordId`, `fieldId`, `protocolRunId`, `stageId`) are optional and may be absent when focus has not yet narrowed.
-
-
-## The `Address` union
-
-`Address`, in pseudo-IDL:
-
-```typescript
-type Address =
-  | {
-      space: "document"
-      containerId: UUID
-      recordId?: UUID
-      fieldId?: UUID
-    }
-  | {
-      space: "process"
-      runId: UUID          // Protocol run ID; requires ext:protocol
-      stageId?: string
-    }
-  | {
-      space: "conversation"
-      sessionId: UUID
-      chunkId?: UUID
-      annotationId?: UUID
-    }
-```
 
 
 ## The `AttentionState` shape
@@ -60,21 +34,12 @@ type Address =
 
 **Required for**: any implementation with live facilitation or multi-session extraction.
 
-Defines a universal addressing scheme and the mechanisms that connect conversation material to document elements.
-
-
-## `Address`
-
-A stable, resolvable identifier for any element across document space, process space, and conversation space.
-
-Example: the `Address` union.
-
-Every element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable.
+Defines the live cursor over the core Address (`AttentionState`) and the mechanisms that connect conversation material to document elements through it. The Address itself is core (RFC-049).
 
 
 ## `AttentionState`
 
-The current focus of an active Protocol run — a live cursor across the address space. `AttentionState` and `Address` are structurally related but serve distinct roles: an `Address` is a stable, resolvable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances.
+The current focus of an active Protocol run: a live cursor across the address space. `AttentionState` and the core `Address` are structurally related but serve distinct roles: an `Address` is a stable identifier for a specific element; `AttentionState` is the mutable cursor that records *where focus currently is* during an active session. An `AttentionState` value at a point in time resolves to a document-space `Address`, but it is stored separately because it changes continuously as the Protocol advances. A cursor with a `fieldId` and no `recordId` (allowed by Invariant 34) resolves to its container's Address; the `fieldId` is dropped from the resolved Address, not from the cursor (RFC-049). Its shape is unchanged by RFC-049 and it carries no `repositoryId`: a stored tag names things in the repository of the session that wrote it.
 
 Conversation material is tagged with the active `AttentionState` as it is produced. This makes context assembly efficient: "all chunks produced while focus was on this Field" is a queryable address predicate.
 
@@ -85,7 +50,7 @@ Example: the `AttentionState` shape.
 
 ## Context Query (behavioural requirement)
 
-A conforming `ext:addressability` implementation must be able to assemble relevant material given an address and a purpose. This is a behavioural requirement, not a data shape.
+A conforming `ext:addressability` implementation must be able to assemble relevant material given an address (the core `Address`, RFC-049) and a purpose. This is a behavioural requirement, not a data shape.
 
 **Required query patterns:**
 

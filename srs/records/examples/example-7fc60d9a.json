@@ -6,10 +6,10 @@
   "typeName": "example",
   "fieldValues": {
     "title": "The `Address` union",
-    "content": "`Address`, in pseudo-IDL:\n\n```typescript\ntype Address =\n  | {\n      space: \"document\"\n      containerId: UUID\n      recordId?: UUID\n      fieldId?: UUID\n    }\n  | {\n      space: \"process\"\n      runId: UUID          // Protocol run ID; requires ext:protocol\n      stageId?: string\n    }\n  | {\n      space: \"conversation\"\n      sessionId: UUID\n      chunkId?: UUID\n      annotationId?: UUID\n    }\n```"
+    "content": "`Address`, in pseudo-IDL (core, RFC-049):\n\n```typescript\ntype Address =\n  | {\n      space: \"document\"\n      repositoryId?: UUID  // the holding repository; absent = the holder's own\n      containerId?: UUID   // context; at least one of containerId, recordId\n      recordId?: UUID\n      fieldId?: UUID       // only with recordId\n    }\n  | {\n      space: \"process\"\n      repositoryId?: UUID\n      runId: UUID          // Protocol run ID; requires ext:protocol\n      stageId?: string\n    }\n  | {\n      space: \"conversation\"\n      repositoryId?: UUID\n      sessionId: UUID\n      chunkId?: UUID\n      annotationId?: UUID\n    }\n```"
   },
   "createdAt": "2026-09-06T17:00:41.558752918+00:00",
-  "updatedAt": "2026-09-06T17:05:12.778462204+00:00",
+  "updatedAt": "2026-11-02T11:59:18.135237511+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "214a7c1f-1bb4-5c86-932e-b47b4fc3b57b"

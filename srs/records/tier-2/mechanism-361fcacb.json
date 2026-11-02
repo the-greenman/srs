@@ -1,0 +1,18 @@
+{
+  "instanceId": "361fcacb-ecb7-4194-844e-d5884e44fbe0",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Conformance Rules (RFC-049): loading, resolving and writing through a registry",
+    "content": "**[R6]** *(`ext:registry`)* If the repository reached through a `repository` entry reports a different id from the entry's, the implementation MUST fail resolution or a write through that entry with `id-mismatch` and MUST NOT use either id as an override.\n\n**[R7]** *(`ext:registry`)* Resolution MUST NOT write to or alter the target repository, and MUST NOT make the target's content part of the resolving repository. (This governs resolution only; declared mirroring is left to a later RFC.)\n\n**[R10]** *(`ext:registry`)* A read resolved through a `repository` entry MUST return the same result as the same request made directly against the target repository.\n\n**[R15]** *(`ext:registry`)* Loading a registry reports, per entry and affecting only the entries named: `entry-malformed` (an entry missing `kind`, a valid `locator` or a field [R14] requires, with a `bundled` locator, or with a `readOnly` that is not a boolean, which fails safe: the entry is outside the boundary and cannot be written), `duplicate-identity` (every entry in a [R4] conflict) and `kind-unsupported` (an entry whose kind the implementation does not support, which it keeps but does not use). It refuses the whole document, loading nothing, only when the document is not a JSON object with an `entries` array (`registry-malformed`), or its `registryRevision` is above the supported revision or below it with no transformer for a step (`registry-revision-unsupported`, [R9]).\n\n**[R17]** *(`ext:registry`)* An implementation MAY route a write that carries a `repositoryId` to a member of its boundary, as a write to that one repository through that repository's own services and contracts. Before writing it MUST verify that the repository reached reports the entry's `id` ([R6]). It MUST refuse a write, writing nothing, with the first of these that holds, in this order: `not-in-boundary` (the id is not in its boundary); `read-only` ([R16]; decided from the entry, so a read-only target is never reached); `locator-unusable`; `id-mismatch`; `revision-unsupported` (as in [R5]); `write-refused` (the target or its transport refuses a write that is valid, for example a permission error, a lock, or a remote endpoint that does not accept writes); or the target repository's own validation diagnostics when the write itself is invalid there. Resolution outcomes in [R5] that can hold together are reported in the same order."
+  },
+  "createdAt": "2026-11-02T12:22:05.646519100+00:00",
+  "updatedAt": "2026-11-02T12:22:05.646526945+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

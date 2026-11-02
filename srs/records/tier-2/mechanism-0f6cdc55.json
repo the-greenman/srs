@@ -1,0 +1,18 @@
+{
+  "instanceId": "0f6cdc55-a45e-435c-be54-7db54a2f0c87",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Conformance Rules (RFC-049): resolution and the boundary",
+    "content": "**[R5]** *(Core)* Resolving an Address, or any read an implementation scopes by repository id, has one of these outcomes besides success, each a result of that one resolution:\n- `not-in-boundary`: the repository id is not in the implementation's boundary ([R8]), including an id whose registry entries failed at load ([R15]);\n- `locator-unusable` (only with `ext:registry`): the entry's locator mode or URL scheme is not one the implementation can reach, or it does not lead to a repository;\n- `id-mismatch` (only with `ext:registry`): see [R6];\n- `revision-unsupported`: the target repository's `dataModelRevision` is above what the implementation supports, or below it and not migrated;\n- `target-not-found`: the repository resolves but the container, record or field addressed is not in it, or the record is not a member of the given container (RFC-049 Change C);\n- `space-unsupported`: the Address's space is not supported by the target or the resolving implementation.\n\n**[R8]** *(Core)* Every implementation resolves an Address with a `repositoryId`, and every read it scopes by repository id, only within its **boundary**, and reports `not-in-boundary` for any other repository id, except the id of the repository that holds the Address or that the request is made against ([R13]). An implementation without `ext:registry`, or with it but using no registry for resolution, has a boundary of exactly one repository, the one it serves. An implementation using a registry for resolution has as its boundary the `repository` entries that loaded from the one registry it uses for resolution, and resolves only through them. No implementation takes a locator for resolution from any repository's content."
+  },
+  "createdAt": "2026-11-02T12:22:05.362173497+00:00",
+  "updatedAt": "2026-11-02T13:00:24.442252019+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

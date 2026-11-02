@@ -1,0 +1,18 @@
+{
+  "instanceId": "66a02761-e2ff-45d9-8a5b-284030cf6f9e",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Boundary, resolution and routed writes",
+    "content": "Every implementation resolves an Address that names a repository, and every read it scopes by repository id, only within its **boundary**: without `ext:registry`, the one repository it serves; with a registry, the `repository` entries that loaded from the one registry it uses for resolution (RFC-049). Resolution is read-through and read-only. Its failures are results of that resolution, never invalidity of what holds the Address, and they are reported in one fixed order: `not-in-boundary`, then the entry's and the target's own outcomes.\n\nA write is a separate act. It is applied to exactly one named repository, and no write changes two repositories. An implementation that does not route writes refuses one that names another repository. No implementation writes to a repository whose registry entry is read-only, however the target is named."
+  },
+  "createdAt": "2026-11-02T12:01:09.582210888+00:00",
+  "updatedAt": "2026-11-02T12:22:03.949461895+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
