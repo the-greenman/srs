@@ -2317,3 +2317,34 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 3. A write needs to change two repositories together. Then "no write spans two repositories" is the wrong boundary. *Checked at:* the cross-repository relations RFC.
 
 
+**Title**: A heading level the renderer skips has one correct treatment: outline continuity applies unconditionally, with no per-Composition switch
+
+**Status**: Proposed
+
+**Decision Date**: 2026-11-02
+
+**Decision Rationale**: A skipped heading level has one correct treatment, so a switch would add a second way to decide a settled question (Conformance, one way over many, rfc-decision-cce3c00e), and an author who forgets the switch ships the broken outline; Revision 11 reasoned the same way for duplicate headings. The opt-in alternative's one advantage, byte-identical output for existing Compositions, buys nothing a reader needs: the gap it preserves is the defect. The owner ruled on 2026-11-02, keeping the door open rather than building it: "We will review a configuration option if we find that we need more control later."
+
+**Decision**: Outline continuity (RFC-001 Rule [N+39]) applies to every Composition: a heading is rendered one level deeper than the nearest heading actually emitted above it, so an untitled section leaves no gap. There is no opt-in or opt-out property. A per-Composition configuration option is reviewed only when a case is found that needs more control than the rule gives.
+
+**Scope**: How a renderer assigns heading levels when a section emits no heading of its own (RFC-001 Change F, Rule [N+39], amending Rule [N+2]). Does not change depthOffset (minimum 0), Rule [N+4b], the field-label rule or any record. Does not decide RFC-042 [R23] for nested untitled sections, which stays open.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: (b) unconditional continuity rule (chosen). Opt-in Composition property: existing output byte-identical, but a second way to decide level skipping, and a forgotten switch ships the gap. (a) Negative depthOffset: cannot show the document title, renders titled sections beside it, asks the author to restate in a number what the renderer knows, and changes a schema minimum. A synthetic heading for the untitled section: invents text no record carries. Do nothing: agent pages keep an H1 then H3 with no H2.
+
+**Accepted Costs**: Every Composition with an untitled section and per-record headings changes its output (those headings rise one level): the six semanticops.com page Compositions today; muDemocracy.org and other downstream packages are not yet audited, and the audit is part of the implementation. Nothing becomes invalid, no record changes, no dataModelRevision change.
+
+**Evidence**:
+- the-greenman/srs#991 (RFC-001 Revision 12 Draft; the owner's ruling recorded as Revision 13)
+- rfcs/rfc-001.md, Change F and Open Question 3
+- the-greenman/srs#911 (the question, SP-82)
+- decision 444121a6 (RFC drafting authorised)
+
+**Review Trigger**: Review a per-Composition configuration option if a case is found that needs more control than the continuity rule gives, for example an author who needs a level skipped on purpose; the case is the evidence for that revision.
+
+

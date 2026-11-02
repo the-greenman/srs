@@ -1,0 +1,42 @@
+{
+  "instanceId": "11c13e69-b7bc-440a-846f-e1f38fd30cd8",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A heading level the renderer skips has one correct treatment: outline continuity applies unconditionally, with no per-Composition switch",
+    "decision_date": "2026-11-02",
+    "decision_rationale": "A skipped heading level has one correct treatment, so a switch would add a second way to decide a settled question (Conformance, one way over many, rfc-decision-cce3c00e), and an author who forgets the switch ships the broken outline; Revision 11 reasoned the same way for duplicate headings. The opt-in alternative's one advantage, byte-identical output for existing Compositions, buys nothing a reader needs: the gap it preserves is the defect. The owner ruled on 2026-11-02, keeping the door open rather than building it: \"We will review a configuration option if we find that we need more control later.\"",
+    "decision_statement": "Outline continuity (RFC-001 Rule [N+39]) applies to every Composition: a heading is rendered one level deeper than the nearest heading actually emitted above it, so an untitled section leaves no gap. There is no opt-in or opt-out property. A per-Composition configuration option is reviewed only when a case is found that needs more control than the rule gives.",
+    "decision_scope": "How a renderer assigns heading levels when a section emits no heading of its own (RFC-001 Change F, Rule [N+39], amending Rule [N+2]). Does not change depthOffset (minimum 0), Rule [N+4b], the field-label rule or any record. Does not decide RFC-042 [R23] for nested untitled sections, which stays open.",
+    "governing_values": [
+      "shared-coherence",
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "(b) unconditional continuity rule (chosen). Opt-in Composition property: existing output byte-identical, but a second way to decide level skipping, and a forgotten switch ships the gap. (a) Negative depthOffset: cannot show the document title, renders titled sections beside it, asks the author to restate in a number what the renderer knows, and changes a schema minimum. A synthetic heading for the untitled section: invents text no record carries. Do nothing: agent pages keep an H1 then H3 with no H2.",
+    "accepted_costs": "Every Composition with an untitled section and per-record headings changes its output (those headings rise one level): the six semanticops.com page Compositions today; muDemocracy.org and other downstream packages are not yet audited, and the audit is part of the implementation. Nothing becomes invalid, no record changes, no dataModelRevision change.",
+    "evidence_refs": [
+      "the-greenman/srs#991 (RFC-001 Revision 12 Draft; the owner's ruling recorded as Revision 13)",
+      "rfcs/rfc-001.md, Change F and Open Question 3",
+      "the-greenman/srs#911 (the question, SP-82)",
+      "decision 444121a6 (RFC drafting authorised)"
+    ],
+    "review_trigger": "Review a per-Composition configuration option if a case is found that needs more control than the continuity rule gives, for example an author who needs a level skipped on purpose; the case is the evidence for that revision."
+  },
+  "lifecycleState": "proposed",
+  "tags": [
+    "topic:rfc",
+    "cell:conformance",
+    "cell:portability"
+  ],
+  "createdAt": "2026-11-02T13:32:00.648496656+00:00",
+  "updatedAt": "2026-11-02T13:38:13.175412545+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:claude-code",
+    "name": "Claude Code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
