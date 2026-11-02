@@ -1,0 +1,18 @@
+{
+  "instanceId": "a6d8671e-3ea6-413a-b7b1-de6c90bbf3d2",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Conformance Rules (RFC-049): requests and writes",
+    "content": "**[R13]** *(Core)* An Address without `repositoryId` names a thing in the repository that holds it, and an Address whose `repositoryId` is the holder's own id names the same thing; it resolves as if the id were absent, whether or not that repository is a registry entry. A transient Address that no repository holds (a request to an implementation) names a thing in the repository the request is made against; an implementation serving more than one repository MUST name one default repository, a `repository` entry of its registry, for requests that carry no `repositoryId`, and MUST state it where it describes itself to clients; if the default's entry did not load, it MUST report that and refuse the requests that rely on the default with `not-in-boundary`. A conversation-layer tag names things in the repository of the session that wrote it.\n\n**[R16]** *(Core)* A write that carries a `repositoryId` equal to the repository the request is made against (for an implementation serving more than one repository, its default, [R13]) is treated as one without it. A write is applied only to the one repository it names, and no write changes more than one repository. An implementation that does not route writes to other repositories (one without `ext:registry`, or one that does not take up [R17]'s MAY) MUST refuse a write naming another repository, writing nothing, with `write-not-routed`, and MUST NOT apply it to any other repository. Any implementation that loads a registry MUST refuse, writing nothing, with `read-only`, a write to a repository whose entry has `readOnly: true`, or whose locator is `remote` when it treats `remote` entries as read-only (which it MAY), however the target was named, including as the default. For a write naming another repository, `write-not-routed` comes first."
+  },
+  "createdAt": "2026-11-02T12:22:05.459818738+00:00",
+  "updatedAt": "2026-11-02T12:22:05.459823927+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

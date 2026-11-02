@@ -218,9 +218,9 @@ independently adoptable capability module, declared in a repository's manifest u
 | `ext:repository` | The file-based repo layout (the `.srs/` marker, `manifest.json`) |
 | `ext:views-l1` / `ext:views-l2` | View rendering; document views with navigation |
 | `ext:themes-l1` | Visual theming for rendered views |
-| `ext:addressability` | Universal addressing across document / process / conversation spaces |
+| `ext:addressability` | The live cursor (`AttentionState`) over the core Address (RFC-049) |
 | `ext:protocol` | Structured facilitation processes with ordered stages |
-| `ext:registry` / `ext:import-tracking` | Package catalogs and provenance |
+| `ext:registry` / `ext:import-tracking` | One registry of packages and repositories (RFC-049); provenance |
 | `ext:cross-field-validation` | Multi-field validation rules |
 | `ext:type-inheritance` | Types extending other Types |
 | `ext:json-store` | Arbitrary JSON alongside standard fields |

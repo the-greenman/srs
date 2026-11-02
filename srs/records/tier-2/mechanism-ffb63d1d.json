@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "`Address`",
-    "content": "A stable, resolvable identifier for any element across document space, process space, and conversation space.\n\nExample: the `Address` union.\n\nEvery element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because assertions about one referencing the other require both to be resolvable."
+    "content": "A stable identifier for any element across document space, process space and conversation space. The Address is core, in the Foundation group (RFC-049); `ext:addressability` adds only the live cursor that points at one, `AttentionState`.\n\nExample: the `Address` union.\n\nEvery element that can be referred to has an Address. A transcript chunk and a document-space field are co-addressable because an assertion about one that references the other needs both to be nameable.\n\n**Spaces.** The union has exactly three spaces: `document` (`containerId`, `recordId`, `fieldId`), `process` (`runId`, `stageId`, given content by `ext:protocol`) and `conversation` (`sessionId`, `chunkId`, `annotationId`, given content by the conversation layer). A `document` Address carries at least one of `containerId` and `recordId`, and `fieldId` only with `recordId`. `containerId` is context, not identity: a record need not be named through a container, and a container that is given is checked when the Address is resolved.\n\n**`repositoryId`.** Every Address may carry the `manifest.repositoryId` of the repository holding the thing addressed, a KEYED reference resolved against the implementation's boundary (`rfc-decision-c8704763`). Absent, or equal to the holder's own id, it means the repository that holds the Address; for a request that no repository holds, the repository the request is made against. Two Addresses are equal when they agree on space, `repositoryId` (an absent one standing for the holder's) and identity components; `containerId` does not count when `recordId` is present. Equality says which repository's copy is meant; record identity is still the `instanceId` wherever a record is held. An Address that cannot be resolved where it is read is still a valid Address."
   },
   "createdAt": "2026-09-08T20:24:14.864726410+00:00",
-  "updatedAt": "2026-09-08T20:24:14.864733851+00:00",
+  "updatedAt": "2026-11-02T13:00:24.278148076+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "214a7c1f-1bb4-5c86-932e-b47b4fc3b57b"

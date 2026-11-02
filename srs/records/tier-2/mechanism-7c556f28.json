@@ -6,14 +6,14 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "ext:repository conformance requirements",
-    "content": "An implementation declaring `ext:repository` MUST:\n- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout\n- Maintain no `instanceIndex` in the manifest: it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])\n- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)\n- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content\n- Resolve `SourceReference` entries with `sourceType: \"repository-document\"` via the sidecar in `sourceDocumentsPath`\n- Enforce Invariants 45–55\n- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === \"local\"`. The repository is fully operable with only its own files.\n\nAn implementation that can produce archives but not consume them (or vice versa) MUST declare this limitation explicitly. Partial repository support is not conformant."
+    "content": "An implementation declaring `ext:repository` MUST:\n- Produce repositories with a `.srs` marker and `manifest.json` at root, with content in the prescribed folder layout\n- Maintain no `instanceIndex` in the manifest: it is retired (RFC-038 [R2]); membership is the instance set enumerated from the tree (RFC-038 [R1])\n- Produce archives that satisfy all self-containment requirements (Invariants 49 and 51)\n- Consume archives by parsing the manifest first and resolving all instances via the repository's authoritative instance set, enumerated from the tree (RFC-038 [R1]), before processing content\n- Resolve `SourceReference` entries with `sourceType: \"repository-document\"` via the sidecar in `sourceDocumentsPath`\n- Enforce Invariants 45–55\n- Require no TSS, Protocol, Addressability infrastructure, or external registry when `PackageRef.mode === \"local\"`. The repository is fully operable with only its own files.\n\n**RFC-049 [R2]** *(`ext:repository`)* A repository does not declare which boundary it belongs to or who its neighbours are. No property that the specification or an extension defines on a manifest or a container may carry a locator to another repository. Naming another repository by id (an Address, a binding's source, a slice's recorded origin) is a reference, not a declaration; content in `meta` and field values that mention or link to another repository are inert, because no implementation takes a locator from repository content (RFC-049 [R8]).\n\nAn implementation that can produce archives but not consume them (or vice versa) MUST declare this limitation explicitly. Partial repository support is not conformant."
   },
   "tags": [
     "concern:extensibility",
     "topic:conformance"
   ],
   "createdAt": "2026-09-11T15:26:35.774738413+00:00",
-  "updatedAt": "2026-09-11T15:32:07.192832688+00:00",
+  "updatedAt": "2026-11-02T13:00:23.799587859+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "d311183c-c402-5096-b961-ed925167e3b8"

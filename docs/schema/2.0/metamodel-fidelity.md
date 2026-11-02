@@ -99,5 +99,7 @@ detail this section does not repeat):
   at srs-rust#932, same disposition as the `FieldAssignment.description`/`packageDependencies`
   precedent (srs-rust#868/#867).
 
+**Outside the emitter's closure: `registry.json` (RFC-049, srs#995).** The `ext:registry` registry document is hand-authored; no metamodel Type models it and no closure test covers it, the same standing as `package-manifest.json` (see the generation ledger's row). Its entry shapes are rules (RFC-049 [R3], [R4], [R14]), not schema.
+
 Per-entity exclusions and documented divergences for all of the above live in
 `docs/schema/2.0/projection-rules.md`'s divergence register, not duplicated here.

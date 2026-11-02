@@ -1,0 +1,40 @@
+{
+  "instanceId": "a42ec697-1c95-46b7-8018-64f6bd8a4be8",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "Writes are routed to one repository; entries can be read-only",
+    "decision_date": "2026-11-02",
+    "decision_rationale": "The point of the registry is one server that handles a set of known repositories (owner): reading and writing through one interface answers SP-87 (\"an agent works in one repository at a time\") fully, where W2 would half-solve it. Some of those repositories are copies of external reference repositories that must not be changed (owner), so read-only is needed now, per entry, as the operator's statement about the server. W3 would let the implementation lead the spec, and would leave a write naming another repository free to land in the default.",
+    "decision_statement": "An implementation may route a write by `repositoryId` to any repository in its boundary, as an ordinary write to that one repository under its own contracts; a `repository` entry may be marked `readOnly`, and writes to it are refused. No access control beyond that flag.",
+    "decision_scope": "Writes through an implementation serving several repositories: routed to one named repository, refused when not routed, and never made to a read-only entry. Not access control.",
+    "governing_values": [
+      "practical-expression",
+      "local-autonomy"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "W2, writes only to the default repository (half-solves SP-87). W3, the specification stays silent (the implementation would lead the specification).",
+    "accepted_costs": "The registry becomes the list of repositories the server can change, not only read; protection against an unintended write is one flag the operator must remember to set; nothing distinguishes one client from another.",
+    "evidence_refs": [
+      "the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)",
+      "rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D6",
+      "srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)",
+      "programme decision 31e9fd27 (federation returns, ratified 2026-10-16)"
+    ],
+    "review_trigger": "1. A write lands in a repository the operator did not mean to change despite the flag (for example, a reference copy listed without `readOnly`). Then consider read-only as the default for some locator modes, or for repositories whose origin is elsewhere. *Checked at:* srs-rust#683's use, and the first friction finding against it.\n2. Different clients of one server need different rights to the same repository. That is access control (IAM), out of scope here and far off (owner); it would arrive as its own RFC, and the flag would become one of its rules. *Checked at:* the first shared (multi-user) server.\n3. A write needs to change two repositories together. Then \"no write spans two repositories\" is the wrong boundary. *Checked at:* the cross-repository relations RFC."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:repository"
+  ],
+  "createdAt": "2026-11-02T12:01:40.445314883+00:00",
+  "updatedAt": "2026-11-02T13:00:24.119550125+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

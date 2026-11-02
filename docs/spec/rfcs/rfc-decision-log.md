@@ -2112,3 +2112,208 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 **Review Trigger**: Review if detached entries (orphans, loops) are reported in more than occasional merges, which would be evidence for a merge driver or tombstones; or if container heads are edited concurrently often enough that one-line heads conflict in practice.
 
 
+**Title**: The Address is core; `AttentionState` stays a cursor
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-30
+
+**Decision Rationale**: Addressability and federation are foundational (owner). Cross-repository links are relations, and a core relation cannot rest on an optional extension. The cursor holds a pointer to an Address; it is not the Address (owner), as the concept record already says.
+
+**Decision**: The Address moves to the core (Foundation group) with an optional `repositoryId`; `AttentionState` stays in `ext:addressability` unchanged.
+
+**Scope**: Where the Address is defined (core, Foundation group, instead of ext:addressability), its repositoryId component, the optional containerId, and Address equality; AttentionState stays in ext:addressability unchanged.
+
+**Governing Values**:
+- semantic-integrity
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Keep the Address in ext:addressability (a core relation would rest on an optional extension). Merge the cursor into the Address (the concept record forbids merging them).
+
+**Accepted Costs**: 14 records change for the move (Integration table, rows 1–14); `ext:addressability` narrows to the cursor; one tightening ([R0], `fieldId` needs `recordId`) with no stored data affected.
+
+**Evidence**:
+- the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)
+- rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D1
+- srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)
+- programme decision 31e9fd27 (federation returns, ratified 2026-10-16)
+
+**Review Trigger**:
+1. Step 2's relation needs an Address the union cannot express, such as a definition (Type, Field) in another repository, which no space covers. *Checked at:* the cross-repository relations RFC.
+2. A core construct needs a cursor, not an Address, to cross repositories. *Checked at:* the cross-repository relations RFC and any conversation-layer RFC.
+3. The cursor turns out unusable without parts of the Address it no longer gets from its extension. *Checked at:* srs-rust's `attention_service.rs`, the one implementation of `AttentionState`, when it is next changed.
+
+
+**Title**: One registry, grown from the existing `ext:registry` catalog (option B)
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-30
+
+**Decision Rationale**: Packages face outward and repositories inward (*Uses*), but both need an identity to resolve to a place through an entry someone vouches for, so the rules are written once. What differs is per kind or per document. Growing the shipped catalog keeps what exists (against option A, which discards and re-adds it) and avoids two catalogs for one goal (against option C). `kind` is required, not defaulted, so no permanent "absent means package" rule is locked in; the one-time migration ([R9]) carries old catalogs forward instead.
+
+**Decision**: There is one registry mechanism. Its document is the `Registry` that `ext:registry` already defines and srs-rust ships. Every entry states `kind` and carries a `locator` in the charter's LOCATOR shape; catalog fields are optional and resolve nothing. Today's entry becomes the `package` kind, its `downloadUrl` renamed `locator` by migration; this RFC adds the `repository` kind. Subscription to updates is binding (RFC-047), never part of the registry.
+
+**Scope**: The registry mechanism: one ext:registry catalog of entries by kind (package, repository), its document shape, identity, LOCATOR locators, registryRevision, per-entry failure and the rename of downloadUrl to locator. Not package distribution or binding (RFC-047).
+
+**Governing Values**:
+- shared-coherence
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Option A, a new minimal registry document replacing the shipped catalog (discards and re-adds the package catalog). Option C, a repository directory beside the catalog (two catalogs for one goal).
+
+**Accepted Costs**: The seven changes listed under Change B: six in srs-rust and its mirrors (registry types, per-entry parsing, `registry get` as discovery, the URI parser's code and case, the WASM registry bindings, `DocumentAddress`) and one srs documentation page (`srs-usage.md`), with payload schemas mirrored in srs-vscode; `registryId` stays as inert optional metadata; one document shape serves a public catalog and a private list.
+
+**Evidence**:
+- the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)
+- rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D2
+- srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)
+- programme decision 31e9fd27 (federation returns, ratified 2026-10-16)
+
+**Review Trigger**:
+1. **The shared rules bend per kind.** The `package` kind (RFC-047) or a later kind needs an exception to more than one shared rule: identity unique within a kind, per-entry failure, label never resolves, LOCATOR shape, one deterministic form. Then split into separate catalogs that share an entry convention. *Checked at:* RFC-047's review.
+2. **Private settings need a place in the document.** The operator's repository list needs content that must never be published (credentials, tokens, private per-machine options). Then public catalogs and private lists get separate document roles that keep the entry core. *Checked at:* srs-rust#683's implementation and the first `remote` repository entry.
+3. **Subscription leaks in.** Binding needs subscription state (last-seen version, update policy) stored in registry entries. Then "the registry says where, binding says whether to follow" is wrong. *Checked at:* RFC-047's review.
+4. **Catalogs we must read omit `kind`.** Registries outside our control that we must consume carry entries without `kind` at `registryRevision` 1 or above. Then requiring `kind` was wrong and a default is needed. *Checked at:* the first external catalog consumed.
+5. **A document-level field is needed per kind.** A published repository catalog needs document metadata a package catalog cannot carry, or the reverse. *Checked at:* the first published repository, which is also the trigger to reopen srs#218.
+6. **Generality nobody uses (soft).** A year after acceptance, no registry holds more than one kind and no tool reads more than one: stop extending the generic core, do not undo it. *Checked at:* a review scheduled in the srs-programme roadmap when this RFC is accepted.
+
+
+**Title**: `srs://` stays tooling
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-30
+
+**Decision Rationale**: The main form of a cross-repository link is a relation (owner), so the stored form is Address components. The resource paths change often (ADR-037 carries 18 amendments since July 2026, several adding resource paths: `type/`, `tree`, `agent-index`, `context/`). A string rule can be added later at little cost; removing one breaks emitters.
+
+**Decision**: The spec defines no string form for an Address; `srs://` remains srs-rust tooling (ADR-037 §6); srs#218 stays parked.
+
+**Scope**: Whether the specification defines a string form for an Address: it does not; srs:// stays implementation tooling.
+
+**Governing Values**:
+- practical-expression
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Specify the repository segment of srs:// strings (Revision 3). Specify a full canonical serialization (locks a path list amended 18 times since July 2026).
+
+**Accepted Costs**: No standard string to paste into prose; agents may still guess malformed strings (finding bbe9faf9, `srs://default/…`), which [R8] answers with `not-in-boundary`.
+
+**Evidence**:
+- the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)
+- rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D3
+- srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)
+- programme decision 31e9fd27 (federation returns, ratified 2026-10-16)
+
+**Review Trigger**:
+1. A repository is published and its elements need public URLs. *Checked at:* the first published repository.
+2. Links start being stored as strings inside field content across repositories. *Checked at:* the cross-repository relations RFC, which must say why a relation does not cover such a link.
+3. Two implementations need to exchange `srs://` strings and disagree on them. *Checked at:* the first second implementation of the MCP surface (srs-web's browser MCP shares srs-mcp-core today, so it does not count).
+
+
+**Title**: At most one copy of a repository per boundary
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-30
+
+**Decision Rationale**: Splitting work off is a slice, which already mints a new id and records its origin. Two repositories sharing an id are clones or worktrees: the same repository at another version, which a re-id rule would mis-model as a different repository.
+
+**Decision**: A clone keeps its source's `repositoryId`, so only one of them can be a boundary member; no re-id rule is added.
+
+**Scope**: Copies of one repository in a boundary: at most one, because a clone keeps its repositoryId; no re-id rule.
+
+**Governing Values**:
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: A re-id rule giving a diverged copy a new id (mis-models a worktree, which is the same repository at another version).
+
+**Accepted Costs**: Listing a worktree and its main checkout in one registry makes both entries fail ([R4]), so neither is reachable; if one is the default, the implementation reports that its default has no usable entry. Each needs its own registry or process.
+
+**Evidence**:
+- the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)
+- rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D4
+- srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)
+- programme decision 31e9fd27 (federation returns, ratified 2026-10-16)
+
+**Review Trigger**:
+1. The owner or an agent regularly needs a worktree and its main checkout in one session. *Checked at:* srs-rust#683's first use with worktrees (`scripts/wt`), and any friction finding filed against it.
+2. Forks that diverge but are not slices need to coexist with their source in one boundary. *Checked at:* the first such fork.
+
+
+**Title**: A repository declares no boundary and no neighbours ([R2])
+
+**Status**: Accepted
+
+**Decision Date**: 2026-10-30
+
+**Decision Rationale**: A repository that lists its neighbours stops being complete on its own, and every repository would carry facts that belong to whoever assembled the boundary. The rule's two halves keep references open: naming another repository by id (an Address, a binding, a slice origin) is allowed; only declaring membership, and taking locators from content, is not. Revision 3's "MUST NOT name another repository's id" would have forbidden step 2's relations, and a version forbidding any locator in content would have invalidated `rfc-decision-1e5df0d9`, which links into muSrs.
+
+**Decision**: In the owner's words: a repository does not declare which boundary it belongs to or who its neighbours are.
+
+**Scope**: What a repository may say about other repositories: no boundary membership and no locators; references by id stay allowed.
+
+**Governing Values**:
+- portability
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Neighbours declared in each repository's manifest (content depends on neighbours; each repository vouches for others). Forbidding any other repository's id (would forbid cross-repository relations).
+
+**Accepted Costs**: A repository cannot say "my research lives over there"; the operator's registry says it.
+
+**Evidence**:
+- the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)
+- rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D5
+- srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)
+- programme decision 31e9fd27 (federation returns, ratified 2026-10-16)
+
+**Review Trigger**:
+1. Declared mirrors (Change C) need more than an origin, such as a standing subscription to the origin with a locator, which would be a declaration of a neighbour. *Checked at:* the mirrors RFC.
+2. RFC-047's bindings need a locator inside the manifest, not just a source id. *Checked at:* RFC-047's review.
+3. Repositories published for others need to advertise related repositories. *Checked at:* the first published repository.
+
+
+**Title**: Writes are routed to one repository; entries can be read-only
+
+**Status**: Accepted
+
+**Decision Date**: 2026-11-02
+
+**Decision Rationale**: The point of the registry is one server that handles a set of known repositories (owner): reading and writing through one interface answers SP-87 ("an agent works in one repository at a time") fully, where W2 would half-solve it. Some of those repositories are copies of external reference repositories that must not be changed (owner), so read-only is needed now, per entry, as the operator's statement about the server. W3 would let the implementation lead the spec, and would leave a write naming another repository free to land in the default.
+
+**Decision**: An implementation may route a write by `repositoryId` to any repository in its boundary, as an ordinary write to that one repository under its own contracts; a `repository` entry may be marked `readOnly`, and writes to it are refused. No access control beyond that flag.
+
+**Scope**: Writes through an implementation serving several repositories: routed to one named repository, refused when not routed, and never made to a read-only entry. Not access control.
+
+**Governing Values**:
+- practical-expression
+- local-autonomy
+
+**Project Phase**: formation
+
+**Alternatives Considered**: W2, writes only to the default repository (half-solves SP-87). W3, the specification stays silent (the implementation would lead the specification).
+
+**Accepted Costs**: The registry becomes the list of repositories the server can change, not only read; protection against an unintended write is one flag the operator must remember to set; nothing distinguishes one client from another.
+
+**Evidence**:
+- the-greenman/srs#913 (RFC-049, accepted by the owner 2026-11-02)
+- rfcs/rfc-049-repository-addressing-boundary-directory.md, Revision 11, Decisions D6
+- srs-programme conversation container ec40e5ab (the owner's words, 2026-10-30 to 2026-11-02)
+- programme decision 31e9fd27 (federation returns, ratified 2026-10-16)
+
+**Review Trigger**:
+1. A write lands in a repository the operator did not mean to change despite the flag (for example, a reference copy listed without `readOnly`). Then consider read-only as the default for some locator modes, or for repositories whose origin is elsewhere. *Checked at:* srs-rust#683's use, and the first friction finding against it.
+2. Different clients of one server need different rights to the same repository. That is access control (IAM), out of scope here and far off (owner); it would arrive as its own RFC, and the flag would become one of its rules. *Checked at:* the first shared (multi-user) server.
+3. A write needs to change two repositories together. Then "no write spans two repositories" is the wrong boundary. *Checked at:* the cross-repository relations RFC.
+
+
