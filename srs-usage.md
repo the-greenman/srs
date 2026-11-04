@@ -1082,77 +1082,52 @@ This is more reliable than `repo diff` for large repos because `changelog list` 
 
 ---
 
-## 5c. Registry Catalog (`ext:registry`)
+## 5c. Registry (`ext:registry`, RFC-049)
 
-A registry catalog is a **standalone JSON file** (not an SRS repository) that lists available packages for discovery and installation. It follows the `ext:registry` schema. The `srs registry` commands read catalog files directly — no `--repo` flag is needed.
+A registry is a **standalone JSON file**, held outside every repository it lists (`docs/schema/2.0/registry.json`). It is one list of entries by `kind`, and each entry maps an identity to a `locator` in the LOCATOR shape `{mode: local|remote|bundled, path|url|id}`. There are two kinds:
 
-### Listing catalog entries
+- **`package`.** Identity `packageId` + `packageVersion`. The shipped reader also requires the catalog fields `packageName`, `publisher`, `publishedAt`, `fieldCount` and `typeCount`. It accepts `description`, `tags`, `viewCount`, `schemaCount`, `protocolCount`, `relationTypeCount` and `checksum`.
+- **`repository`.** Identity `id` (the repository's `repositoryId`), plus an optional `readOnly: true`. It is what `srs mcp serve --registry` serves (see **5i**).
 
-```bash
-srs registry list --path /path/to/catalog.json --pretty
-# Optional filters (ANDed):
-srs registry list --path /path/to/catalog.json --publisher com.example --tag governance --pretty
-```
+`registryRevision` counts registry shapes: this one is `1`. An absent stamp reads as `0`, a pre-RFC-049 catalog, which the reader brings forward. A stamp above `1` is refused (`registry-revision-unsupported`). A published catalog may also carry `registryId`, `registryName`, `catalogVersion`, `updatedAt` and `homepage`. An operator's own list of repositories carries `entries` only.
 
-Returns:
 ```json
 {
-  "ok": true,
-  "command": "registry list",
-  "payload": {
-    "registryId": "<uuid>",
-    "registryName": "Example Registry",
-    "catalogVersion": "1.0.0",
-    "updatedAt": "2026-07-01T00:00:00Z",
-    "homepage": "https://example.com/registry",
-    "entries": [
-      {
-        "packageId": "<uuid>",
-        "packageName": "com.example.governance",
-        "packageVersion": "2.1.0",
-        "publisher": "com.example",
-        "description": "Governance types and protocols",
-        "publishedAt": "2026-06-01T00:00:00Z",
-        "tags": ["governance", "risk"],
-        "fieldCount": 12,
-        "typeCount": 5,
-        "downloadUrl": "https://example.com/packages/governance-2.1.0.tar.gz",
-        "checksum": "sha256:..."
-      }
-    ],
-    "totalCount": 42,
-    "filteredCount": 1
-  }
+  "registryRevision": 1,
+  "entries": [
+    { "kind": "package", "packageId": "<uuid>", "packageVersion": "2.1.0",
+      "packageName": "com.example.governance", "publisher": "com.example",
+      "publishedAt": "2026-06-01T00:00:00Z", "fieldCount": 12, "typeCount": 5,
+      "locator": { "mode": "remote", "url": "https://example.com/governance-2.1.0.srspkg" } },
+    { "kind": "repository", "id": "<repositoryId>",
+      "locator": { "mode": "local", "path": "/srv/repos/essays" }, "readOnly": true }
+  ]
 }
 ```
 
-`totalCount` is the unfiltered count; `filteredCount` is what matched. Optional fields (`description`, `homepage`, `tags`, `viewCount`, `schemaCount`, `protocolCount`, `relationTypeCount`, `downloadUrl`, `checksum`) are omitted when absent.
+A malformed entry fails only itself. `srs registry list` returns the entries that parsed, and reports each skipped one in `outcomes` as `{index, code, message}`, with `code` `entry-malformed` or `kind-unsupported`. A malformed file as a whole is `registry-malformed`.
 
-`--publisher` matches the exact `publisher` field. `--tag` matches membership in `tags` (entry must carry the tag). Both filters may be combined (AND).
-
-### Getting a single entry
+### Listing entries
 
 ```bash
-srs registry get --path /path/to/catalog.json --package-name com.example.governance --pretty
+srs registry list --path /path/to/registry.json --pretty
+# Optional filters (ANDed; they match package entries only):
+srs registry list --path /path/to/registry.json --publisher com.example --tag governance --pretty
 ```
 
-Returns:
-```json
-{
-  "ok": true,
-  "command": "registry get",
-  "payload": {
-    "registryId": "<uuid>",
-    "entry": { /* same shape as a single entry above */ }
-  }
-}
+Payload: `registryRevision`, `entries` (each entry as written, with its `kind` and `locator`), `outcomes`, `totalCount` (entries that parsed), `filteredCount` (entries that matched), plus whichever catalog fields the file carries. `--publisher` matches `publisher` exactly. `--tag` (repeatable) requires every tag.
+
+### Finding a package by name
+
+```bash
+srs registry get --path /path/to/registry.json --package-name com.example.governance --pretty
 ```
 
-Returns an error envelope (`"ok": false`) when the package name is not found in the catalog — it does not return null.
+This is discovery by name: `payload.entries` lists **every** package entry with that `packageName`, one per version, each with its `locator`. No match is an error envelope with code `registry-entry-not-found`, not an empty list.
 
 ### Relationship to `srs package install`
 
-`srs registry` is discovery-only: it reads catalog files and returns structured metadata. There is no `--url` install: `srs package install` takes a local package directory or a local `.srspkg` file (see **5g**). Download the registry entry's `downloadUrl` yourself, verify it, then install the local file with `srs package install --bundle <file.srspkg> --repo <path>` (or the unpacked directory as the positional argument).
+`srs registry` is discovery-only. `srs package install` takes a local package directory or a local `.srspkg` file (see **5g**). For a `remote` locator, download the file at `locator.url` yourself, check it against `checksum` when the entry carries one, and install it with `srs package install --bundle <file.srspkg> --repo <path>`.
 
 ---
 
@@ -1490,7 +1465,7 @@ All limit fields (`allowedMimeTypes`, `maxPerFileBytes`, `maxDocBytes`, `maxTota
 
 ## 5g. Package Installation & Import Tracking
 
-This section documents the `srs package` sub-commands that install and track upstream package definitions. For registry-based discovery, see **5c. Registry Catalog**.
+This section documents the `srs package` sub-commands that install and track upstream package definitions. For registry-based discovery, see **5c. Registry**.
 
 ### Installing a package
 
@@ -1819,7 +1794,7 @@ The generic SRS MCP surface (all tools including `container_copy` and `record_fo
 srs mcp serve --repo <path>      # stdio MCP server; --repo auto-detects from cwd if omitted
 ```
 
-**This command does not emit the JSON envelope** — stdout carries MCP JSON-RPC for the connected client, and pre-serve failures (no repository found) go to stderr with a non-zero exit. One repository per server process. The global `--pretty` and `--container` flags parse but are ignored.
+**This command does not emit the JSON envelope** — stdout carries MCP JSON-RPC for the connected client, and pre-serve failures (no repository found) go to stderr with a non-zero exit. A server serves one repository (`--repo`) or every repository of a registry (`--registry`, below). The global `--pretty` and `--container` flags parse but are ignored.
 
 Client configuration (Claude Code `.mcp.json`):
 
@@ -1829,6 +1804,44 @@ Client configuration (Claude Code `.mcp.json`):
     "my-srs-repo": {
       "command": "srs",
       "args": ["mcp", "serve", "--repo", "/absolute/path/to/repo"]
+    }
+  }
+}
+```
+
+### Serving several repositories (`--registry`, RFC-049)
+
+```bash
+srs mcp serve --registry /path/to/registry.json [--default <repositoryId>]
+```
+
+One server serves every `repository` entry of the registry (see **5c**). Its boundary is fixed when it starts.
+
+- **Naming a repository.** A request names its repository by id: `srs://<repositoryId>/…` for resources, or the optional `repositoryId` argument that every tool takes. A request that names none goes to the **default** repository: `--default`, otherwise the first `repository` entry.
+- **Locators.** A `local` path is resolved against the registry file's directory. A `remote` locator isn't served yet.
+- **Startup problems are reported, not fatal.** Malformed entries, and a default with no usable entry, go to stderr, and the server starts with the rest.
+- **The served list.** The server's `instructions` list the served ids, mark the read-only ones, and name the default.
+- **Writes are routed.** A write goes only to the repository it names, and is refused on a `readOnly` entry before the repository is touched.
+
+Refusals are tool errors carrying a stable `code`, checked in this order:
+
+| Code | When |
+|---|---|
+| `not-in-boundary` | The named id is not a served repository (also: a read of another repository from a `--repo` server) |
+| `read-only` | A write to a `readOnly` entry |
+| `locator-unusable` | The entry's locator doesn't lead to a repository (no `.srs/`, unreadable manifest, or a `remote` locator) |
+| `id-mismatch` | The located repository reports a different `repositoryId` |
+| `revision-unsupported` | The located repository's `dataModelRevision` isn't the one this build reads |
+| `write-not-routed` | A `--repo` server is asked to write to a repository other than its own |
+
+Client configuration for one server over a workspace (Claude Code `.mcp.json`). The tools are then `mcp__srs__*` for every repository:
+
+```json
+{
+  "mcpServers": {
+    "srs": {
+      "command": "srs",
+      "args": ["mcp", "serve", "--registry", "${HOME}/.config/srs/registry.json", "--default", "<repositoryId>"]
     }
   }
 }
