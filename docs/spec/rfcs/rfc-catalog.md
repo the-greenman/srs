@@ -1326,7 +1326,7 @@ Rev 15 (Door 3 correction, owner ruling on srs-rust#1438 A1, the-greenman/srs#95
 
 **RFC Number**: 049
 
-**Status**: Accepted
+**Status**: Implemented
 
 **Author**: Peter Brownell (owner direction on srs-rust#683, 2026-10-08; rulings 2026-10-30 and 2026-11-02; accepted 2026-11-02, the-greenman/srs#913); drafted by Claude Code
 
