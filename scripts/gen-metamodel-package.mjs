@@ -748,15 +748,8 @@ const TYPE_SPECS = {
     purpose: 'Models the four properties ext:type-inheritance contributes to a Type: the base Type reference, the merged effective field order, and per-field overrides.',
     extendsTypeId: typeIdByName.type,
     extendsTypeVersion: 1,
-    // RFC-040 Unit 3 (srs#479): exercises the Type.fieldOrder facet it itself models (I-41) to pin the
-    // frozen `type.json` seed's own hand-curated property order across the flattened core+facets merge
-    // — without it, the default `.order`-tie-broken-by-declaration-position sort interleaves the three
-    // facets' properties in a way the seed's narrative grouping does not follow.
-    fieldOrder: [
-      'id', 'namespace', 'name', 'version', 'description', 'ai_guidance', 'fields',
-      'lifecycle', 'lifecycle_ref', 'tags', 'extends_type_id', 'extends_type_version', 'field_order',
-      'field_assignment_overrides', 'identity_field_id', 'validation_rules', 'lineage', 'provenance', 'created_at',
-    ],
+    // The frozen `type.json` seed's merged property order lives in schema-emitter.mjs ENTITY_FIELD_ORDER:
+    // as a fieldOrder here it named the sibling facets' fields, which I-41 forbids (srs-rust#1566).
     assignments: [
       a('extends_type_id', false, 'Extends Type Id', 'ext:type-inheritance — the UUID of the base Type this Type specializes.'),
       a('extends_type_version', false, 'Extends Type Version', 'ext:type-inheritance — the version of the base Type being extended.'),

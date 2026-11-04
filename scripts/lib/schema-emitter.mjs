@@ -127,6 +127,34 @@ export const ENTITY_TITLES = {
   field: "SRS Field Definition",
   type: "SRS Type Definition",
 };
+/** The frozen `type.json` seed's hand-curated property order across the flattened core+facets
+ * merge: id … fields, lifecycle, lifecycle_ref, tags, extends_type_id … field_assignment_overrides,
+ * identity_field_id, validation_rules, lineage, provenance, created_at. A fixed envelope constant like
+ * ENTITY_IDS: no Type can declare it, because I-41 makes a `fieldOrder` an exact permutation of that
+ * Type's OWN effective set, and the merge spans three sibling facets (srs-rust#1566). */
+export const ENTITY_FIELD_ORDER = {
+  type: [
+    "4b000001-0000-4000-a000-000000000001",
+    "4b000002-0000-4000-a000-000000000002",
+    "4b000003-0000-4000-a000-000000000003",
+    "4b000004-0000-4000-a000-000000000004",
+    "4b000005-0000-4000-a000-000000000005",
+    "4b000008-0000-4000-a000-000000000008",
+    "4b000032-0000-4000-a000-000000000032",
+    "4b000056-0000-4000-a000-000000000056",
+    "4b000057-0000-4000-a000-000000000057",
+    "4b00000b-0000-4000-a000-00000000000b",
+    "4b000052-0000-4000-a000-000000000052",
+    "4b000053-0000-4000-a000-000000000053",
+    "4b000054-0000-4000-a000-000000000054",
+    "4b000055-0000-4000-a000-000000000055",
+    "4b000058-0000-4000-a000-000000000058",
+    "4b000059-0000-4000-a000-000000000059",
+    "4b00000c-0000-4000-a000-00000000000c",
+    "4b00000d-0000-4000-a000-00000000000d",
+    "4b000006-0000-4000-a000-000000000006",
+  ],
+};
 /** `$comment` on the two frozen entity files is hand-authored framing prose describing the file's own
  * bootstrap status — it has no record-level source (there is no Field for "$comment") and is excluded
  * from the Tier-2 closure test's subset comparison for exactly that reason. It is still reproduced here
@@ -252,11 +280,12 @@ function declaredFieldOrder(extenders) {
 
 /** A ctx whose `typesByName[typeName]` carries the merged effective fields (see `effectiveFields`),
  * and a declared `fieldOrder` (for `emitBody` to apply) — the BASE's own, if it declares one (I-41
- * applies to any Type, extended or not), else the first extender's. */
+ * applies to any Type, extended or not), else the entity's fixed ENTITY_FIELD_ORDER, else the first
+ * extender's. */
 export function withEffectiveType(ctx, typeName) {
   const base = ctx.typesByName[typeName];
   const extenders = Object.values(ctx.typesById).filter((t) => t.extendsTypeId === base.id);
-  const fieldOrder = base.fieldOrder ?? declaredFieldOrder(extenders);
+  const fieldOrder = base.fieldOrder ?? ENTITY_FIELD_ORDER[typeName] ?? declaredFieldOrder(extenders);
   const merged = { ...base, fields: effectiveFields(ctx, typeName), fieldOrder };
   return { ...ctx, typesByName: { ...ctx.typesByName, [typeName]: merged } };
 }
