@@ -13,9 +13,9 @@
     "proposal_artifact_path": "rfcs/rfc-049-repository-addressing-boundary-directory.md",
     "content": "Makes the Address core and lets it name a thing in another repository (an optional repositoryId), and grows ext:registry's catalog into one registry of entries by kind, so one implementation can serve a declared set of repositories: reading and routing writes by repositoryId, refusing writes to read-only entries, and preserving Addresses it cannot resolve. srs:// strings stay tooling. Step 1 of federation's return (decision 31e9fd27); answers SP-87 and prepares SP-86. Full text: rfcs/rfc-049-repository-addressing-boundary-directory.md."
   },
-  "lifecycleState": "accepted",
+  "lifecycleState": "implemented",
   "createdAt": "2026-11-02T12:02:05.669733325+00:00",
-  "updatedAt": "2026-11-02T12:02:15.902447927+00:00",
+  "updatedAt": "2026-11-04T13:13:06.763921521+00:00",
   "createdBy": {
     "kind": "ai",
     "id": "claude-code"
