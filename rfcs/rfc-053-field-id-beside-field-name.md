@@ -2,7 +2,7 @@
 
 # RFC-053: A Field's id travels beside its name in machine-facing outputs
 
-**Status**: Draft (Revision 3)
+**Status**: Draft (Revision 4)
 **Affects**:
 - **RFC-039 (Accepted, Revision 6):** reverses, for the authoring projection, the statement "`x-srs-field-id` is retired" in RFC-039's *Blast radius* section. RFC-039's conformance rules do not change: `fieldValues` stays keyed by `Field.name` ([R1], [R2b]).
 - **RFC-012 / `ext:discovery` (Accepted, Revision 13):** gains one conditional mechanism, *Field facets*, for implementations that report field facets. RFC-012's rules [R1]–[R12] do not change.
@@ -23,6 +23,7 @@ Answers SP-05. Requested by the-greenman/srs#931 and found by the-greenman/srs-w
 | 1 | 2026-11-04 | Initial draft. |
 | 2 | 2026-11-04 | Agent review round 1 (two reviewers, comments on srs#931). **Blocking, fixed:** (1) References to a missing *Decisions you need to make* section now point to the numbered Open Questions, and every option is listed there. (2) [R3] now says which facet keys are normative (`fieldId`, `field`) and which choices stay with the implementation (eligibility, caps, value ordering), and it adds a deterministic tie-break. The effects on eligibility and truncation are stated. (3) Doors are named per fold target: this RFC is Door 2, and its fold carries Door 3 revision rows on RFC-012, RFC-035 and RFC-039 in one PR (Change D). **Should-fix, fixed:** [R2] now covers the unexpanded fallback and list cardinality. [R6] now omits the property at every depth and names no codes. [R5] becomes a testable cross-adapter rule. The id is stated to be version-free, and a facet is stated to span Types. The precedent is relabelled as implementation practice, beside the normative `FieldView.fieldId`. The integration manifest tokens are named. Fixtures are named. OQ3 and OQ4 become decided-unless-objected. Five absence tests are counted, not three. The srs-mcp README line is listed for rewrite. Client breakage is counted. Alt B's real advantage is stated. Payload goldens are noted as an implementation consequence. |
 | 3 | 2026-11-04 | Agent review round 2 (both reviewers: zero blocking). **Should-fix, fixed:** [R3] now resolves assignments in the effective field set and breaks ties in ascending `fieldId` order. [R6] reports through the implementation's diagnostic channel. [R5] is now a completeness obligation on the output. Change D: the RFC-039 row is a non-normative revision row, not Door 3, and the fold PR's merge consequence is stated. Change A states what the registration forecloses for srs#366. Facet eligibility of nested and list values is named implementation-defined. The size cost is a lower bound. The RFC-035 Rev 6 precedent is described accurately. |
+| 4 | 2026-11-04 | Round-2 integrity should-fixes (no blocking findings). The authoring projection is now defined against `projection-rules.md`'s facing distinction, and an implementation must name which of its outputs are authoring projections. [R1] now binds properties that project a FieldAssignment, and nested `items` properties are clarified. [R4] is restated as testable behaviour. [R3] uses MUST NOT. [R6] also drops the omitted key from `required` and resolves against the effective package. The tie-break's reordering of every tied result is stated. The fixtures cover the mixed-eligibility, unresolvable and tie cases. |
 
 ---
 
@@ -127,7 +128,7 @@ So this RFC also has to say where its rules live (Change C) and which doors its 
 
 ### Change A: every authoring Type schema property carries its Field's id
 
-An **authoring projection** is a JSON Schema projection of a domain Type that an implementation returns to a client so that the client can author a Record's `fieldValues`. In the reference implementation it is `type_schema` on every adapter. The validation projection defined by the existing sections of `projection-rules.md` is not an authoring projection.
+An **authoring projection** is a JSON Schema projection of a domain Type, returned to a client, that is neither of `projection-rules.md`'s two facings (definition-facing or instance-facing, RFC-040 Change G). The outputs of the RFC-035 reference emitter are never authoring projections. An implementation MUST name which of its outputs are authoring projections, so that membership is decidable. In the reference implementation that is `type_schema` on every adapter. In this RFC, "the validation projection" means the two existing facings.
 
 In an authoring projection, each property carries the annotation keyword `x-srs-field-id`. Its value is the `id` of the Field assigned at that key in the effective field set of the projected `typeId@typeVersion`. The value is version-free: a Field's `id` names the Field across its versions, and a `FieldAssignment` references a Field by `fieldId` alone.
 
@@ -140,7 +141,7 @@ What this makes possible: a client holding a schema property can name the Field 
 What it does not do: the keyword is an annotation. Records are still authored by `Field.name`. A client that ignores the keyword loses nothing it has today, and a validator ignores it too. It does not let a client write values keyed by id ([R4]).
 
 What it costs:
-- **Size.** One keyword per property, 58 bytes with its UUID. On the largest Type in the measured corpora (`com.semanticops.srs/manifest`, 17 own fields) that is at least 1 KB per projection; inherited and nested properties add to it.
+- **Size.** One keyword per property, about 56 to 58 bytes with its UUID. On the largest Type in the measured corpora (`com.semanticops.srs/manifest`, 17 own fields) that is at least 1 KB per projection; inherited and nested properties add to it.
 - **Strict consumers.** No first-party client validates the authoring schema against a closed meta-schema. srs-web has 0 such sites and srs-vscode has 0, so an added keyword breaks no client.
 - **Tests.** In the reference implementation, five tests that assert the keyword is absent must be inverted when this is implemented: three in srs-mcp (`tests/e2e.rs`, `tests/resources.rs`, `tests/tools.rs`) and two in `srs-repository/src/type_schema_service.rs`.
 
@@ -165,6 +166,7 @@ What this makes possible: a client can group a set by a field, choose it by id a
 What it changes for existing consumers:
 - **Shared closed names split.** Where two Fields share a closed-string name in the match set, today's single merged facet becomes two facets. In the first-party corpora this happens for one name (`kind`, in srs-programme) and nowhere else.
 - **Mixed shared names gain a facet.** Where a name is closed in one Field and open in another, the closed Field now gets a facet, which by-name eligibility denies it today.
+- **Tie order.** The reference implementation breaks ties by `Field.name` today; [R3]'s `fieldId` tie-break reorders tied facets in every result, not only where a name is shared.
 - **Truncation.** Splitting adds entries, so under an implementation's facet cap one more facet may be truncated out.
 - **Who is affected.** This is a change in meaning for any wire consumer of `facets.fields`. The change to its shape is additive. No first-party client reads `facets.fields` today: srs-web#547 deliberately does not use it until this lands. So no deprecation window is needed.
 - **Merging is still possible.** A client that wants the merged view can sum the facets that share a `field` label.
@@ -193,17 +195,17 @@ This RFC is **Door 2**: it adds new normative meaning, so the owner accepts it. 
 
 ## Conformance Rules
 
-> **[R1]** *(The authoring projection carries identity.)* Every property of an authoring projection of a Type MUST carry the keyword `x-srs-field-id`. Its value MUST be the `id` (a UUID string) of the Field assigned at that property's key in the effective field set (RFC-040 Change A, I-39..43) of the projected `typeId@typeVersion`. For a list-cardinality Field the keyword MUST sit on the property, not on its `items`.
+> **[R1]** *(The authoring projection carries identity.)* Every property of an authoring projection that projects a FieldAssignment MUST carry the keyword `x-srs-field-id`. Its value MUST be the `id` (a UUID string) of the Field assigned at that property's key in the effective field set (RFC-040 Change A, I-39..43) of the projected `typeId@typeVersion`. For a list-cardinality Field the keyword MUST sit on the property, not on the `items` schema itself; properties nested within `items` carry their own per [R2].
 >
 > **[R2]** *(At every depth.)* Where an authoring projection expands an inline-composite `ref` in place, every nested property MUST carry `x-srs-field-id` as [R1] requires, resolved against the effective field set of the range Type `rangeType.typeId@rangeType.typeVersion`. Where the composite is left unexpanded, the outer property MUST still carry its own `x-srs-field-id`.
 >
-> **[R3]** *(Facets are per Field.)* An implementation that reports per-field facets over a match set MUST make each reported facet correspond to exactly one Field `id`. No two facets in one result MAY carry the same `fieldId`. Each facet MUST carry `fieldId` (the Field's `id`) and `field` (the Field's `name`). A value MUST be counted only in the facet of the Field that the record's version-pinned Type assigns, in its effective field set (RFC-040 Change A), at the key the value is stored under. A value whose Type does not resolve, or whose key matches no assignment, MUST NOT be counted in any per-Field facet. Where an implementation orders facets and two facets tie, it MUST break the tie by ascending lexicographic order of the `fieldId` string. Which Fields are eligible, the caps and the value ordering are implementation-defined, and MUST be decided per Field.
+> **[R3]** *(Facets are per Field.)* An implementation that reports per-field facets over a match set MUST make each reported facet correspond to exactly one Field `id`. Two facets in one result MUST NOT carry the same `fieldId`. Each facet MUST carry `fieldId` (the Field's `id`) and `field` (the Field's `name`). A value MUST be counted only in the facet of the Field that the record's version-pinned Type assigns, in its effective field set (RFC-040 Change A), at the key the value is stored under. A value whose Type does not resolve, or whose key matches no assignment, MUST NOT be counted in any per-Field facet. Where an implementation orders facets and two facets tie, it MUST break the tie by ascending lexicographic order of the `fieldId` string. Which Fields are eligible, the caps and the value ordering are implementation-defined, and MUST be decided per Field.
 >
-> **[R4]** *(An annotation, never a key.)* `x-srs-field-id` and a facet's `fieldId` are annotations. They MUST NOT change the validity of any value. An implementation MUST NOT accept `fieldValues` keyed by Field id because of them. `fieldValues` keys remain `Field.name` (RFC-039 [R1], [R2b]).
+> **[R4]** *(An annotation, never a key.)* `x-srs-field-id` and a facet's `fieldId` are annotations. An implementation's write and validation behaviour MUST be identical whether or not these annotations are present. A `fieldValues` key that is a Field id, not a `Field.name`, remains invalid under RFC-039 [R2b]. `fieldValues` keys remain `Field.name` (RFC-039 [R1], [R2b]).
 >
 > **[R5]** *(Every adapter agrees, and no client resolves.)* Over the same repository state, every adapter of one implementation (command line, embedded binding, MCP) MUST report the same Field id for the same authoring-projection property and the same facet. The ids that [R1]–[R3] require MUST be present in the output itself, so that no client needs to read Type or Field definitions to learn them.
 >
-> **[R6]** *(Unresolvable assignment.)* Where a Type's field assignment, at any depth, names a Field id that the repository does not hold, the authoring projection MUST omit that property and MUST report, through the implementation's diagnostic channel for that projection, a warning naming the unresolved id.
+> **[R6]** *(Unresolvable assignment.)* Where a Type's field assignment, at any depth, names a Field id that the effective package (installed packages included) does not hold, the authoring projection MUST omit that property, MUST leave its key out of `required`, and MUST report, through the implementation's diagnostic channel for that projection, a warning naming the unresolved id.
 
 ---
 
@@ -300,6 +302,7 @@ A new core operation, exposed on every adapter, that resolves a name in a Type's
 - **Revision rows:** Door 3 on RFC-012 and RFC-035, and a non-normative row on RFC-039 (Change D).
 - **Conformance fixtures:**
   - *Facets:* two Types, each assigning a different closed-string Field named `kind`, plus a third Type sharing one of those Fields. Expected: two facets, one of which spans two Types.
+  - *Facet edge cases:* a name `x` closed in one Field and open in another (expected: a facet for the closed Field only); a record whose Type does not resolve (expected: counted in no per-Field facet); two facets with equal totals (expected: ascending `fieldId` order).
   - *Authoring projection:* a Type that inherits a field and expands an inline composite. Expected: every property, nested ones included, carries the right id.
 - **`srs-usage.md`:** rewrite the `type_schema` line ("the `x-srs-field-id` bridge is retired") to say that each property carries `x-srs-field-id` as the Field's identity, and that records are still authored by name.
 - **Implementation (srs-rust, filed only after acceptance):**
