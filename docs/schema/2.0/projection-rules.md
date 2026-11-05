@@ -91,6 +91,22 @@ Both directions propagate any declared `fieldOrder` onto the returned Type so `e
 domain-Type golden fixtures (`tests/rfc-040-unit3/`) — not the production instance-layer schema set (the
 24-schema ledger), which remains #272's to generate.
 
+## The authoring projection: Field identity (RFC-053)
+
+An **authoring projection** is a JSON Schema projection of a domain Type, returned to a client, that is neither of the two facings above (definition-facing or instance-facing). The outputs of the RFC-035 reference emitter are never authoring projections. An implementation MUST name which of its outputs are authoring projections, so that membership is decidable. Nothing in this section changes the validation projection, the emitter or the frozen seed.
+
+This section registers one annotation keyword, `x-srs-field-id`. It registers no other `x-srs-*` keyword; that stays with the-greenman/srs#366.
+
+> **[R1]** *(The authoring projection carries identity.)* Every property of an authoring projection that projects a FieldAssignment MUST carry the keyword `x-srs-field-id`. Its value MUST be the `id` (a UUID string) of the Field assigned at that property's key in the effective field set (RFC-040 Change A, I-39..43) of the projected `typeId@typeVersion`. For a list-cardinality Field the keyword MUST sit on the property, not on the `items` schema itself; properties nested within `items` carry their own per [R2].
+>
+> **[R2]** *(At every depth.)* Where an authoring projection expands an inline-composite `ref` in place, every nested property MUST carry `x-srs-field-id` as [R1] requires, resolved against the effective field set of the range Type `rangeType.typeId@rangeType.typeVersion`. Where the composite is left unexpanded, the outer property MUST still carry its own `x-srs-field-id`.
+>
+> **[R4]** *(An annotation, never a key.)* `x-srs-field-id` and a facet's `fieldId` are annotations. An implementation's write and validation behaviour MUST be identical whether or not these annotations are present. A `fieldValues` key that is a Field id, not a `Field.name`, remains invalid under RFC-039 [R2b]. `fieldValues` keys remain `Field.name` (RFC-039 [R1], [R2b]).
+>
+> **[R5]** *(Every adapter agrees, and no client resolves.)* Over the same repository state, every adapter of one implementation (command line, embedded binding, MCP) MUST report the same Field id for the same authoring-projection property and the same facet. The ids that [R1]–[R3] require MUST be present in the output itself, so that no client needs to read Type or Field definitions to learn them.
+>
+> **[R6]** *(Unresolvable assignment.)* Where a Type's field assignment, at any depth, names a Field id that the effective package (installed packages included) does not hold, the authoring projection MUST omit that property, MUST leave its key out of `required`, and MUST report, through the implementation's diagnostic channel for that projection, a warning naming the unresolved id.
+
 ## Conditional projection (RFC-040 Change F)
 
 Two mechanisms, both machine-checked by the byte-closure and Unit-3 golden tests:

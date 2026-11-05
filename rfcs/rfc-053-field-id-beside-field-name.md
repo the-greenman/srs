@@ -2,7 +2,7 @@
 
 # RFC-053: A Field's id travels beside its name in machine-facing outputs
 
-**Status**: Draft (Revision 5)
+**Status**: Accepted (Revision 6)
 **Affects**:
 - **RFC-039 (Accepted, Revision 6):** reverses, for the authoring projection, the statement "`x-srs-field-id` is retired" in RFC-039's *Blast radius* section. RFC-039's conformance rules do not change: `fieldValues` stays keyed by `Field.name` ([R1], [R2b]).
 - **RFC-012 / `ext:discovery` (Accepted, Revision 13):** gains one conditional mechanism, *Field facets*, for implementations that report field facets. RFC-012's rules [R1]–[R12] do not change.
@@ -25,6 +25,7 @@ Answers SP-05. Requested by the-greenman/srs#931 and found by the-greenman/srs-w
 | 3 | 2026-11-04 | Agent review round 2 (both reviewers: zero blocking). **Should-fix, fixed:** [R3] now resolves assignments in the effective field set and breaks ties in ascending `fieldId` order. [R6] reports through the implementation's diagnostic channel. [R5] is now a completeness obligation on the output. Change D: the RFC-039 row is a non-normative revision row, not Door 3, and the fold PR's merge consequence is stated. Change A states what the registration forecloses for srs#366. Facet eligibility of nested and list values is named implementation-defined. The size cost is a lower bound. The RFC-035 Rev 6 precedent is described accurately. |
 | 4 | 2026-11-04 | Round-2 integrity should-fixes (no blocking findings). The authoring projection is now defined against `projection-rules.md`'s facing distinction, and an implementation must name which of its outputs are authoring projections. [R1] now binds properties that project a FieldAssignment, and nested `items` properties are clarified. [R4] is restated as testable behaviour. [R3] uses MUST NOT. [R6] also drops the omitted key from `required` and resolves against the effective package. The tie-break's reordering of every tied result is stated. The fixtures cover the mixed-eligibility, unresolvable and tie cases. |
 | 5 | 2026-11-05 | **Owner answers on the-greenman/srs#998, 2026-11-05 19:42 UTC.** D1: "A: id beside name in the authoring schema and facets". D2: "One facet per Field". Open Questions 1 and 2 are resolved as written in Changes A and B, with no normative change. The status stays Draft until the owner accepts the RFC. |
+| 6 | 2026-11-05 | **Accepted by the owner on the-greenman/srs#998, 2026-11-05.** Folded into the canonical spec: the mechanism records *Authoring projection: Field identity* and *Field facets*, the `projection-rules.md` section, decisions `rfc-decision-51974ac3` and `rfc-decision-43e84d63`, and revision rows on RFC-012, RFC-035 and RFC-039. Open Questions 3 and 4 close as decided. **Owed, not folded here:** the conformance fixtures (see *Fold-in targets*); until they land, the level test's check is a debt owed by the-greenman/srs#1007, with implementation in the-greenman/srs-rust#1581. The PR's decision block read A as a renewal under axis 5-11's boundary clause, while *Charter alignment* below reads it as Reliability; both readings are recorded and neither changes a rule. |
 
 ---
 
@@ -293,7 +294,7 @@ A new core operation, exposed on every adapter, that resolves a name in a Type's
 
 ---
 
-## Fold-in targets (on acceptance; not done in this Draft)
+## Fold-in targets (folded at Revision 6, except the conformance fixtures and implementation)
 
 - **`docs/schema/2.0/projection-rules.md`:** the new section (Change C).
 - **Mechanism records:**

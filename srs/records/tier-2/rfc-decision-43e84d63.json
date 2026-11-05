@@ -1,0 +1,41 @@
+{
+  "instanceId": "43e84d63-a9df-462d-9fdb-db042496288e",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A field facet is one Field",
+    "accepted_revision": 6,
+    "decision_date": "2026-11-05",
+    "decision_rationale": "Grouping is an act `rfc-decision-b2ff7c91` requires to be done by identifier. A facet keyed by a label still counts by the label even with ids beside it, so a client cannot show honest counts for a Field it chose by id.",
+    "decision_statement": "An implementation that reports per-field facets makes each facet correspond to exactly one Field id, carrying `fieldId` beside the `field` name.",
+    "decision_scope": "Per-field facets under `ext:discovery`, where an implementation reports them. Eligibility, caps and value ordering stay implementation-defined, decided per Field. No shape is added to `discovery.json`.",
+    "governing_values": [
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Do nothing: facets stay merged by name with no id. One facet per name with a list of `fieldIds`: counting is unchanged, but there are no per-id counts where a name is shared.",
+    "accepted_costs": "The meaning of a field facet changes for any reader. One closed name (`kind`, in srs-programme) splits across the first-party corpora, a mixed shared name gains a facet, tied facets reorder, and under a cap one more facet may be cut. No first-party client reads field facets today.",
+    "evidence_refs": [
+      "the-greenman/srs#998 (owner answers 2026-11-05 19:42 UTC; owner acceptance 2026-11-05)",
+      "rfcs/rfc-053-field-id-beside-field-name.md, Revision 6",
+      "the-greenman/srs-web#547 (D6 follow-up: 'Ask the engine for field ids')",
+      "programme decision 6b5e2810 (authorised the RFC)"
+    ],
+    "review_trigger": "1. Clients keep merging split facets back together by label. *Checked at:* srs-web#547's implementation and the next client to read field facets.\n2. The split pushes useful facets past an implementation's cap. *Checked at:* srs-rust's `find` when next changed.\n*Done its job:* a client offers a per-Field choice with honest counts."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:identity"
+  ],
+  "createdAt": "2026-11-05T20:03:25.211273342+00:00",
+  "updatedAt": "2026-11-05T20:03:56.879909879+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:claude-code",
+    "name": "Claude Code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
