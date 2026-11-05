@@ -14,7 +14,7 @@ When you encounter `.srs/`, stop and orient before doing anything:
 
 ```bash
 srs repo map --repo <path> --pretty       # counts, relation summary, package info, description
-srs repo validate --repo <path> --pretty  # full validation; read diagnostics[] before proceeding
+srs repo validate --repo <path> --pretty  # full validation; read `ok`, then `payload.summary` and `payload.diagnostics`, before proceeding
 ```
 
 Never assume you understand the repo's content from its directory listing.
@@ -723,7 +723,7 @@ Payload: `{ "protocol": { ... } }`, the stored Protocol JSON with the same field
 srs repo validate --repo <path> --pretty
 ```
 
-Check `payload.diagnostics` — a non-empty array means something is broken. Zero exit code does not mean zero errors; diagnostics are in the payload, not the exit code.
+Read `ok`, then `payload.summary` and `payload.diagnostics` (objects). They are present on both `ok:true` and `ok:false`; a non-empty `diagnostics` array or `summary.errors > 0` means something is broken. Exit code `0` does not mean zero errors: the verdict is in the envelope, not the exit code.
 
 ### Managing Declared Extensions
 
@@ -2151,7 +2151,7 @@ Always check `ok` before reading `payload`. On failure, the envelope has `ok: fa
 - **WASM bindings** throw a JS `Error` with the same `.code` and `.details`.
 - **MCP tool errors** carry the same object as `structuredContent`, with `isError: true`.
 
-Exit code `0` means the command ran. It does not mean the data is valid. Check `payload.diagnostics` (for `repo validate`) separately.
+Exit code `0` means the command ran. It does not mean the data is valid. For `repo validate`, read `ok`, then `payload.summary` and `payload.diagnostics` (objects); the payload has the same shape on `ok:true` and `ok:false` (srs-rust ADR-053, srs-rust#1314).
 
 Use `--pretty` for human reading. Omit it when piping to `jq` or a script.
 
