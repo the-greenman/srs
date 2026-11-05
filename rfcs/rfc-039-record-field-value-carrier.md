@@ -539,7 +539,7 @@ level and not in the inner `manifest`. Phase B adds it. The affected artifacts a
 | Artifact | Instance content |
 |---|---|
 | `docs/spec/examples/gallery.srsj` | **22 records / 100 field values** — needs the full transform, and RFC-032 migration first |
-| `packages/com.semanticops.core/1.0.0/core-bundle.srsj` | 0 field values — envelope stamp only |
+| `packages/com.semanticops.core/1.0.0/core-bundle.srspkg` | 0 field values — envelope stamp only |
 | `packages/com.mudemocracy.governance/{1.0.0,1.1.0}/seed/empty-governance-document.srsj` | 0 field values — envelope stamp only |
 
 There is also **no schema in `docs/schema/2.0/` for the `{srsj, manifest, data}` archive envelope**

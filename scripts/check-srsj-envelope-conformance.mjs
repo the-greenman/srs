@@ -8,7 +8,7 @@
  * generation-ledger.md row).
  *
  * Discovery: every `**\/*.srsj` file in the repo, MINUS `packages/com.semanticops.core/1.0.0/
- * core-bundle.srsj`, which RFC-038 states explicitly is a bare package-bundle artifact with no
+ * core-bundle.srspkg`, which RFC-038 states explicitly is a bare package-bundle artifact with no
  * `srsj`/`manifest`/`data` envelope at all — the .srsj membership rule does not apply to it. This is
  * a structural test (does the shape validate against the schema), not a semantic re-check of
  * `manifest`'s own content — that is `validate-package.mjs`/`srs repo validate`'s job elsewhere.
@@ -32,9 +32,9 @@ const HERE = resolve(fileURLToPath(new URL(".", import.meta.url)));
 const REPO = process.argv[2] ? resolve(process.argv[2]) : resolve(HERE, "..");
 const SCHEMA_PATH = join(HERE, "..", "docs/schema/2.0/srsj-envelope.json");
 
-// RFC-038: "core-bundle.srsj is a package bundle with no data/manifest envelope at all, so the
+// RFC-038: "core-bundle.srspkg is a package bundle with no data/manifest envelope at all, so the
 // .srsj membership rule does not apply to it" — the one named, permanent exclusion from this check.
-const EXCLUDED = new Set([join(REPO, "packages/com.semanticops.core/1.0.0/core-bundle.srsj")]);
+const EXCLUDED = new Set([join(REPO, "packages/com.semanticops.core/1.0.0/core-bundle.srspkg")]);
 
 // RFC-052 Change C (srs#948) and RFC-051 (srs#949), owner seed ruling 2026-10-23: a published
 // com.mudemocracy.governance seed below the current dataModelRevision (11) is immutable history. It is
@@ -74,7 +74,7 @@ async function findSrsjFiles(dir) {
       // Without this, a worktree under the repo (the documented per-unit workflow puts them at
       // ../.worktrees, but nothing stops one landing inside) is walked as if it were this tree. The
       // failure is worse than noise: EXCLUDED is keyed by absolute path from REPO, so the worktree's
-      // copy of packages/com.semanticops.core/1.0.0/core-bundle.srsj does not match the exclusion
+      // copy of packages/com.semanticops.core/1.0.0/core-bundle.srspkg does not match the exclusion
       // its own twin has, and the run goes red on a file that is deliberately excluded three
       // directories away. CI never sees it — CI has no worktrees — so it is a local-only false
       // failure, which is the shape that teaches people to distrust a gate (srs-rust#874's

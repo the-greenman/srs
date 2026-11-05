@@ -198,7 +198,7 @@ The srs repository adds no checker for this RFC beyond the deep-equality asserti
 
 | Schema file | Change | Effect on existing data |
 |---|---|---|
-| `package-bundle.json` | Add optional `readme` (`$ref: #/$defs/BundledReadme`). Add `$defs.BundledReadme`: object, `additionalProperties: false`, `required: [path, content]`, both plain strings. The `$def`'s descriptions are form-neutral ("relative to the root of the artifact this form carries") and state that the path and content rules are checked by implementations, not by this schema; the per-form anchor (package directory, or repository root) is in the description of each schema's `readme` property. Not added to the top-level `required`. | None. The one bundle in the corpus (`core-bundle.srsj`) carries no `readme`. |
+| `package-bundle.json` | Add optional `readme` (`$ref: #/$defs/BundledReadme`). Add `$defs.BundledReadme`: object, `additionalProperties: false`, `required: [path, content]`, both plain strings. The `$def`'s descriptions are form-neutral ("relative to the root of the artifact this form carries") and state that the path and content rules are checked by implementations, not by this schema; the per-form anchor (package directory, or repository root) is in the description of each schema's `readme` property. Not added to the top-level `required`. | None. The one bundle in the corpus (`core-bundle.srspkg`) carries no `readme`. |
 | `srsj-envelope.json` | Add optional top-level `readme` (`$ref: #/$defs/BundledReadme`) and the same `$defs.BundledReadme`. Not added to `required`. The envelope's other `$defs` are unchanged. | None. The 5 envelope instances (`gallery.srsj` and the four governance seed `.srsj` files, 1.0.0, 1.1.0, 1.2.0 and 1.2.1) carry no `readme` and stay valid. |
 | `generation-ledger.md` | The `package-bundle.json` row records this RFC's hand patch; the `srsj-envelope.json` row records the new Field and value-object Type. | None. |
 
@@ -229,7 +229,7 @@ Both mirrors refresh from the srs release artifact after the spec PR merges.
 
 ## What breaks
 
-**Nothing becomes invalid.** Both added properties are optional, no existing property changes, and no existing artifact carries `readme`. Measured on 2026-10-02 against srs `origin/master` `6bc3a71`, and re-checked unchanged at `51496ea` (after RFC-044 and RFC-046 merged): 1 package bundle (`core-bundle.srsj`) and 5 `.srsj` envelopes, none carrying `readme`; no file anywhere is renamed, moved, required or reinterpreted. The two known `.srs/README.md` files (srs's `docs/spec/examples/gallery-project-v2/.srs/README.md`, and srs-programme's) are unaffected by the spec: it gives them no role.
+**Nothing becomes invalid.** Both added properties are optional, no existing property changes, and no existing artifact carries `readme`. Measured on 2026-10-02 against srs `origin/master` `6bc3a71`, and re-checked unchanged at `51496ea` (after RFC-044 and RFC-046 merged): 1 package bundle (`core-bundle.srspkg`) and 5 `.srsj` envelopes, none carrying `readme`; no file anywhere is renamed, moved, required or reinterpreted. The two known `.srs/README.md` files (srs's `docs/spec/examples/gallery-project-v2/.srs/README.md`, and srs-programme's) are unaffected by the spec: it gives them no role.
 
 **Spec prose.** At fold, the *Package* and *ext:json-store* mechanisms and the `ext:repository` extension record gain this RFC's rule text (Affects, fold map). The *Repository layout* mechanism's existing sentence (*"by convention `.srs/README.md`, an* About SRS *orientation document"*) is not changed.
 

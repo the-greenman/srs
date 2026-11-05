@@ -298,7 +298,7 @@ Each rule is testable by fixture ([R1] to [R5], [R8], [R11], [R13], [R15]), by r
 |---|---|
 | `relation-type.json` | add optional `sourceTypeIds` and `targetTypeIds` (array of strings with `format: uuid`, `minItems` 1, `uniqueItems` true); `maxPerSource` and `maxPerTarget` (integer, `minimum` 1); `acyclic` (boolean). Update the `requireSameType` description, whose text still says `allowedSourceTypes` / `allowedTargetTypes` were "retired with no successor". |
 | `package/core/relation-types/precedes.json`, `contains.json` | package data, not schema: version 2 with `acyclic: true`; `package/core/package.json` version 1.1.0. |
-| `packages/com.semanticops.core/1.1.0/` | package data, not schema: the published core release bundle `packages/com.semanticops.core/1.1.0/core-bundle.srsj`, beside the existing 1.0.0. Implementation note: the implementation's embedded core bundle is refreshed from it (the embedded-bundle drift test guards equality). |
+| `packages/com.semanticops.core/1.1.0/` | package data, not schema: the published core release bundle `packages/com.semanticops.core/1.1.0/core-bundle.srspkg`, beside the existing 1.0.0. Implementation note: the implementation's embedded core bundle is refreshed from it (the embedded-bundle drift test guards equality). |
 | `package/metamodel/**` | generated from the schemas by `scripts/gen-metamodel-package.mjs`, never hand-edited: the relation-type Type gains the new fields. |
 | `blueprint.json`, `manifest.json`, `protocol.json` and all other schemas | None. |
 
