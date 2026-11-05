@@ -54,4 +54,4 @@ When SectionSource.discovery-query carries containerScope, implementations MUST 
 
 **Number**: I-138
 
-A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
+A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. ProjectedFieldGroup and ProjectedGroupEntry are removed and have no successor construct. (RFC-039 [R11])

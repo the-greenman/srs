@@ -891,7 +891,7 @@ Raw string tags on Notes filled that gap. A tag is not a claim about structure �
 1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
 2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
 
-This led to `TagDefinition`, giving a tag a stable identity, description, roles, and aliases — later generalised into `Term`, a defined option within a `Vocabulary`. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
+This led to TagDefinition, giving a tag a stable identity, description, roles, and aliases — later generalised into `Term`, a defined option within a `Vocabulary`. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
 
 
 ##### Design principle
@@ -937,7 +937,7 @@ See *Generated reference: `Vocabulary`* for `Vocabulary`'s current property tabl
 
 ##### `Term`
 
-The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
+The generalisation of TagDefinition. A defined option within a `Vocabulary`.
 
 See *Generated reference: `Term`* for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 
@@ -1810,7 +1810,7 @@ The instance layer: Notes and Records, formalised below as two tiers of semantic
 
 How far a captured instance has been formalised, expressed as a tier and not as a yes-or-no. Tier 0 is a Note: named text sections, no type binding, no field semantics. Tier 2 is a Record: fields bound to a Type, fully semantic. The point of the tier model is that half-formed material is first-class — meaning may be captured before its shape is known and formalised later, instead of being lost because no template fitted it yet. An implementation may support only Tier 2.
 
-**Notes**: The gap at Tier 1 is deliberate. `TypedRecord` was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
+**Notes**: The gap at Tier 1 is deliberate. TypedRecord was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
 
 ##### Why Record tiers exist (Note → Record)
 
@@ -1966,7 +1966,7 @@ A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator tra
 
 **Number**: I-134
 
-`FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
+`FieldValue`, FieldValueEntry, FieldGroupValue, FieldGroupEntry, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
 
 
 ###### Record fieldValues is a name-keyed object
@@ -1994,8 +1994,8 @@ type FieldValue = string | number | boolean
 
 Example: the `FieldValue` union.
 
-There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
-objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
+There is no wrapper construct: the pre-RFC-039 `FieldValue`/FieldValueEntry pair
+objects, `groupValues`, and FieldGroup carriers are removed (I-134).
 
 
 
@@ -3753,7 +3753,7 @@ Context query for R-D / F-outcome:
 
 **Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
 
-Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
+Replaces TemplateFacilitationStep from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
 
 
 ##### `FieldRef`
@@ -4287,7 +4287,7 @@ Example: the `RecordPropertyView` shape.
 
 The `property` enum is closed and generated from `record.json`'s declared top-level properties after excluding identity/type-binding properties (`$schema`, `instanceId`, `typeId`, `typeVersion`, `typeNamespace`, `typeName`), carriers (`fieldValues`, `fieldMeta`), the open `meta` bag, and `sourceRefs` (deferred because no composite-object-array field-row form is defined). `required`, `editorHintOverride`, and `compositeRenderer` do not apply to this row kind.
 
-Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldViews[].order` is the sole presentation and export ordering mechanism: `ExportConfig` cannot reorder rows. Labels resolve from `displayLabel`, then default to `Status`, `Tags`, `Created`, or `Updated`. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View.
+Rows of both kinds are interleaved by their shared, unique `order`. `View.fieldViews[].order` is the sole presentation and export ordering mechanism: `ExportConfig` cannot reorder rows. Labels resolve from `displayLabel`, then default to Status, Tags, Created, or Updated. `lifecycleState` resolves through the bound Lifecycle state's label when possible and otherwise renders the raw key. Tags use the RFC-037 multi-entry form; timestamps render as raw ISO-8601 strings. An absent or empty value omits the row without invalidating the Record or View.
 
 
 ###### Conformance Rules (RFC-041)
@@ -4381,8 +4381,8 @@ Roles, with their owning Type and required `fieldType`:
 | `label` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
 
 The composite field's own `cardinality` governs how many tables it carries: `single` is one, `list` is a
-sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-007, which is retired with
-`FieldGroup` at the #242 cutover.
+sequence. This replaces the FieldGroup + `compositeRenderer` mechanism of RFC-007, which is retired with
+FieldGroup at the #242 cutover.
 
 
 ###### Conformance Rules (RFC-036)
@@ -4661,7 +4661,7 @@ When SectionSource.discovery-query carries containerScope, implementations MUST 
 
 **Number**: I-138
 
-A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. `ProjectedFieldGroup` and `ProjectedGroupEntry` are removed and have no successor construct. (RFC-039 [R11])
+A Composition projection MUST key `ProjectedRecord.fields` and `orderedFieldKeys` by `Field.name`, and MUST carry a composite value recursively under its own key. ProjectedFieldGroup and ProjectedGroupEntry are removed and have no successor construct. (RFC-039 [R11])
 
 
 
@@ -4811,9 +4811,9 @@ Variables not applicable to a given template context MUST resolve to an empty st
 
 ###### Composite rendering reconciliation (RFC-036)
 
-`ElementTemplates` gains `compositeFieldRowTemplates?: { [fieldName: string]: string }` — the successor to
-`groupFieldRowTemplates`, re-scoped from `FieldGroup` entries to composite-range values rendered by the
-composite baseline. `groupFieldRowTemplates` is deprecated and retires with `FieldGroup` at the #242
+`ElementTemplates` gains `compositeFieldRowTemplates?: { [fieldName: string]: string }`, the successor to
+`groupFieldRowTemplates`, re-scoped from FieldGroup entries to composite-range values rendered by the
+composite baseline. `groupFieldRowTemplates` is deprecated and retires with FieldGroup at the #242
 cutover.
 
 `compositeRendererConfig` is unchanged in shape and keying, and gains a schema for its `table` sub-object
@@ -4836,9 +4836,9 @@ because [CR-036-19] retires the `[T-Cx*]` rules that currently house half of the
 
 **[CR-036-17]** `compositeFieldRowTemplates` is keyed by `Field.name` and supplies the template for an individual field row within a composite rendered by the baseline, in place of `fieldRow`. Keys matching no rendered field MUST be silently ignored. Implementations MUST NOT apply it to a composite that resolved to a renderer under [CR-036-6]; a composite that falls back to the baseline under [CR-036-7] or [CR-036-9] is baseline-rendered and MUST have it applied.
 
-**[CR-036-18]** `groupFieldRowTemplates` is deprecated by `compositeFieldRowTemplates` and retires with `FieldGroup` at the #242 cutover. While both exist, implementations MUST apply `groupFieldRowTemplates` to `FieldGroup` entries and `compositeFieldRowTemplates` to composite entries. Migrating a `FieldGroup` to a composite therefore silently disables any `groupFieldRowTemplates` key naming one of its fields: a migration that converts a group MUST carry every such key over to `compositeFieldRowTemplates`, and implementations SHOULD emit a diagnostic when a `groupFieldRowTemplates` key matches no `FieldGroup` field in the effective package set.
+**[CR-036-18]** `groupFieldRowTemplates` is deprecated by `compositeFieldRowTemplates` and retires with FieldGroup at the #242 cutover. While both exist, implementations MUST apply `groupFieldRowTemplates` to FieldGroup entries and `compositeFieldRowTemplates` to composite entries. Migrating a FieldGroup to a composite therefore silently disables any `groupFieldRowTemplates` key naming one of its fields: a migration that converts a group MUST carry every such key over to `compositeFieldRowTemplates`, and implementations SHOULD emit a diagnostic when a `groupFieldRowTemplates` key matches no FieldGroup field in the effective package set.
 
-**[CR-036-19]** RFC-007's `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and `[T-Cx1]`–`[T-Cx5]` remain in force for `FieldGroup` until `FieldGroup` is removed at the #242 cutover, at which point they are retired. A `FieldGroup` MUST NOT be the target of a composite renderer binding, and a composite-range field MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact.
+**[CR-036-19]** RFC-007's `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and `[T-Cx1]`–`[T-Cx5]` remain in force for FieldGroup until FieldGroup is removed at the #242 cutover, at which point they are retired. A FieldGroup MUST NOT be the target of a composite renderer binding, and a composite-range field MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact.
 
 
 ###### Normative field-row rendering (RFC-037)
@@ -4871,7 +4871,7 @@ whether or not `ext:themes-l1` is declared and whether or not a Theme resolves. 
 **[FR-037-14]** For `"html"` and `"pdf"` output, implementations MUST emit both the `srs-`-prefixed
 class names and their unprefixed aliases (`field-label`, `field-value`) until the #242 cutover, and
 MUST emit only the prefixed names thereafter. The aliases are deprecated on acceptance of RFC-037
-and retire at the same cutover that [CR-036-19] retires `FieldGroup` and the `[T-Gx*]`/`[T-Cx*]`
+and retire at the same cutover that [CR-036-19] retires FieldGroup and the `[T-Gx*]`/`[T-Cx*]`
 rules, so the deprecation ends on a clock the project already keeps. A stylesheet claiming
 conformance MUST NOT depend on the unprefixed aliases. No `pdf` row form is yet defined, so for
 `pdf` this rule names the classes without naming the elements that carry them (RFC-037 Open
@@ -5804,7 +5804,7 @@ srs/conformance/discovery/
 
 **Content**: **Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). The 2026-08-21 usage attestation found zero `changelog/changelog.json` files anywhere in the corpus: the mechanism was speculative, never exercised in production. It is removed under the dormancy rule (`rfc-decision-cce3c00e`) alongside the per-field Revision sidecar mechanism it paired with, removed by the same ruling.
 
-**Removed surface** (historical, introduced by RFC-018, srs#141): the `ChangelogCollection`/`ChangelogEntry` schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
+**Removed surface** (historical, introduced by RFC-018, srs#141): the ChangelogCollection/ChangelogEntry schema (`changelog.json`); the `srs changelog list` CLI command. `manifest.changelogPath` is deprecated, not deleted, so existing declarations remain readable.
 
 **Return trigger**: a consumer needs transition history or field-level audit — anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the mechanism is redesigned against them, not reinstated as specified here.
 
@@ -6611,7 +6611,7 @@ Conversation chunks produced while `AttentionState.stageId` is set are associate
 
 ##### ext:lifecycle × ext:addressability
 
-**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling governs an implementation declaring both `ext:lifecycle` and `ext:addressability`: its required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a `Revision` snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field `Revision` mechanism removed (zero corpus use, incompletely specified: see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
+**Status: Dormant** (removed under `rfc-decision-2a1e1590`, 2026-08-21). This coupling governs an implementation declaring both `ext:lifecycle` and `ext:addressability`: its required behaviour, and both of its invariants (formerly `[LC-AX1]` and `[LC-AX2]`), required a lifecycle state transition to produce a Revision snapshot per field value, tagged with `provenance.lifecycleTransition`. Every clause of this coupling was revision-dependent; with the per-field Revision mechanism removed (zero corpus use, incompletely specified: see `rfc-decision-2a1e1590`, also removed under the same ruling), no requirement survives the cut. `ext:lifecycle` and `ext:addressability` impose no cross-cutting obligation on each other while this stays dormant; each extension's own invariants are unaffected.
 
 **Return trigger**: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface. When a real consumer's requirements are known, the coupling is redesigned against them, not reinstated as specified here.
 
@@ -6662,7 +6662,7 @@ This matters for:
 ##### Addressability as a prerequisite for live facilitation
 
 **Content**: 
-`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
+`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without Revision, the history of a field's value is an implementation detail not visible at the interoperability layer.
 
 Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
 
@@ -6732,7 +6732,7 @@ A conforming `ext:addressability` implementation must be able to assemble releva
 4. Chunks tagged to the parent Record — broader session context
 5. Related Records via Relations — structural context
 
-**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field `Revision` snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule — zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
+**Note (2026-08-21, `rfc-decision-2a1e1590`)**: the per-field Revision snapshot mechanism (addressable field-value history, `revisionId`, revision chains, revision-trace queries) previously specified here is removed under the dormancy rule, zero corpus use, and it was incompletely specified (a PascalCase wire-format leak in its agent tag, and a coupling that named a pre-RFC-006 field). `Address`, `AttentionState`, and the Context Query requirement above are untouched by that removal. Return trigger: a consumer needs transition history or field-level audit - anticipated first claimant is the muDemocracy Decision Log governance audit surface.
 
 
 
@@ -7335,7 +7335,7 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 - **I-130.** A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator transformation, at ever…
 - **I-132.** A `FieldAssignment` with `required: true` means its key MUST be present in `fieldValues`. Key absenc…
 - **I-133.** `fieldMeta`, when present, MUST be an object whose keys are a subset of the sibling `fieldValues` ke…
-- **I-134.** `FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `Fiel…
+- **I-134.** `FieldValue`, FieldValueEntry, FieldGroupValue, FieldGroupEntry, `Type.fieldGroups`, and `FieldAssig…
 - **I-135.** A reader MUST determine instance generation structurally. For a Tier-2 `Record`: an array `fieldValu…
 - **I-140.** A Type's projected JSON Schema describes the `fieldValues` object, not the whole Record document. `i…
 - **I-141.** Instance `fieldValues` keys MUST be serialised in `FieldAssignment.order`, and nested composite obje…

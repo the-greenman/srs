@@ -148,9 +148,9 @@ Variables not applicable to a given template context MUST resolve to an empty st
 
 ## Composite rendering reconciliation (RFC-036)
 
-`ElementTemplates` gains `compositeFieldRowTemplates?: { [fieldName: string]: string }` — the successor to
-`groupFieldRowTemplates`, re-scoped from `FieldGroup` entries to composite-range values rendered by the
-composite baseline. `groupFieldRowTemplates` is deprecated and retires with `FieldGroup` at the #242
+`ElementTemplates` gains `compositeFieldRowTemplates?: { [fieldName: string]: string }`, the successor to
+`groupFieldRowTemplates`, re-scoped from FieldGroup entries to composite-range values rendered by the
+composite baseline. `groupFieldRowTemplates` is deprecated and retires with FieldGroup at the #242
 cutover.
 
 `compositeRendererConfig` is unchanged in shape and keying, and gains a schema for its `table` sub-object
@@ -173,9 +173,9 @@ because [CR-036-19] retires the `[T-Cx*]` rules that currently house half of the
 
 **[CR-036-17]** `compositeFieldRowTemplates` is keyed by `Field.name` and supplies the template for an individual field row within a composite rendered by the baseline, in place of `fieldRow`. Keys matching no rendered field MUST be silently ignored. Implementations MUST NOT apply it to a composite that resolved to a renderer under [CR-036-6]; a composite that falls back to the baseline under [CR-036-7] or [CR-036-9] is baseline-rendered and MUST have it applied.
 
-**[CR-036-18]** `groupFieldRowTemplates` is deprecated by `compositeFieldRowTemplates` and retires with `FieldGroup` at the #242 cutover. While both exist, implementations MUST apply `groupFieldRowTemplates` to `FieldGroup` entries and `compositeFieldRowTemplates` to composite entries. Migrating a `FieldGroup` to a composite therefore silently disables any `groupFieldRowTemplates` key naming one of its fields: a migration that converts a group MUST carry every such key over to `compositeFieldRowTemplates`, and implementations SHOULD emit a diagnostic when a `groupFieldRowTemplates` key matches no `FieldGroup` field in the effective package set.
+**[CR-036-18]** `groupFieldRowTemplates` is deprecated by `compositeFieldRowTemplates` and retires with FieldGroup at the #242 cutover. While both exist, implementations MUST apply `groupFieldRowTemplates` to FieldGroup entries and `compositeFieldRowTemplates` to composite entries. Migrating a FieldGroup to a composite therefore silently disables any `groupFieldRowTemplates` key naming one of its fields: a migration that converts a group MUST carry every such key over to `compositeFieldRowTemplates`, and implementations SHOULD emit a diagnostic when a `groupFieldRowTemplates` key matches no FieldGroup field in the effective package set.
 
-**[CR-036-19]** RFC-007's `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and `[T-Cx1]`–`[T-Cx5]` remain in force for `FieldGroup` until `FieldGroup` is removed at the #242 cutover, at which point they are retired. A `FieldGroup` MUST NOT be the target of a composite renderer binding, and a composite-range field MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact.
+**[CR-036-19]** RFC-007's `[FG-Cx0]`–`[FG-Cx4]`, `[T-Gx1]`–`[T-Gx3]` and `[T-Cx1]`–`[T-Cx5]` remain in force for FieldGroup until FieldGroup is removed at the #242 cutover, at which point they are retired. A FieldGroup MUST NOT be the target of a composite renderer binding, and a composite-range field MUST NOT be dispatched by `FieldGroup.compositeRenderer`; the two mechanisms MUST NOT interact.
 
 
 ## Normative field-row rendering (RFC-037)
@@ -208,7 +208,7 @@ whether or not `ext:themes-l1` is declared and whether or not a Theme resolves. 
 **[FR-037-14]** For `"html"` and `"pdf"` output, implementations MUST emit both the `srs-`-prefixed
 class names and their unprefixed aliases (`field-label`, `field-value`) until the #242 cutover, and
 MUST emit only the prefixed names thereafter. The aliases are deprecated on acceptance of RFC-037
-and retire at the same cutover that [CR-036-19] retires `FieldGroup` and the `[T-Gx*]`/`[T-Cx*]`
+and retire at the same cutover that [CR-036-19] retires FieldGroup and the `[T-Gx*]`/`[T-Cx*]`
 rules, so the deprecation ends on a clock the project already keeps. A stylesheet claiming
 conformance MUST NOT depend on the unprefixed aliases. No `pdf` row form is yet defined, so for
 `pdf` this rule names the classes without naming the elements that carry them (RFC-037 Open

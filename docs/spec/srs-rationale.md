@@ -240,7 +240,7 @@ Declaring nothing beyond Core is a valid answer for a repository that only creat
 ### Addressability as a prerequisite for live facilitation
 
 **Content**: 
-`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without `Revision`, the history of a field's value is an implementation detail not visible at the interoperability layer.
+`ext:addressability` is not just about naming things. It is the mechanism that makes the conversation layer useful. Without `AttentionState`, transcript chunks have no address-time connection to the Records they inform. Without Revision, the history of a field's value is an implementation detail not visible at the interoperability layer.
 
 Any implementation that facilitates live sessions — where conversation material is produced while people are working on specific Records and Fields — should implement `ext:addressability`. Without it, context assembly is purely retrospective, and the quality of AI assistance degrades accordingly.
 
@@ -445,7 +445,7 @@ Raw string tags on Notes filled that gap. A tag is not a claim about structure �
 1. **Disambiguation**: the same string could mean different things in different contexts. A label is not enough — description and aliases matter.
 2. **Roles**: some tags were structural signals rather than topic labels. The `foundation` tag marks notes that should always be included in an AI context handoff. That is a semantic role, not just a category.
 
-This led to `TagDefinition`, giving a tag a stable identity, description, roles, and aliases — later generalised into `Term`, a defined option within a `Vocabulary`. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
+This led to TagDefinition, giving a tag a stable identity, description, roles, and aliases — later generalised into `Term`, a defined option within a `Vocabulary`. A tag does not *require* a definition to be used; definitions are additive enrichment. But when a tag carries structural meaning (like `foundation`), its definition is what makes that meaning machine-readable.
 
 
 ### Design principle
