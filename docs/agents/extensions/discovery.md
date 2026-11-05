@@ -90,3 +90,14 @@ The Text Projection MUST include `tags` array entries as `TextSegment`s after fi
 **Number**: I-122
 
 Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
+
+
+## Field facets
+
+An implementation that reports none is unaffected, and `discovery.json` gains no shape. A client that wants a merged view can sum the facets that share a `field` label.
+
+**[R3]** *(Facets are per Field.)* An implementation that reports per-field facets over a match set MUST make each reported facet correspond to exactly one Field `id`. Two facets in one result MUST NOT carry the same `fieldId`. Each facet MUST carry `fieldId` (the Field's `id`) and `field` (the Field's `name`). A value MUST be counted only in the facet of the Field that the record's version-pinned Type assigns, in its effective field set (RFC-040 Change A), at the key the value is stored under. A value whose Type does not resolve, or whose key matches no assignment, MUST NOT be counted in any per-Field facet. Where an implementation orders facets and two facets tie, it MUST break the tie by ascending lexicographic order of the `fieldId` string. Which Fields are eligible, the caps and the value ordering are implementation-defined, and MUST be decided per Field.
+
+**[R5]** *(Every adapter agrees, and no client resolves.)* Over the same repository state, every adapter of one implementation (command line, embedded binding, MCP) MUST report the same Field id for the same authoring-projection property and the same facet. The ids that [R1]–[R3] require MUST be present in the output itself, so that no client needs to read Type or Field definitions to learn them.
+
+Introduced by RFC-053 (`rfcs/rfc-053-field-id-beside-field-name.md`). Decision: `rfc-decision-43e84d63`.

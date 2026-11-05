@@ -587,6 +587,25 @@ Example: the two lifecycle declaration forms on a Type.
 Declaring both is a validation error. An inline lifecycle cannot extend; use `lifecycleRef` when the same state machine is needed across multiple Types.
 
 
+##### Authoring projection: Field identity
+
+An **authoring projection** is a JSON Schema projection of a domain Type, returned to a client, that is neither of the two facings in `docs/schema/2.0/projection-rules.md` (definition-facing or instance-facing). The outputs of the RFC-035 reference emitter are never authoring projections. An implementation MUST name which of its outputs are authoring projections, so that membership is decidable.
+
+Records are still authored by `Field.name`. `projection-rules.md` registers `x-srs-field-id` as a normative annotation keyword.
+
+**[R1]** *(The authoring projection carries identity.)* Every property of an authoring projection that projects a FieldAssignment MUST carry the keyword `x-srs-field-id`. Its value MUST be the `id` (a UUID string) of the Field assigned at that property's key in the effective field set (RFC-040 Change A, I-39..43) of the projected `typeId@typeVersion`. For a list-cardinality Field the keyword MUST sit on the property, not on the `items` schema itself; properties nested within `items` carry their own per [R2].
+
+**[R2]** *(At every depth.)* Where an authoring projection expands an inline-composite `ref` in place, every nested property MUST carry `x-srs-field-id` as [R1] requires, resolved against the effective field set of the range Type `rangeType.typeId@rangeType.typeVersion`. Where the composite is left unexpanded, the outer property MUST still carry its own `x-srs-field-id`.
+
+**[R4]** *(An annotation, never a key.)* `x-srs-field-id` and a facet's `fieldId` are annotations. An implementation's write and validation behaviour MUST be identical whether or not these annotations are present. A `fieldValues` key that is a Field id, not a `Field.name`, remains invalid under RFC-039 [R2b]. `fieldValues` keys remain `Field.name` (RFC-039 [R1], [R2b]).
+
+**[R5]** *(Every adapter agrees, and no client resolves.)* Over the same repository state, every adapter of one implementation (command line, embedded binding, MCP) MUST report the same Field id for the same authoring-projection property and the same facet. The ids that [R1]–[R3] require MUST be present in the output itself, so that no client needs to read Type or Field definitions to learn them.
+
+**[R6]** *(Unresolvable assignment.)* Where a Type's field assignment, at any depth, names a Field id that the effective package (installed packages included) does not hold, the authoring projection MUST omit that property, MUST leave its key out of `required`, and MUST report, through the implementation's diagnostic channel for that projection, a warning naming the unresolved id.
+
+Introduced by RFC-053 (`rfcs/rfc-053-field-id-beside-field-name.md`). Decision: `rfc-decision-51974ac3`.
+
+
 
 #### Type specialisation
 
@@ -6384,6 +6403,17 @@ The Text Projection MUST include `tags` array entries as `TextSegment`s after fi
 **Number**: I-122
 
 Normalization of `TextSegment.text` MUST apply Unicode Normalization Form C (NFC) followed by Unicode simple case folding (locale-independent). Implementations MUST NOT strip punctuation, diacritics, or whitespace during this normalization step; additional stemming or tokenization is permitted for ranking purposes only, not as a substitute for the normalized canonical search string. (RFC-012 R10.)
+
+
+##### Field facets
+
+An implementation that reports none is unaffected, and `discovery.json` gains no shape. A client that wants a merged view can sum the facets that share a `field` label.
+
+**[R3]** *(Facets are per Field.)* An implementation that reports per-field facets over a match set MUST make each reported facet correspond to exactly one Field `id`. Two facets in one result MUST NOT carry the same `fieldId`. Each facet MUST carry `fieldId` (the Field's `id`) and `field` (the Field's `name`). A value MUST be counted only in the facet of the Field that the record's version-pinned Type assigns, in its effective field set (RFC-040 Change A), at the key the value is stored under. A value whose Type does not resolve, or whose key matches no assignment, MUST NOT be counted in any per-Field facet. Where an implementation orders facets and two facets tie, it MUST break the tie by ascending lexicographic order of the `fieldId` string. Which Fields are eligible, the caps and the value ordering are implementation-defined, and MUST be decided per Field.
+
+**[R5]** *(Every adapter agrees, and no client resolves.)* Over the same repository state, every adapter of one implementation (command line, embedded binding, MCP) MUST report the same Field id for the same authoring-projection property and the same facet. The ids that [R1]–[R3] require MUST be present in the output itself, so that no client needs to read Type or Field definitions to learn them.
+
+Introduced by RFC-053 (`rfcs/rfc-053-field-id-beside-field-name.md`). Decision: `rfc-decision-43e84d63`.
 
 
 

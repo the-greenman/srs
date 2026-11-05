@@ -1,0 +1,25 @@
+{
+  "instanceId": "5199da92-d294-4203-8f66-2aa03763a3f2",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-053: A Field's id travels beside its name in machine-facing outputs",
+    "rfc_number": "053",
+    "author": "agent:rfc-drafter (draft); the owner accepted it 2026-11-05 on the-greenman/srs#998",
+    "affected_components": "The authoring projection (`x-srs-field-id` on every property, at every depth), per-field facets under `ext:discovery` (one facet per Field, carrying `fieldId`), `docs/schema/2.0/projection-rules.md`, the prose retirement of the keyword in RFC-039's Blast radius section. No stored shape, no JSON schema file, no `dataModelRevision` bump.\n\n<!-- srs-integration:v1\next:discovery\nmechanism:field-facets\nmechanism:authoring-projection-field-identity\ncell:identity\ncell:conformance\n-->",
+    "dependency_refs": "Applies rfc-decision-b2ff7c91. Amends the surfaces of RFC-012 (Door 3) and RFC-035 (Door 3), and reverses one prose statement of RFC-039 (non-normative row). Consults rfc-decision-cce3c00e, rfc-decision-7d3dda60, rfc-decision-9ee14517. Adjacent: the-greenman/srs#366. Records its decisions as rfc-decision-51974ac3 and rfc-decision-43e84d63.",
+    "proposal_artifact_path": "rfcs/rfc-053-field-id-beside-field-name.md",
+    "content": "A field name is a label, unique only within one Type. An implementation reports a Field's id beside its name in the two outputs where clients meet field names: each authoring-projection property carries `x-srs-field-id`, and each field facet is one Field carrying `fieldId`. Records stay keyed by `Field.name`, and nothing stored changes. Full text: rfcs/rfc-053-field-id-beside-field-name.md."
+  },
+  "lifecycleState": "accepted",
+  "createdAt": "2026-11-05T20:03:25.452183373+00:00",
+  "updatedAt": "2026-11-05T20:12:59.015389709+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:claude-code",
+    "name": "Claude Code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

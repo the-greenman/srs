@@ -1,0 +1,42 @@
+{
+  "instanceId": "51974ac3-ca81-4814-a726-19bcb234e565",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A Field's id travels in the outputs clients already receive",
+    "accepted_revision": 6,
+    "decision_date": "2026-11-05",
+    "decision_rationale": "`rfc-decision-b2ff7c91` requires identity in machine-facing outputs, and one mechanism beats two (Conformance: one way over many). A separate read would add a second way to the same goal and leave each client calling once per Type and combining results. The reversal of RFC-039's retirement of the keyword is explicit and named, which axis 5-11's boundary clause requires of a renewal. Records stay keyed by `Field.name`.",
+    "decision_statement": "An implementation reports each Field's id beside its name in the authoring projection, as the annotation keyword `x-srs-field-id`, so no client needs a separate read to learn it.",
+    "decision_scope": "The authoring projection in every implementation. Not the validation projection, the RFC-035 emitter, stored Records, or any other `x-srs-*` keyword.",
+    "governing_values": [
+      "shared-coherence",
+      "semantic-integrity"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Do nothing: clients see names only, and `b2ff7c91` stays unmet in these outputs. A separate `(typeId, typeVersion, name) -> fieldId` read plus facets listing contributing Types: the schema stays free of the keyword, closest to RFC-039, at the cost of a second mechanism and one call per Type per view. In-place ids now with that read added later as a convenience: still open, and adding it needs a new decision.",
+    "accepted_costs": "About 58 bytes per schema property. Every implementation must report ids. `x-srs-field-id` becomes the first `x-srs-*` keyword registered outside the validation projection, so srs#366's later registry inherits its name and placement, and removing it would need a supersession. This settles in practice that the authoring projection serves SRS-aware clients while the validation projection stays plain.",
+    "evidence_refs": [
+      "the-greenman/srs#998 (owner answers 2026-11-05 19:42 UTC; owner acceptance 2026-11-05)",
+      "rfcs/rfc-053-field-id-beside-field-name.md, Revision 6",
+      "the-greenman/srs-web#547 (D6 follow-up: 'Ask the engine for field ids')",
+      "programme decision 6b5e2810 (authorised the RFC)"
+    ],
+    "review_trigger": "1. Agents keep reading a schema or running a find only to learn one field's id. *Checked at:* srs-context friction records and the first MCP use after implementation; then add the Record-only read.\n2. A third-party consumer cannot take the keyword, for example under strict schema validation. *Checked at:* srs#366, when it leaves parked.\n3. srs#366 rules on keyword placement in a way this keyword contradicts. *Checked at:* srs#366.\n*Done its job:* srs-web restores \"Tell apart by\" with no client matching on names."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:conformance"
+  ],
+  "createdAt": "2026-11-05T20:03:25.122993599+00:00",
+  "updatedAt": "2026-11-05T20:03:56.718662927+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:claude-code",
+    "name": "Claude Code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

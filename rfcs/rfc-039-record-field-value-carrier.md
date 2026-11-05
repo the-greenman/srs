@@ -2,7 +2,7 @@
 
 # RFC-039: Name-keyed `fieldValues` — the recursive Record value carrier
 
-**Status**: Accepted (Revision 6)
+**Status**: Accepted (Revision 7)
 **Affects**: `Record` (Tier 2), `TypedRecord` (Tier 1), `FieldValue`, `FieldValueEntry`, `FieldGroupValue`/`FieldGroupEntry` (`ext:field-groups`), `ext:repeatable-fields`, `FieldAssignment.{repeatable,minItems,maxItems}`, `Type.fieldGroups`, `dataModelRevision`; `docs/schema/2.0/{record,typed-record,type}.json` and `docs/schema/2.0/projection-rules.md`. Builds on RFC-032 (Accepted — composite field range), RFC-035 (Accepted — schema emitter / projection rules; **this RFC narrows its [R4]** ([R2a]) to the in-scope meta-model Types), RFC-036 (Accepted — composite rendering), RFC-037 (Accepted Rev 3 — field-row baseline). Composed with RFC-038 (#296, Draft) in one first-party cutover. **Breaking (instance layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -13,6 +13,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 7 | 2026-11-05 | **Non-normative row (RFC-053, the-greenman/srs#998).** The *Blast radius* statement that `x-srs-field-id` is retired is reversed for the authoring projection: the keyword returns as an identity annotation, not as a bridge. Conformance rules, `rfc-decision-7d3dda60` and the migration are untouched. |
 | 1 | 2026-07-31 | Initial draft. Phase A of #242: design and migration plan only, no implementation. |
 | 2 | 2026-07-31 | Review round 1. **Blocking fixes:** added **Change E.2** (the definition-layer `FieldGroup` → composite transform, with naming/UUID/version-bump rules — previously the instance transform referenced a Field key nothing produced); **removed `null`** from the value space ([R5]) because it falsified the by-construction claim against RFC-032 Change G's null-free projection (0/1318 in corpus); added **Change I** discharging RFC-036's `document-view-output.json` / `theme.json` / [CR-036-19] deferrals and RFC-037 [FR-037-14]'s alias sunset; added **Change J** + [R14] discharging the reference-integrity deferral three Accepted RFCs left to #242; added the **Fold-in targets** section (I-22–I-27 retired; new invariants owed; anticipated integration manifest); made the transform **total** over eight schema-legal branches; added the **muSrs corpus audit** prerequisite. **Corrected baseline** to **1318** values / **355** Tier-2 Records after finding a second record root (`package/records/`, 7 instances, no `$schema`) — [R13] now forbids glob enumeration. **Should-fixes:** [R16]–[R18] (uniform list-wrapping, what the projected schema describes, instance key order); blast radius evidenced for `srs-rust` (39 files / 6 crates, incl. `srs-gov`) and `srs-web` flagged unevidenced; `x-srs-field-id` retirement stated; RFC-019 conflict named; Change C rebuts the issue's actual third option; added **Cross-references**; OQ2 given a landing place; OQ1 declines RFC-033:407 explicitly rather than silently. |
 | 6 | 2026-07-31 | Owner review of the three previously-unsettled decisions. Corrected the emitter evidence: RFC-035's Node reference emitter applies its underscore transform without a domain/metamodel branch, while the separate Rust draft-07 domain service emits names verbatim; `proposal-artifact-path` alone cannot distinguish those policies. Alt D is technically implementable by defining a transform over both separators (0/45 current Type collisions), but remains rejected on design grounds. `Field.name` uniqueness now records RFC-032 `dependsOn` and schema property assembly as pre-existing consumers of the missing rule. Open Question 2 adds the grandfather option, removes the unsupported ten-year claim (the corpus reflects roughly one year of project work), distinguishes documentary convention from schema enforcement, records the existing Type-name exceptions, and expands rename cost to 34 assignments / 13 Type version bumps / 216 live Records. |
@@ -1091,6 +1092,8 @@ reason muSrs's figures are quoted rather than measured: neither repository is in
 scope, so enumerating them was not possible here. They must be enumerated to the `srs-rust` standard
 before the cutover — item 6 of this issue requires the blast radius *resolved*, and an asserted row
 is not a resolved one. Recorded as a gap with a named owner rather than presented as complete.
+
+*Reversed for the authoring projection by RFC-053 (Revision 7): the keyword returns as an identity annotation, not as a bridge. Records stay keyed by `Field.name`.*
 
 **`x-srs-field-id` is retired.** Motivation calls it the bridge keyword that exists only to paper
 over the name-keyed-schema / UUID-keyed-instance mismatch. Once instances are name-keyed there is

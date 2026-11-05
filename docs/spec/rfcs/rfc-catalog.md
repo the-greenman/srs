@@ -347,11 +347,12 @@ I-123
 I-124
 I-142
 I-143
+mechanism:field-facets
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-012-discovery-contract-text-projection.md
 
-**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md. RFC-043 Door 3 amendment (Revision 13, 2026-10-01, effective at dataModelRevision 8): the containerId filter reads the entry ids of the container or of its effective(C) closure (one condition, not three); the conformance fixture's containers move to the entry shape.
+**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md. RFC-043 Door 3 amendment (Revision 13, 2026-10-01, effective at dataModelRevision 8): the containerId filter reads the entry ids of the container or of its effective(C) closure (one condition, not three); the conformance fixture's containers move to the entry shape. RFC-053 Door 3 amendment (Revision 14, 2026-11-05): a new conditional mechanism, Field facets, binds an implementation that reports per-field facets; [R1]–[R12] are untouched.
 
 
 **Title**: RFC-013: Required Root Container & Structural Navigation
@@ -758,7 +759,7 @@ tooling-only
 
 **Proposal Artifact Path**: rfcs/rfc-035-schema-emitter.md
 
-**Content**: The JSON Schema emitter for the self-hosted meta-model: meta-model Type records → a target-neutral IR → JSON Schema 2020-12 definition schemas, generalizing RFC-032 `projectField` to whole entities. Verification is two-tier — byte-for-byte determinism against the emitter's own goldens, plus an `emitter ⊆ seed` structural closure over the covered authoritative features (with a documented-divergence register and exclusion set). Relocates `projection-rules.md` to a live normative home and stamps `dataModelRevision` on the generated bundle. Node reference emitter now; srs-projection/CLI/WASM at the #260 cutover. Full text: rfcs/rfc-035-schema-emitter.md.
+**Content**: The JSON Schema emitter for the self-hosted meta-model: meta-model Type records → a target-neutral IR → JSON Schema 2020-12 definition schemas, generalizing RFC-032 `projectField` to whole entities. Verification is two-tier — byte-for-byte determinism against the emitter's own goldens, plus an `emitter ⊆ seed` structural closure over the covered authoritative features (with a documented-divergence register and exclusion set). Relocates `projection-rules.md` to a live normative home and stamps `dataModelRevision` on the generated bundle. Node reference emitter now; srs-projection/CLI/WASM at the #260 cutover. Full text: rfcs/rfc-035-schema-emitter.md. RFC-053 Door 3 amendment (Revision 8, 2026-11-05): `projection-rules.md` gains the section *The authoring projection: Field identity*; the validation projection and RFC-040's sections are unchanged.
 
 
 **Title**: RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields
@@ -857,6 +858,8 @@ I-139
 I-140
 I-141
 -->
+
+**Dependency Refs**:  RFC-053 (Revision 7, non-normative row) reverses the prose retirement of `x-srs-field-id` for the authoring projection only; conformance rules and `rfc-decision-7d3dda60` are unchanged.
 
 **Proposal Artifact Path**: rfcs/rfc-039-record-field-value-carrier.md
 
@@ -1354,5 +1357,30 @@ mechanism:`Address`
 **Proposal Artifact Path**: rfcs/rfc-049-repository-addressing-boundary-directory.md
 
 **Content**: Makes the Address core and lets it name a thing in another repository (an optional repositoryId), and grows ext:registry's catalog into one registry of entries by kind, so one implementation can serve a declared set of repositories: reading and routing writes by repositoryId, refusing writes to read-only entries, and preserving Addresses it cannot resolve. srs:// strings stay tooling. Step 1 of federation's return (decision 31e9fd27); answers SP-87 and prepares SP-86. Full text: rfcs/rfc-049-repository-addressing-boundary-directory.md.
+
+
+**Title**: RFC-053: A Field's id travels beside its name in machine-facing outputs
+
+**RFC Number**: 053
+
+**Status**: Accepted
+
+**Author**: agent:rfc-drafter (draft); the owner accepted it 2026-11-05 on the-greenman/srs#998
+
+**Affected Components**: The authoring projection (`x-srs-field-id` on every property, at every depth), per-field facets under `ext:discovery` (one facet per Field, carrying `fieldId`), `docs/schema/2.0/projection-rules.md`, the prose retirement of the keyword in RFC-039's Blast radius section. No stored shape, no JSON schema file, no `dataModelRevision` bump.
+
+<!-- srs-integration:v1
+ext:discovery
+mechanism:field-facets
+mechanism:authoring-projection-field-identity
+cell:identity
+cell:conformance
+-->
+
+**Dependency Refs**: Applies rfc-decision-b2ff7c91. Amends the surfaces of RFC-012 (Door 3) and RFC-035 (Door 3), and reverses one prose statement of RFC-039 (non-normative row). Consults rfc-decision-cce3c00e, rfc-decision-7d3dda60, rfc-decision-9ee14517. Adjacent: the-greenman/srs#366. Records its decisions as rfc-decision-51974ac3 and rfc-decision-43e84d63.
+
+**Proposal Artifact Path**: rfcs/rfc-053-field-id-beside-field-name.md
+
+**Content**: A field name is a label, unique only within one Type. An implementation reports a Field's id beside its name in the two outputs where clients meet field names: each authoring-projection property carries `x-srs-field-id`, and each field facet is one Field carrying `fieldId`. Records stay keyed by `Field.name`, and nothing stored changes. Full text: rfcs/rfc-053-field-id-beside-field-name.md.
 
 
