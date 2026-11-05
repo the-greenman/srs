@@ -1,0 +1,20 @@
+{
+  "instanceId": "25b15af1-9c83-4f19-935e-a7f84ec00abe",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/projected-property-row",
+    "title": "ProjectedPropertyRow",
+    "description": "One resolved record-property row in the JSON projection, written as property, label and value, on a ProjectedRecord's properties array in ascending order. Label and value are the resolved ones, as a rendered row would show them."
+  },
+  "createdAt": "2026-11-04T16:15:34.473330102+00:00",
+  "updatedAt": "2026-11-04T16:15:34.473345061+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:tpr-builder",
+    "name": "Third-party-ready builder"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

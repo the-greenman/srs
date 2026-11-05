@@ -1,0 +1,20 @@
+{
+  "instanceId": "f86bea6b-762b-4869-a1be-50ec94435be2",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/dependency-ref",
+    "title": "DependencyRef",
+    "description": "One entry of a package manifest's packageDependencies list: the package that is required, carried as packageId, namespace, name and version, and no other property. packageId is the identity; namespace and name are display labels; version is a SemVer range."
+  },
+  "createdAt": "2026-11-04T16:15:34.413300568+00:00",
+  "updatedAt": "2026-11-04T16:15:34.413319905+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:tpr-builder",
+    "name": "Third-party-ready builder"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

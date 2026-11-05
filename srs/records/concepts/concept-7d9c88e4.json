@@ -1,0 +1,20 @@
+{
+  "instanceId": "7d9c88e4-5601-4315-89ee-97baee72cbd6",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/exact-type-ref",
+    "title": "ExactTypeRef",
+    "description": "A reference to one exact Type by id and version. A field whose datatype is ref names the Type its values point at with an ExactTypeRef (its rangeType), so the range cannot drift when a later version of the Type appears."
+  },
+  "createdAt": "2026-11-04T16:15:34.379272005+00:00",
+  "updatedAt": "2026-11-04T16:15:39.330980648+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:tpr-builder",
+    "name": "Third-party-ready builder"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

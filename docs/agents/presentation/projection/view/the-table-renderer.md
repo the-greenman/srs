@@ -16,5 +16,5 @@ Roles, with their owning Type and required `fieldType`:
 | `label` | table Type | no | `{ datatype: "string", cardinality: "single" }` |
 
 The composite field's own `cardinality` governs how many tables it carries: `single` is one, `list` is a
-sequence. This replaces the `FieldGroup` + `compositeRenderer` mechanism of RFC-007, which is retired with
-`FieldGroup` at the #242 cutover.
+sequence. This replaces the FieldGroup + `compositeRenderer` mechanism of RFC-007, which is retired with
+FieldGroup at the #242 cutover.

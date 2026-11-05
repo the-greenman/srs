@@ -10,7 +10,7 @@ The instance layer: Notes and Records, formalised below as two tiers of semantic
 
 How far a captured instance has been formalised, expressed as a tier and not as a yes-or-no. Tier 0 is a Note: named text sections, no type binding, no field semantics. Tier 2 is a Record: fields bound to a Type, fully semantic. The point of the tier model is that half-formed material is first-class — meaning may be captured before its shape is known and formalised later, instead of being lost because no template fitted it yet. An implementation may support only Tier 2.
 
-**Notes**: The gap at Tier 1 is deliberate. `TypedRecord` was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
+**Notes**: The gap at Tier 1 is deliberate. TypedRecord was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
 
 #### Graduation
 
@@ -149,7 +149,7 @@ A `fieldValues` key MUST be `Field.name` verbatim, with no case or separator tra
 
 **Number**: I-134
 
-`FieldValue`, `FieldValueEntry`, `FieldGroupValue`, `FieldGroupEntry`, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
+`FieldValue`, FieldValueEntry, FieldGroupValue, FieldGroupEntry, `Type.fieldGroups`, and `FieldAssignment.{repeatable, minItems, maxItems}` are removed. An implementation MUST reject a document containing any of them at `dataModelRevision >= 2`. Definition files carry no document-local revision discriminator, so revision MUST be resolved from the enclosing repository or package manifest before this rule is applied to a definition. A manifest at `dataModelRevision >= 2` MUST NOT declare `ext:field-groups` or `ext:repeatable-fields`; a reader encountering such a declaration MUST report an error. (RFC-039 [R7]/[R15])
 
 
 ##### Record fieldValues is a name-keyed object
@@ -177,8 +177,8 @@ type FieldValue = string | number | boolean
 
 Example: the `FieldValue` union.
 
-There is no wrapper construct: the pre-RFC-039 `FieldValue`/`FieldValueEntry` pair
-objects, `groupValues`, and `FieldGroup` carriers are removed (I-134).
+There is no wrapper construct: the pre-RFC-039 `FieldValue`/FieldValueEntry pair
+objects, `groupValues`, and FieldGroup carriers are removed (I-134).
 
 
 

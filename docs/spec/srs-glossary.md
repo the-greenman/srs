@@ -138,6 +138,13 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 **Key**: record:concepts/conversation-boundary
 
 
+### DependencyRef
+
+**Definition**: One entry of a package manifest's packageDependencies list: the package that is required, carried as packageId, namespace, name and version, and no other property. packageId is the identity; namespace and name are display labels; version is a SemVer range.
+
+**Key**: record:concepts/dependency-ref
+
+
 ### Discovery
 
 **Definition**: A portable contract for asking a repository what it holds, split deliberately into two halves that behave differently. Structured filters, over type, container, tag, tier and lifecycle state, are exact-match predicates: two conforming implementations with the same data must return the same set. Free-text content matching is a recall floor: every instance whose projected text contains the normalised query must be returned, and returning more, or ranking differently, is explicitly permitted. This is what lets a naive substring matcher and a semantic search engine both conform.
@@ -159,6 +166,13 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 **Definition**: The Distribution group is required for all conforming implementations.
 
 **Key**: record:concepts/distribution-group-core
+
+
+### ExactTypeRef
+
+**Definition**: A reference to one exact Type by id and version. A field whose datatype is ref names the Type its values point at with an ExactTypeRef (its rangeType), so the range cannot drift when a later version of the Type appears.
+
+**Key**: record:concepts/exact-type-ref
 
 
 ### Extension
@@ -374,6 +388,20 @@ Transcript chunks referenced in `SourceReference` are source material — addres
 **Key**: record:concepts/presentation-shapes-reference
 
 
+### ProjectedPropertyRow
+
+**Definition**: One resolved record-property row in the JSON projection, written as property, label and value, on a ProjectedRecord's properties array in ascending order. Label and value are the resolved ones, as a rendered row would show them.
+
+**Key**: record:concepts/projected-property-row
+
+
+### ProjectedRecord
+
+**Definition**: The shape of one record in the JSON projection of a Composition (document-view-output.json): its field values keyed by Field name, orderedFieldKeys, the relation rows of RFC-027 and the property rows of RFC-041.
+
+**Key**: record:concepts/projected-record
+
+
 ### Projection
 
 **Definition**: The principle that rendered output is derived from records and never the source of truth for them. Records hold the meaning; a document, a table, an export, a JSON serialisation are all views onto that meaning, produced on demand and discardable. A projection must keep a clear line back to canonical meaning and must never quietly become a second semantic source, which is what happens when someone edits the rendered artifact instead of the records.
@@ -465,7 +493,7 @@ The nine Parts read front to back, each presupposing what came before it:
 
 **Definition**: How far a captured instance has been formalised, expressed as a tier and not as a yes-or-no. Tier 0 is a Note: named text sections, no type binding, no field semantics. Tier 2 is a Record: fields bound to a Type, fully semantic. The point of the tier model is that half-formed material is first-class — meaning may be captured before its shape is known and formalised later, instead of being lost because no template fitted it yet. An implementation may support only Tier 2.
 
-**Notes**: The gap at Tier 1 is deliberate. `TypedRecord` was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
+**Notes**: The gap at Tier 1 is deliberate. TypedRecord was removed as an unexercised construct and the surviving tiers were not renumbered, so existing references stay valid.
 
 **Key**: record:concepts/semantic-maturity-tier
 
