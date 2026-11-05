@@ -2,7 +2,7 @@
 
 # RFC-053: A Field's id travels beside its name in machine-facing outputs
 
-**Status**: Draft (Revision 4)
+**Status**: Draft (Revision 5)
 **Affects**:
 - **RFC-039 (Accepted, Revision 6):** reverses, for the authoring projection, the statement "`x-srs-field-id` is retired" in RFC-039's *Blast radius* section. RFC-039's conformance rules do not change: `fieldValues` stays keyed by `Field.name` ([R1], [R2b]).
 - **RFC-012 / `ext:discovery` (Accepted, Revision 13):** gains one conditional mechanism, *Field facets*, for implementations that report field facets. RFC-012's rules [R1]–[R12] do not change.
@@ -24,6 +24,7 @@ Answers SP-05. Requested by the-greenman/srs#931 and found by the-greenman/srs-w
 | 2 | 2026-11-04 | Agent review round 1 (two reviewers, comments on srs#931). **Blocking, fixed:** (1) References to a missing *Decisions you need to make* section now point to the numbered Open Questions, and every option is listed there. (2) [R3] now says which facet keys are normative (`fieldId`, `field`) and which choices stay with the implementation (eligibility, caps, value ordering), and it adds a deterministic tie-break. The effects on eligibility and truncation are stated. (3) Doors are named per fold target: this RFC is Door 2, and its fold carries Door 3 revision rows on RFC-012, RFC-035 and RFC-039 in one PR (Change D). **Should-fix, fixed:** [R2] now covers the unexpanded fallback and list cardinality. [R6] now omits the property at every depth and names no codes. [R5] becomes a testable cross-adapter rule. The id is stated to be version-free, and a facet is stated to span Types. The precedent is relabelled as implementation practice, beside the normative `FieldView.fieldId`. The integration manifest tokens are named. Fixtures are named. OQ3 and OQ4 become decided-unless-objected. Five absence tests are counted, not three. The srs-mcp README line is listed for rewrite. Client breakage is counted. Alt B's real advantage is stated. Payload goldens are noted as an implementation consequence. |
 | 3 | 2026-11-04 | Agent review round 2 (both reviewers: zero blocking). **Should-fix, fixed:** [R3] now resolves assignments in the effective field set and breaks ties in ascending `fieldId` order. [R6] reports through the implementation's diagnostic channel. [R5] is now a completeness obligation on the output. Change D: the RFC-039 row is a non-normative revision row, not Door 3, and the fold PR's merge consequence is stated. Change A states what the registration forecloses for srs#366. Facet eligibility of nested and list values is named implementation-defined. The size cost is a lower bound. The RFC-035 Rev 6 precedent is described accurately. |
 | 4 | 2026-11-04 | Round-2 integrity should-fixes (no blocking findings). The authoring projection is now defined against `projection-rules.md`'s facing distinction, and an implementation must name which of its outputs are authoring projections. [R1] now binds properties that project a FieldAssignment, and nested `items` properties are clarified. [R4] is restated as testable behaviour. [R3] uses MUST NOT. [R6] also drops the omitted key from `required` and resolves against the effective package. The tie-break's reordering of every tied result is stated. The fixtures cover the mixed-eligibility, unresolvable and tie cases. |
+| 5 | 2026-11-05 | **Owner answers on the-greenman/srs#998, 2026-11-05 19:42 UTC.** D1: "A: id beside name in the authoring schema and facets". D2: "One facet per Field". Open Questions 1 and 2 are resolved as written in Changes A and B, with no normative change. The status stays Draft until the owner accepts the RFC. |
 
 ---
 
@@ -280,11 +281,11 @@ A new core operation, exposed on every adapter, that resolves a name in a Type's
 
 ## Open Questions
 
-1. **A or B?** *Owner decision.*
+1. **A or B?** *Resolved (owner, 2026-11-05, srs#998 D1): A.*
    - (a) **A**, Changes A and B as written. The id travels in the outputs clients already receive. *Recommended.*
    - (b) **B**, the separate read and the contributing-Types facet rule (Alt B). The projection stays free of id keywords, at the cost of a second mechanism and one call per Type.
    - (c) **A now, with B's Record-only lookup later** as a convenience, if an agent use case appears.
-2. **Facet shape under A.** *Owner decision.*
+2. **Facet shape under A.** *Resolved (owner, 2026-11-05, srs#998 D2): one facet per Field.*
    - (a) **One facet per Field** (Change B): it groups by identity, honest counts per id, a shared closed name splits (one name today), and the merge happens in the client. *Recommended.*
    - (b) **One facet per name with `fieldIds`** (Alt B2): counting does not change, but per-id counts are unavailable whenever a name is shared.
 3. **A schema shape for field facets?** *Decided unless the owner objects:* none. [R3] is a mechanism rule, and `discovery.json` does not change (Change C). If the owner wants a shape, it fits better with srs#366's emitter-profile work.
