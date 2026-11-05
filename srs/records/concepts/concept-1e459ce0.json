@@ -1,0 +1,20 @@
+{
+  "instanceId": "1e459ce0-cabc-42df-8f4f-cd54fe792637",
+  "typeId": "2a000004-0000-4000-a000-000000000004",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "concept",
+  "fieldValues": {
+    "canonical_key": "record:concepts/projected-record",
+    "title": "ProjectedRecord",
+    "description": "The shape of one record in the JSON projection of a Composition (document-view-output.json): its field values keyed by Field name, orderedFieldKeys, the relation rows of RFC-027 and the property rows of RFC-041."
+  },
+  "createdAt": "2026-11-04T16:15:34.442547627+00:00",
+  "updatedAt": "2026-11-04T16:15:34.442561040+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:tpr-builder",
+    "name": "Third-party-ready builder"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

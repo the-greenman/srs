@@ -128,7 +128,7 @@ Context query for R-D / F-outcome:
 
 **Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.
 
-Replaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
+Replaces TemplateFacilitationStep from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records.
 
 
 ## `FieldRef`

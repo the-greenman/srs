@@ -26,12 +26,7 @@ const ROOT = process.argv[2]
 const DOCS = join(ROOT, "docs");
 
 // ponytail: a frozen list, not a definitions registry; srs#987 defines or removes each.
-const KNOWN_UNDEFINED = new Set([
-  "ChangelogCollection", "ChangelogEntry", "Created", "DependencyRef", "ExactTypeRef", "FieldGroup",
-  "FieldGroupEntry", "FieldGroupValue", "FieldValueEntry", "ProjectedFieldGroup", "ProjectedGroupEntry",
-  "ProjectedPropertyRow", "ProjectedRecord", "Revision", "Status", "TagDefinition", "Tags",
-  "TemplateFacilitationStep", "TypedRecord", "Updated",
-]);
+const KNOWN_UNDEFINED = new Set([]);
 
 const LLMS_LIMIT = 100000;
 const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");

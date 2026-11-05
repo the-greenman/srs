@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "ext:protocol",
-    "content": "**Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.\n\nReplaces `TemplateFacilitationStep` from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records."
+    "content": "**Required for**: facilitation tools, structured deliberation, any implementation that guides users through epistemic stages.\n\nReplaces TemplateFacilitationStep from v1. Protocol is epistemically richer: stages have explicit dependencies, completion criteria, and may produce intermediate Records."
   },
   "createdAt": "2026-09-08T20:23:30.077845909+00:00",
-  "updatedAt": "2026-09-08T20:23:30.077856061+00:00",
+  "updatedAt": "2026-11-04T16:15:28.571442005+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "ca3ea62e-effb-503f-ac04-22ce30ca4511"
