@@ -387,6 +387,8 @@ gh pr create \
 
 **`## Decisions you need to make`** — every open question, each with the options, their consequences, and your recommendation. If the RFC can be accepted without any owner input, say **"None — this is fully specified"**. Never bury a decision in an Open Questions section of a file the reviewer was not asked to open.
 
+**`## Implementation tasks`** — what accepting this RFC sets in motion: each task from the Stage 8 list, its repository, and what it waits on. Before acceptance these are plans in words; once Stage 8 has run, each line links its issue. If nothing follows, say **"None"** and say why.
+
 **`## Reading the diff`** — tell the reviewer what to skip:
 
 > - **Read this:** `rfcs/rfc-NNN-<slug>.md` — the RFC itself.
@@ -596,6 +598,41 @@ The records and rendered spec are now correct, but the prose docs that *describe
 
 ---
 
+## Stage 8 — File the implementation tasks
+
+An accepted RFC whose follow-up work has no issue stops at acceptance: nothing puts it in the queue, and the session that accepted it has moved on. Run this stage when the RFC reaches Accepted, after Stage 7 and **before the owner is asked to merge**. Also run it for a Door 3 revision that changes what an implementation must do. Skip it for a Draft.
+
+1. **List the tasks.** Go through this list and keep each row that applies. The RFC's Schema changes section, integration manifest and any fixtures left owed are the inputs.
+
+   | Task | Repository | Applies when | Blocked by |
+   |---|---|---|---|
+   | Implement the rules | `srs-rust` | The RFC changes anything the implementation reads, writes, validates or emits | the RFC issue |
+   | Release and revision bump | `srs-rust`, then `srs` | `dataModelRevision` rises: follow the revision-bump choreography in `CLAUDE.md` | implementation |
+   | Advance the pin | `srs`, `srs-web`, `muDemocracy.org`: one issue each | A later task needs the released behaviour in that repository | the release |
+   | Schema mirrors | `srs-rust`, `srs-vscode` | A file in `docs/schema/2.0/` changed | the RFC issue |
+   | Client work | `srs-web`, `srs-vscode`, `muDemocracy.org`: one issue each | The RFC enables or breaks something there, including the feature that motivated it | implementation, or that repository's pin advance |
+   | Fixtures and close-out | `srs` | Always, unless the RFC is `tooling-only`: add any owed fixtures, set the RFC to Implemented, remove wording that says it is not shipped yet | every other task |
+
+2. **Look before filing.** Search with `gh search issues --owner the-greenman "<terms>"`, including closed issues: a closed issue does not mean the work is tracked. Link an open issue that already covers a task, and comment on it, instead of filing another.
+
+3. **File each new issue** in the shape of the clerk handbook's *How an issue reaches a group*: `Answers:`, `Part of`, `Remedy:`, `Ruling:` naming this RFC, then `## Problem`, `## Technical plan` and `## Acceptance`, with the lane label of the group that holds the epic. The plan names the files and tests, so a builder can start without reopening the RFC. Do not set a priority by hand.
+
+4. **Join them.** For each issue:
+   ```bash
+   clerk board link <epic-repo>#<n> <repo>#<n>
+   clerk board dep add <repo>#<n> <blocker-repo>#<n>
+   clerk flow --chain <repo>#<n>
+   ```
+   Fix every ✗ except a `blockers` or `hold` line that names a blocker from the table: that wait is intended.
+
+   The edge on the RFC issue keeps the first tasks out of the queue until the merge closes that issue. So the accepting PR must carry `Closes #<issue-N>`; if an earlier Draft PR closed the issue, reopen it first.
+
+5. **Put the links in the PR body**, under `## Implementation tasks`.
+
+If the RFC is rejected, or its PR closes unmerged, close these issues as not planned.
+
+---
+
 ## Output contract
 
 When done, report:
@@ -608,6 +645,7 @@ When done, report:
 - Schema files changed (if any)
 - Spec records created (instanceIds, if Stage 6 was reached)
 - Docs reconciled in Stage 7 (list files, including any edit to the non-committable `semanticops/CLAUDE.md`; or "none — no model-level change")
+- Implementation tasks filed in Stage 8 (issue links and what each waits on, or "none" and why)
 - Any open questions remaining in the RFC
 - Confirmation that the PR body stands alone: every required section present, no generated artefact pasted, and no sentence that requires opening a file to act on
 
