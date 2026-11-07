@@ -121,7 +121,7 @@ async function fieldNameCases(root) {
 
   // The other bundle shape: a package bundle inlines definitions in top-level arrays with no `data`
   // map at all (docs/schema/2.0/package-bundle.json), as the shipped
-  // `packages/com.semanticops.core/1.0.0/core-bundle.srsj` does. Reading only `data` skips it in
+  // `packages/com.semanticops.core/1.0.0/core-bundle.srspkg` does. Reading only `data` skips it in
   // silence — which is why the walk recurses over the document instead of enumerating carriers.
   await writeJson(bundle, { mode: "bundled", fields: [field("kebab-case-name")], types: [] });
   expect("rejects a kebab-case Field.name inlined in a package .srsj bundle", runCheck("check-field-name-convention.mjs", root), {
@@ -140,7 +140,7 @@ async function fieldNameCases(root) {
   });
   await rm(srspkg);
 
-  // The pre-RFC-032 carrier. `core-bundle.srsj` still ships two `valueType` Fields, so dropping that
+  // The pre-RFC-032 carrier. `core-bundle.srspkg` still ships two `valueType` Fields, so dropping that
   // disjunct from `isFieldDefinition` would silently stop checking them.
   const { fieldType: _unused, ...legacy } = field("kebab-case-name");
   await writeJson(join(root, "srs/package/fields/legacy.json"), { ...legacy, valueType: "string" });
