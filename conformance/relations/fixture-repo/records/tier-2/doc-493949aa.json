@@ -1,0 +1,19 @@
+{
+  "instanceId": "493949aa-de32-4863-8ce7-c8d9b3021b71",
+  "typeId": "0b0000b1-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.relations",
+  "typeName": "doc",
+  "fieldValues": {
+    "title": "Alpha"
+  },
+  "lifecycleState": "draft",
+  "createdAt": "2026-11-08T19:18:33.929591655+00:00",
+  "updatedAt": "2026-11-08T19:18:33.929599836+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:tpr-builder",
+    "name": "Third-party-ready builder"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

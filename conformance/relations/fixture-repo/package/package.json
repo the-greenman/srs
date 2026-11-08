@@ -1,0 +1,24 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "id": "0b0000a0-0000-4000-8000-000000000001",
+  "namespace": "com.example.relations",
+  "name": "primary",
+  "version": "1.0.0",
+  "title": "primary",
+  "description": "",
+  "status": "active",
+  "createdAt": "2026-01-01T00:00:00Z",
+  "fields": [
+    "fields/title-0b0000e1.json"
+  ],
+  "types": [
+    "types/doc-0b0000b1.json"
+  ],
+  "relationTypes": [],
+  "views": [],
+  "compositions": [],
+  "blueprints": [],
+  "lifecycles": [
+    "lifecycles/docflow-0b0000d1.json"
+  ]
+}

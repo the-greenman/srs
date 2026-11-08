@@ -1,0 +1,52 @@
+{
+  "id": "0b0000d1-0000-4000-8000-000000000001",
+  "version": 1,
+  "namespace": "com.example.relations",
+  "name": "doc_flow",
+  "states": [
+    {
+      "id": "0b0000d2-0000-4000-8000-000000000001",
+      "key": "draft",
+      "isInitial": true
+    },
+    {
+      "id": "0b0000d2-0000-4000-8000-000000000002",
+      "key": "superseded",
+      "isFinal": true,
+      "requiresRelation": {
+        "enforcement": "hard",
+        "relationType": [
+          "supersedes"
+        ],
+        "direction": "incoming"
+      }
+    },
+    {
+      "id": "0b0000d2-0000-4000-8000-000000000003",
+      "key": "reviewed",
+      "requiresRelation": {
+        "enforcement": "advisory",
+        "relationType": [
+          "refines"
+        ],
+        "direction": "incoming"
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "id": "0b0000d3-0000-4000-8000-000000000001",
+      "name": "supersede",
+      "from": "draft",
+      "to": "superseded"
+    },
+    {
+      "id": "0b0000d3-0000-4000-8000-000000000002",
+      "name": "review",
+      "from": "draft",
+      "to": "reviewed"
+    }
+  ],
+  "initialState": "draft",
+  "createdAt": "2026-11-08T00:00:00Z"
+}

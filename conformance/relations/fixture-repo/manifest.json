@@ -1,0 +1,10 @@
+{
+  "rootContainerId": "0b000000-0000-4000-8000-000000000001",
+  "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "createdAt": "2026-11-08T19:18:26.047296343+00:00",
+  "dataModelRevision": 11,
+  "namespace": "com.example.relations",
+  "repositoryId": "0b000000-0000-4000-8000-000000000001",
+  "srsVersion": "2.0-draft",
+  "title": "Relation Conformance Fixture"
+}

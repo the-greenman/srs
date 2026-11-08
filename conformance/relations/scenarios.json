@@ -1,0 +1,149 @@
+{
+  "$comment": "Relation-layer conformance scenarios (srs#180). Each scenario cites the recorded rule it checks; a scenario with no recorded rule is not here (see README). `steps` run in order against a fresh copy of fixture-repo with the pinned srs CLI: `cli` arguments without --repo, `stdin` an optional JSON body, `expect` on the envelope (`ok`, `errorCode` = errors[0].code, `diagnosticIncludes` = a substring of the diagnostics). `afterValidate` lists what `repo validate` must then report (`errors` count and each expected warning as a message substring). A scenario with `pending` is not run: the pinned build does not emit the rule's diagnostic and `pending.issue` names the srs-rust issue.",
+  "ids": {
+    "ALPHA": "493949aa-de32-4863-8ce7-c8d9b3021b71",
+    "BETA": "632d2992-42db-4a82-9fc6-d5028326810e",
+    "GAMMA": "691f5e64-b30f-42c5-a8c8-aed44559550c",
+    "ROOT_CONTAINER": "0b000000-0000-4000-8000-000000000001",
+    "NOWHERE": "0b0000ff-0000-4000-8000-0000000000ff"
+  },
+  "baseline": {
+    "errors": 0,
+    "warnings": ["lifecycle-advisory-relation-unsatisfied: record '$BETA'"]
+  },
+  "scenarios": [
+    {
+      "id": "dangling-target-refused",
+      "rule": "mechanism-eec1e40c (Resolution invariants)",
+      "description": "A relation whose target resolves to no instance is refused on write (E2UnknownEndpoint).",
+      "steps": [
+        {
+          "cli": ["relation", "create"],
+          "stdin": { "relationType": "depends-on", "sourceInstanceId": "$ALPHA", "targetInstanceId": "$NOWHERE" },
+          "expect": { "ok": false, "errorCode": "relation-validation", "diagnosticIncludes": "E2UnknownEndpoint" }
+        }
+      ]
+    },
+    {
+      "id": "dangling-source-refused",
+      "rule": "mechanism-eec1e40c (Resolution invariants)",
+      "description": "A relation whose source resolves to no instance is refused on write (E2UnknownEndpoint).",
+      "steps": [
+        {
+          "cli": ["relation", "create"],
+          "stdin": { "relationType": "depends-on", "sourceInstanceId": "$NOWHERE", "targetInstanceId": "$ALPHA" },
+          "expect": { "ok": false, "errorCode": "relation-validation", "diagnosticIncludes": "E2UnknownEndpoint" }
+        }
+      ]
+    },
+    {
+      "id": "unresolvable-relation-type-refused",
+      "rule": "mechanism-eec1e40c V1 (closed-vocabulary resolution: Relation.relationType)",
+      "description": "A relation whose type resolves to no installed relation type is refused on write (E1UnknownRelationType).",
+      "steps": [
+        {
+          "cli": ["relation", "create"],
+          "stdin": { "relationType": "no-such-type", "sourceInstanceId": "$ALPHA", "targetInstanceId": "$GAMMA" },
+          "expect": { "ok": false, "errorCode": "relation-validation", "diagnosticIncludes": "E1UnknownRelationType" }
+        }
+      ]
+    },
+    {
+      "id": "container-id-as-target-refused",
+      "rule": "I-20",
+      "description": "A containerId is not an instance id: a relation targeting it is refused (the container id resolves to no instance, E2UnknownEndpoint).",
+      "steps": [
+        {
+          "cli": ["relation", "create"],
+          "stdin": { "relationType": "depends-on", "sourceInstanceId": "$ALPHA", "targetInstanceId": "$ROOT_CONTAINER" },
+          "expect": { "ok": false, "errorCode": "relation-validation", "diagnosticIncludes": "E2UnknownEndpoint" }
+        }
+      ]
+    },
+    {
+      "id": "container-id-as-source-refused",
+      "rule": "I-20",
+      "description": "A containerId is not an instance id: a relation sourced from it is refused (E2UnknownEndpoint).",
+      "steps": [
+        {
+          "cli": ["relation", "create"],
+          "stdin": { "relationType": "depends-on", "sourceInstanceId": "$ROOT_CONTAINER", "targetInstanceId": "$ALPHA" },
+          "expect": { "ok": false, "errorCode": "relation-validation", "diagnosticIncludes": "E2UnknownEndpoint" }
+        }
+      ]
+    },
+    {
+      "id": "hard-requires-relation-unsatisfied-refused",
+      "rule": "I-98",
+      "description": "A transition into a state declaring a hard requiresRelation is refused while no satisfying relation exists, with the machine-readable code lifecycle-relation-required naming the state, the type and the direction.",
+      "steps": [
+        {
+          "cli": ["record", "transition", "--id", "$ALPHA"],
+          "stdin": { "to": "superseded" },
+          "expect": { "ok": false, "errorCode": "lifecycle-relation-required", "diagnosticIncludes": "state 'superseded' requires a satisfying 'incoming' relation of type [\"supersedes\"]" }
+        }
+      ],
+      "afterValidate": { "errors": 0, "warnings": ["lifecycle-advisory-relation-unsatisfied: record '$BETA'"] }
+    },
+    {
+      "id": "hard-requires-relation-satisfied-allowed",
+      "rule": "I-98",
+      "description": "The same transition is allowed once a satisfying incoming supersedes relation exists, and the repository then validates with the baseline warning only.",
+      "steps": [
+        {
+          "cli": ["relation", "create"],
+          "stdin": { "relationType": "supersedes", "sourceInstanceId": "$GAMMA", "targetInstanceId": "$ALPHA" },
+          "expect": { "ok": true }
+        },
+        {
+          "cli": ["record", "transition", "--id", "$ALPHA"],
+          "stdin": { "to": "superseded" },
+          "expect": { "ok": true }
+        }
+      ],
+      "afterValidate": { "errors": 0, "warnings": ["lifecycle-advisory-relation-unsatisfied: record '$BETA'"] }
+    },
+    {
+      "id": "advisory-requires-relation-warns-at-rest",
+      "rule": "I-98, I-100",
+      "description": "A transition into an advisory state is permitted without the relation; the unsatisfied state surfaces only as a warning at rest (lifecycle-advisory-relation-unsatisfied), never an error. Gamma is moved there; the fixture's Beta already rests there.",
+      "steps": [
+        {
+          "cli": ["record", "transition", "--id", "$GAMMA"],
+          "stdin": { "to": "reviewed" },
+          "expect": { "ok": true }
+        }
+      ],
+      "afterValidate": {
+        "errors": 0,
+        "warnings": ["lifecycle-advisory-relation-unsatisfied: record '$BETA'", "lifecycle-advisory-relation-unsatisfied: record '$GAMMA'"]
+      }
+    },
+    {
+      "id": "source-role-outside-closed-set-refused",
+      "rule": "I-88 (the sourceRole value set is a closed enum of the implemented revision, RFC-023)",
+      "description": "A SourceReference whose sourceRole is a relation-type key (depends-on) is refused: the two vocabularies are disjoint.",
+      "steps": [
+        {
+          "cli": ["relation", "create"],
+          "stdin": {
+            "relationType": "depends-on",
+            "sourceInstanceId": "$ALPHA",
+            "targetInstanceId": "$GAMMA",
+            "sourceRefs": [{ "sourceType": "external-document", "sourceId": "x", "sourceRole": "depends-on" }]
+          },
+          "expect": { "ok": false, "errorCode": "invalid-input", "diagnosticIncludes": "unknown variant `depends-on`" }
+        }
+      ]
+    },
+    {
+      "id": "relation-type-key-equals-source-role-collision",
+      "rule": "I-88",
+      "description": "Relation-type creation MUST reject a definition whose key equals a sourceRole value, and repo validate MUST report a pre-existing collision as SOURCEROLE_RELATIONTYPE_COLLISION (warning at rest).",
+      "pending": {
+        "issue": "the-greenman/srs-rust#1610",
+        "observed": "pinned build 0.1.0-build.569: `relation-type create` with key `evidence` succeeds and `repo validate` reports no collision (checked 2026-11-08)"
+      }
+    }
+  ]
+}
