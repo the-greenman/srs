@@ -97,7 +97,7 @@ const isObject = (o) => o != null && typeof o === "object" && !Array.isArray(o);
  * keys definitions under `data` by the path they would occupy exploded (84 entries in
  * `docs/spec/examples/gallery.srsj`), and a package bundle inlines them in top-level definition
  * arrays (`docs/schema/2.0/package-bundle.json`, as `packages/com.semanticops.core`'s shipped
- * `core-bundle.srsj` does). Enumerating the carriers instead of the objects is how the second one
+ * `core-bundle.srspkg` does). Enumerating the carriers instead of the objects is how the second one
  * got missed, and the list would need extending for every bundle shape added later — a package
  * bundle committed as `.json`, or one nested inside a repository bundle's `data` entry. Recursing
  * over the whole document has no such list. `isFieldDefinition` is specific enough to make the
