@@ -1,0 +1,19 @@
+{
+  "instanceId": "505593ce-425d-4fe4-9ec7-e8f584fa0f4a",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Field facets",
+    "content": "An implementation that reports none is unaffected, and `discovery.json` gains no shape. A client that wants a merged view can sum the facets that share a `field` label.\n\n**[R3]** *(Facets are per Field.)* An implementation that reports per-field facets over a match set MUST make each reported facet correspond to exactly one Field `id`. Two facets in one result MUST NOT carry the same `fieldId`. Each facet MUST carry `fieldId` (the Field's `id`) and `field` (the Field's `name`). A value MUST be counted only in the facet of the Field that the record's version-pinned Type assigns, in its effective field set (RFC-040 Change A), at the key the value is stored under. A value whose Type does not resolve, or whose key matches no assignment, MUST NOT be counted in any per-Field facet. Where an implementation orders facets and two facets tie, it MUST break the tie by ascending lexicographic order of the `fieldId` string. Which Fields are eligible, the caps and the value ordering are implementation-defined, and MUST be decided per Field.\n\n**[R5]** *(Every adapter agrees, and no client resolves.)* Over the same repository state, every adapter of one implementation (command line, embedded binding, MCP) MUST report the same Field id for the same authoring-projection property and the same facet. The ids that [R1]–[R3] require MUST be present in the output itself, so that no client needs to read Type or Field definitions to learn them.\n\nIntroduced by RFC-053 (`rfcs/rfc-053-field-id-beside-field-name.md`). Decision: `rfc-decision-43e84d63`."
+  },
+  "createdAt": "2026-11-05T20:03:24.686831341+00:00",
+  "updatedAt": "2026-11-05T20:18:04.202775579+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "agent:claude-code",
+    "name": "Claude Code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

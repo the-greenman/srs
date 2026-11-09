@@ -14,7 +14,7 @@ When you encounter `.srs/`, stop and orient before doing anything:
 
 ```bash
 srs repo map --repo <path> --pretty       # counts, relation summary, package info, description
-srs repo validate --repo <path> --pretty  # full validation; read diagnostics[] before proceeding
+srs repo validate --repo <path> --pretty  # full validation; read `ok`, then `payload.summary` and `payload.diagnostics`, before proceeding
 ```
 
 Never assume you understand the repo's content from its directory listing.
@@ -723,7 +723,7 @@ Payload: `{ "protocol": { ... } }`, the stored Protocol JSON with the same field
 srs repo validate --repo <path> --pretty
 ```
 
-Check `payload.diagnostics` — a non-empty array means something is broken. Zero exit code does not mean zero errors; diagnostics are in the payload, not the exit code.
+Read `ok`, then `payload.summary` and `payload.diagnostics` (objects). They are present on both `ok:true` and `ok:false`; a non-empty `diagnostics` array or `summary.errors > 0` means something is broken. Exit code `0` does not mean zero errors: the verdict is in the envelope, not the exit code.
 
 ### Managing Declared Extensions
 
@@ -1892,7 +1892,7 @@ identity or members, so it is not the way to set an identity.
 The tool set mirrors the discovery ladder and write workflows in this document. Descriptions below are the canonical tool descriptions (single-sourced from `srs-mcp`'s `tools.rs`):
 
 - **`repo_validate`** — validate the whole repository and return the diagnostics array plus a summary. Run after every write batch; an empty diagnostics array means the repository is consistent. Diagnostics are data, not an error.
-- **`type_schema`** — the authoring contract for a type by UUID (`typeVersion` optional; latest when omitted): a JSON Schema whose properties are keyed by `Field.name` — exactly the keys `record_create` `fieldValues` uses (RFC-039; the `x-srs-field-id` bridge is retired) — carrying the field's `aiGuidance`. An inline-composite range is expanded in place. Read this before authoring records of an unfamiliar type; discover typeIds from the type resources.
+- **`type_schema`** — the authoring contract for a type by UUID (`typeVersion` optional; latest when omitted): a JSON Schema whose properties are keyed by `Field.name` — exactly the keys `record_create` `fieldValues` uses (RFC-039). Under RFC-053 each property also carries `x-srs-field-id`, the Field's identity, once an implementation has shipped it; records are still authored by name, never by id. Each property carries the field's `aiGuidance`. An inline-composite range is expanded in place. Read this before authoring records of an unfamiliar type; discover typeIds from the type resources.
 - **`find`** — the deterministic discovery query (ext:discovery): all axes optional and AND-combined (`typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `excludeLifecycleStates`, `tier`, `contentMatch`). Serves Tier 2 and Tier 0 (type and lifecycle filters exclude notes). Hits are BM25-ranked with a `score` by default (`rank: false` orders by `instanceId`); `contentMatch` matches every word in any order; `limit` defaults to 25. Hits carry `uri`, `typeId` (absent for notes) and `containerIds`; the reply carries `facets` over the whole match set, so `find {limit:0}` with no filters is the cheap repository map. An unknown type, `typeId` or `containerId` returns zero hits with a `warning:` diagnostic.
 - **`similar`** — `{instanceId, limit? (default 25), ...find filters}`: more-like-this. Find-shaped hits (instanceId, uri, label, type, score) ranked by BM25 overlap with the source's characteristic terms, never the source itself; `typeId`, `typeNamespace`, `typeName`, `containerId`, `tag`, `lifecycleState`, `tier` narrow candidates; no `contentMatch`. Lexical, no embeddings. Same as `srs find --similar`.
 - **`attachment_add`** — `{fileName, content | contentBase64, title?, subdir?, contentType?}`: store a file as a source document (content + `.meta.json` sidecar) and return its `documentId`. Exactly one of `content` (UTF-8 text) or `contentBase64`. Enforces the repository's `attachment_policy` (size / MIME / total): a violating file is a tool error and nothing is written. `full` profile only.
@@ -2151,7 +2151,7 @@ Always check `ok` before reading `payload`. On failure, the envelope has `ok: fa
 - **WASM bindings** throw a JS `Error` with the same `.code` and `.details`.
 - **MCP tool errors** carry the same object as `structuredContent`, with `isError: true`.
 
-Exit code `0` means the command ran. It does not mean the data is valid. Check `payload.diagnostics` (for `repo validate`) separately.
+Exit code `0` means the command ran. It does not mean the data is valid. For `repo validate`, read `ok`, then `payload.summary` and `payload.diagnostics` (objects); the payload has the same shape on `ok:true` and `ok:false` (srs-rust ADR-053, srs-rust#1314).
 
 Use `--pretty` for human reading. Omit it when piping to `jq` or a script.
 

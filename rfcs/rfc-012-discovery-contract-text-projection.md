@@ -2,7 +2,7 @@
 
 # RFC-012: Discovery Contract & Text Projection
 
-**Status**: Accepted (Revision 13)
+**Status**: Accepted (Revision 14)
 **Affects**: `Field` (`fieldType` searchability classification; Tier-1 `TypedField.valueType` transitional carve-out), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, `discovery.json` schema, `ext:views-l2` (`SectionSource.discovery-query`, RFC-011 Rev 2)
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
@@ -14,6 +14,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 14 | 2026-11-05 | **Door 3 amendment (RFC-053, the-greenman/srs#998).** `ext:discovery` gains one conditional mechanism, *Field facets* (RFC-053 [R3], [R5]), for an implementation that reports per-field facets. [R1]–[R12] are untouched, and `discovery.json` does not change. |
 | 11 | 2026-08-09 | srs#242 Phase B cutover: RFC-039 [R18] (canonical I-141) supersedes the deliberate `fieldValues` array-order signal at :139 — instance keys serialise in `FieldAssignment.order`, and the Tier-2 text projection iterates that order. The write-history signal is unrecoverable under a keyed carrier; recorded as an accepted capability loss (RFC-039 Cross-references). |
 | 1 | 2026-06-26 | Initial draft |
 | 2 | 2026-06-26 | Address review findings (blocking): fix Note text projection to use `sections[].content` directly (close OQ-1); add normative tag-authority statement (instance file is canonical); align `containerId` filter with RFC-009 I-66's three-condition membership definition (condition 1 — rootInstanceIds membership — was missing); define Tier 1 "declaration order" as `fields[]` array position; specify that select/multiselect projection emits stored value as-is (no alias resolution during projection). **Should-fix:** remove `ext:views-l1` from Affects (display labels downgraded to MAY, close OQ-2); change `TextSegment.fieldId` type from `UUID` to `string`; use `"typed-record-field"` sentinel for Tier 1 instead of empty string; add normative `ext:repeatable-fields` carve-out (close OQ-3); clarify `typeId`+`typeNamespace` contradiction semantics; add `discovery.json` schema property table; add fixture timeline (must ship with RFC merge); remove duplicate inline R1 from Change D; update R6 (RFC-009 aligned); update R9 (MAY). **Nits:** add `field.json` row to schema changes table; guarantee all 8 valueTypes in fixture; add invariant numbering note. |

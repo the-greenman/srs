@@ -239,7 +239,7 @@ schema:manifest.json
 
 **Problems addressed:** (1) No way to determine what changed since a sync point — the `repo copy` round-trip workflow cannot distinguish actually modified records from path-changed files. (2) Sync and replication tooling must rely on git history, binding SRS to a specific VCS backend and breaking for `.srsj`/in-memory stores. (3) No normative record of operation provenance — no standard way to record who or what asserted a change.
 
-**Changes:** (A) New extension key `ext:changelog`; repositories opt in via `manifest.declaredExtensions`; implementation creates an empty changelog file on first declaration. (B) New `changelogPath` optional field on `manifest.json` (default: `changelog/changelog.json`). (C) New schema `changelog.json` defining `ChangelogCollection` and `ChangelogEntry` (`entryId` UUID4, `instanceId`, `changeKind` enum: `created`/`updated`/`deleted`/`note-created`/`note-updated`/`note-deleted`, `timestamp`, optional `assertedBy`; `noteId` required for note variants). (D) Normative `srs changelog list --repo <path> [--since <iso8601>] [--instance <uuid>]` CLI command.
+**Changes:** (A) New extension key `ext:changelog`; repositories opt in via `manifest.declaredExtensions`; implementation creates an empty changelog file on first declaration. (B) New `changelogPath` optional field on `manifest.json` (default: `changelog/changelog.json`). (C) New schema `changelog.json` defining ChangelogCollection and ChangelogEntry (`entryId` UUID4, `instanceId`, `changeKind` enum: `created`/`updated`/`deleted`/`note-created`/`note-updated`/`note-deleted`, `timestamp`, optional `assertedBy`; `noteId` required for note variants). (D) Normative `srs changelog list --repo <path> [--since <iso8601>] [--instance <uuid>]` CLI command.
 
 **Conformance rules:** R1–R10. Key rules: R1–R2 (maintain and append-on-write), R3 (UUID4 uniqueness), R4 (append-only immutability), R5 (no changelogPath without extension), R7 (noteId MUST when note variant), R9 (normative CLI query), R10 (SHOULD lock on write).
 
@@ -347,11 +347,12 @@ I-123
 I-124
 I-142
 I-143
+mechanism:field-facets
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-012-discovery-contract-text-projection.md
 
-**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md. RFC-043 Door 3 amendment (Revision 13, 2026-10-01, effective at dataModelRevision 8): the containerId filter reads the entry ids of the container or of its effective(C) closure (one condition, not three); the conformance fixture's containers move to the entry shape.
+**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md. RFC-043 Door 3 amendment (Revision 13, 2026-10-01, effective at dataModelRevision 8): the containerId filter reads the entry ids of the container or of its effective(C) closure (one condition, not three); the conformance fixture's containers move to the entry shape. RFC-053 Door 3 amendment (Revision 14, 2026-11-05): a new conditional mechanism, Field facets, binds an implementation that reports per-field facets; [R1]–[R12] are untouched.
 
 
 **Title**: RFC-013: Required Root Container & Structural Navigation
@@ -758,7 +759,7 @@ tooling-only
 
 **Proposal Artifact Path**: rfcs/rfc-035-schema-emitter.md
 
-**Content**: The JSON Schema emitter for the self-hosted meta-model: meta-model Type records → a target-neutral IR → JSON Schema 2020-12 definition schemas, generalizing RFC-032 `projectField` to whole entities. Verification is two-tier — byte-for-byte determinism against the emitter's own goldens, plus an `emitter ⊆ seed` structural closure over the covered authoritative features (with a documented-divergence register and exclusion set). Relocates `projection-rules.md` to a live normative home and stamps `dataModelRevision` on the generated bundle. Node reference emitter now; srs-projection/CLI/WASM at the #260 cutover. Full text: rfcs/rfc-035-schema-emitter.md.
+**Content**: The JSON Schema emitter for the self-hosted meta-model: meta-model Type records → a target-neutral IR → JSON Schema 2020-12 definition schemas, generalizing RFC-032 `projectField` to whole entities. Verification is two-tier — byte-for-byte determinism against the emitter's own goldens, plus an `emitter ⊆ seed` structural closure over the covered authoritative features (with a documented-divergence register and exclusion set). Relocates `projection-rules.md` to a live normative home and stamps `dataModelRevision` on the generated bundle. Node reference emitter now; srs-projection/CLI/WASM at the #260 cutover. Full text: rfcs/rfc-035-schema-emitter.md. RFC-053 Door 3 amendment (Revision 8, 2026-11-05): `projection-rules.md` gains the section *The authoring projection: Field identity*; the validation projection and RFC-040's sections are unchanged.
 
 
 **Title**: RFC-036: Composite rendering — view-owned renderer dispatch for composite-range fields
@@ -784,7 +785,7 @@ I-13
 
 **Proposal Artifact Path**: rfcs/rfc-036-composite-rendering.md
 
-**Content**: Restores the rendering-dispatch capability that RFC-032 strands when it subsumes `FieldGroup` into composite range, and relocates it from the Type to the View — where RFC-015 places presentation and where `FieldView` already carries `displayHint`/`editorHintOverride`. Specifies the `table` renderer against a structured value shape (`columns: string[]`, `rows: ref(Row)[] inline`, `Row.cells: string[]`, `widths: number[]`) rather than JSON-in-text; specifies composite baseline rendering, which every fallback path depends on and which no document had defined; maps every RFC-007 rendering rule onto the new mechanism, including the one and a half that cease to be renderer concerns; and specifies the deterministic corpus migration. Design only — the inline-composite value carrier, the fixture and the migrations are #242. Full text: rfcs/rfc-036-composite-rendering.md.
+**Content**: Restores the rendering-dispatch capability that RFC-032 strands when it subsumes FieldGroup into composite range, and relocates it from the Type to the View, where RFC-015 places presentation and where `FieldView` already carries `displayHint`/`editorHintOverride`. Specifies the `table` renderer against a structured value shape (`columns: string[]`, `rows: ref(Row)[] inline`, `Row.cells: string[]`, `widths: number[]`) rather than JSON-in-text; specifies composite baseline rendering, which every fallback path depends on and which no document had defined; maps every RFC-007 rendering rule onto the new mechanism, including the one and a half that cease to be renderer concerns; and specifies the deterministic corpus migration. Design only — the inline-composite value carrier, the fixture and the migrations are #242. Full text: rfcs/rfc-036-composite-rendering.md.
 
 
 **Title**: RFC-037: Normative field-row rendering baseline
@@ -833,7 +834,7 @@ Revision 5 (srs#827, Door 3): `FieldView` gains an optional `labelMode`, `"inlin
 
 **Author**: the-greenman
 
-**Affected Components**: The Tier-2 `Record` instance carrier: `fieldValues` changes from an array of `{fieldId, value}` pairs to an object keyed by `Field.name` verbatim, whose value space is one recursive rule identical to RFC-032 `projectField`'s instance space — making a Record valid against its Type's projected JSON Schema by construction. Retires `FieldGroup`, `Type.fieldGroups`, `groupValues`, `ext:repeatable-fields` `entries`, and the deprecated `FieldAssignment.{repeatable,minItems,maxItems}` trio; relocates per-value provenance to a parallel `fieldMeta` sibling; reconciles Tier-1 `TypedField.valueType`/`selectOptions` to an inline `fieldType`. Narrows RFC-035 [R4]'s name projection to the in-scope meta-model Types and fixes verbatim `Field.name` keys for domain Types. Establishes `Field.name` uniqueness within a Type's effective field set. Discharges obligations RFC-032 (Change E, OQ4), RFC-033, RFC-035, RFC-036 (`document-view-output.json`, `theme.json` [CR-036-18], [CR-036-19], Open Question 3) and RFC-037 ([FR-037-14]) deferred to #242 by name; records conflicts with RFC-012 and RFC-031 for Phase B. Phase A is design and migration plan only — no schema file is edited and no data is migrated; the cutover is Phase B, composed with RFC-038 in one first-party release train.
+**Affected Components**: The Tier-2 `Record` instance carrier: `fieldValues` changes from an array of `{fieldId, value}` pairs to an object keyed by `Field.name` verbatim, whose value space is one recursive rule identical to RFC-032 `projectField`'s instance space — making a Record valid against its Type's projected JSON Schema by construction. Retires FieldGroup, `Type.fieldGroups`, `groupValues`, `ext:repeatable-fields` `entries`, and the deprecated `FieldAssignment.{repeatable,minItems,maxItems}` trio; relocates per-value provenance to a parallel `fieldMeta` sibling; reconciles Tier-1 `TypedField.valueType`/`selectOptions` to an inline `fieldType`. Narrows RFC-035 [R4]'s name projection to the in-scope meta-model Types and fixes verbatim `Field.name` keys for domain Types. Establishes `Field.name` uniqueness within a Type's effective field set. Discharges obligations RFC-032 (Change E, OQ4), RFC-033, RFC-035, RFC-036 (`document-view-output.json`, `theme.json` [CR-036-18], [CR-036-19], Open Question 3) and RFC-037 ([FR-037-14]) deferred to #242 by name; records conflicts with RFC-012 and RFC-031 for Phase B. Phase A is design and migration plan only — no schema file is edited and no data is migrated; the cutover is Phase B, composed with RFC-038 in one first-party release train.
 
 Phase A folds **no** canonical record or schema artifact — its normative changes land at the Phase-B cutover — so it declared its `srs-integration:v1` manifest at the Phase-B cutover (below); the interim grandfather entry in `rfcs/integration-allowlist.json` is removed with it.
 
@@ -858,11 +859,13 @@ I-140
 I-141
 -->
 
+**Dependency Refs**:  RFC-053 (Revision 7, non-normative row) reverses the prose retirement of `x-srs-field-id` for the authoring projection only; conformance rules and `rfc-decision-7d3dda60` are unchanged.
+
 **Proposal Artifact Path**: rfcs/rfc-039-record-field-value-carrier.md
 
 **Content**: Phase A of issue #242. A Tier-2 Record stores its field values as an array of `{fieldId, value}` pairs, and JSON Schema validates object properties by name — so a Type cannot project into a standard JSON Schema that validates its own Records' field values without a `contains` clause plus an `if`/`then` branch per field, with field-id uniqueness not expressible at all. This blocks epic #256's requirement that a Type project by direct implementation.
 
-RFC-039 replaces `fieldValues` with an object keyed by `Field.name` verbatim. Its value space is a single recursive rule that is exactly RFC-032 `projectField`'s instance space read from the value side, so instance shape and projected schema are one rule in two directions rather than two sources of truth. Scalars, lists, inline composites and lists of inline composites all become expressible — the last being the case tables need and the reason `FieldGroup`, `groupValues` and `entries` retire together.
+RFC-039 replaces `fieldValues` with an object keyed by `Field.name` verbatim. Its value space is a single recursive rule that is exactly RFC-032 `projectField`'s instance space read from the value side, so instance shape and projected schema are one rule in two directions rather than two sources of truth. Scalars, lists, inline composites and lists of inline composites all become expressible — the last being the case tables need and the reason FieldGroup, `groupValues` and `entries` retire together.
 
 Grounding: RFC-035 [R4]'s unqualified `snake_case` → `lowerCamelCase` rule is deliberately narrowed to the frozen-seed meta-model; domain projection and instance keys use `Field.name` verbatim. RFC-035's Node reference emitter does not currently encode that scope distinction, while the separate Rust draft-07 domain service already emits names verbatim. The mutable-attribute objection to name-keying does not survive the spec: a `Field.name` change requires a new UUID, so the name is as stable as the `fieldId` it replaces. No `Field.name` uniqueness rule exists at any scope today; this RFC establishes one at the weakest sufficient scope, the effective field set, with I-19 as the Tier-1 precedent and RFC-032 `dependsOn` as an existing Tier-2 consumer of unambiguous sibling names.
 
@@ -1208,7 +1211,7 @@ cell:portability
 
 **Proposal Artifact Path**: rfcs/rfc-046-actor-provenance.md
 
-**Content**: Adds one optional, single-shaped property, createdBy, to Record, Note and Relation. It names the actor with a kind (human or ai), a stable opaque id and an optional display name. The implementation stamps it when a new instance is persisted, from the session actor its host configures outside any request, and never from the request, so an agent cannot claim to be someone else. It is set once, preserved by every other operation, and never affects validity: testimony, not authority. The data model moves to revision 9 so that older binaries refuse the property and cannot drop it. Accepted by the owner 2026-10-02 (srs#850) as Revision 6; the Actor kind stays ai. Charter Check: cell:attribution, cell:identity, cell:portability, decision_mode complicated.
+**Content**: Adds one optional, single-shaped property, createdBy, to Record, Note and Relation. It names the actor with a kind (human or ai), a stable opaque id and an optional display name. The implementation stamps it when a new instance is persisted, from the session actor its host configures outside any request, and never from the request, so an agent cannot claim to be someone else. It is set once, preserved by every other operation, and never affects validity: testimony, not authority. The data model moves to revision 9 so that older binaries refuse the property and cannot drop it. Accepted by the owner 2026-10-02 (srs#850) as Revision 6; the Actor kind stays ai. Charter Check: cell:attribution, cell:identity, cell:portability, decision_mode complicated. Revision 7 (2026-11-05, owner ruling, srs#1006): an instance carried from another copy of the same repository is moved, not created, even when its id is new to the target, so its createdBy is preserved; only what an operation itself originates is stamped.
 
 
 **Title**: RFC-045: Self-describing artifacts — a readme travels with packages and repositories
@@ -1354,5 +1357,30 @@ mechanism:`Address`
 **Proposal Artifact Path**: rfcs/rfc-049-repository-addressing-boundary-directory.md
 
 **Content**: Makes the Address core and lets it name a thing in another repository (an optional repositoryId), and grows ext:registry's catalog into one registry of entries by kind, so one implementation can serve a declared set of repositories: reading and routing writes by repositoryId, refusing writes to read-only entries, and preserving Addresses it cannot resolve. srs:// strings stay tooling. Step 1 of federation's return (decision 31e9fd27); answers SP-87 and prepares SP-86. Full text: rfcs/rfc-049-repository-addressing-boundary-directory.md.
+
+
+**Title**: RFC-053: A Field's id travels beside its name in machine-facing outputs
+
+**RFC Number**: 053
+
+**Status**: Accepted
+
+**Author**: agent:rfc-drafter (draft); the owner accepted it 2026-11-05 on the-greenman/srs#998
+
+**Affected Components**: The authoring projection (`x-srs-field-id` on every property, at every depth), per-field facets under `ext:discovery` (one facet per Field, carrying `fieldId`), `docs/schema/2.0/projection-rules.md`, the prose retirement of the keyword in RFC-039's Blast radius section. No stored shape, no JSON schema file, no `dataModelRevision` bump.
+
+<!-- srs-integration:v1
+ext:discovery
+mechanism:field-facets
+mechanism:authoring-projection-field-identity
+cell:identity
+cell:conformance
+-->
+
+**Dependency Refs**: Applies rfc-decision-b2ff7c91. Amends the surfaces of RFC-012 (Door 3) and RFC-035 (Door 3), and reverses one prose statement of RFC-039 (non-normative row). Consults rfc-decision-cce3c00e, rfc-decision-7d3dda60, rfc-decision-9ee14517. Adjacent: the-greenman/srs#366. Records its decisions as rfc-decision-51974ac3 and rfc-decision-43e84d63.
+
+**Proposal Artifact Path**: rfcs/rfc-053-field-id-beside-field-name.md
+
+**Content**: A field name is a label, unique only within one Type. An implementation reports a Field's id beside its name in the two outputs where clients meet field names: each authoring-projection property carries `x-srs-field-id`, and each field facet is one Field carrying `fieldId`. Records stay keyed by `Field.name`, and nothing stored changes. Full text: rfcs/rfc-053-field-id-beside-field-name.md.
 
 

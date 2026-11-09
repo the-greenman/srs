@@ -2348,3 +2348,71 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 **Review Trigger**: Review a per-Composition configuration option if a case is found that needs more control than the continuity rule gives, for example an author who needs a level skipped on purpose; the case is the evidence for that revision.
 
 
+**Title**: A Field's id travels in the outputs clients already receive
+
+**Status**: Accepted
+
+**Decision Date**: 2026-11-05
+
+**Decision Rationale**: `rfc-decision-b2ff7c91` requires identity in machine-facing outputs, and one mechanism beats two (Conformance: one way over many). A separate read would add a second way to the same goal and leave each client calling once per Type and combining results. The reversal of RFC-039's retirement of the keyword is explicit and named, which axis 5-11's boundary clause requires of a renewal. Records stay keyed by `Field.name`.
+
+**Decision**: An implementation reports each Field's id beside its name in the authoring projection, as the annotation keyword `x-srs-field-id`, so no client needs a separate read to learn it.
+
+**Scope**: The authoring projection in every implementation. Not the validation projection, the RFC-035 emitter, stored Records, or any other `x-srs-*` keyword.
+
+**Governing Values**:
+- shared-coherence
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Do nothing: clients see names only, and `b2ff7c91` stays unmet in these outputs. A separate `(typeId, typeVersion, name) -> fieldId` read plus facets listing contributing Types: the schema stays free of the keyword, closest to RFC-039, at the cost of a second mechanism and one call per Type per view. In-place ids now with that read added later as a convenience: still open, and adding it needs a new decision.
+
+**Accepted Costs**: About 58 bytes per schema property. Every implementation must report ids. `x-srs-field-id` becomes the first `x-srs-*` keyword registered outside the validation projection, so srs#366's later registry inherits its name and placement, and removing it would need a supersession. This settles in practice that the authoring projection serves SRS-aware clients while the validation projection stays plain.
+
+**Evidence**:
+- the-greenman/srs#998 (owner answers 2026-11-05 19:42 UTC; owner acceptance 2026-11-05)
+- rfcs/rfc-053-field-id-beside-field-name.md, Revision 6
+- the-greenman/srs-web#547 (D6 follow-up: 'Ask the engine for field ids')
+- programme decision 6b5e2810 (authorised the RFC)
+
+**Review Trigger**:
+1. Agents keep reading a schema or running a find only to learn one field's id. *Checked at:* srs-context friction records and the first MCP use after implementation; then add the Record-only read.
+2. A third-party consumer cannot take the keyword, for example under strict schema validation. *Checked at:* srs#366, when it leaves parked.
+3. srs#366 rules on keyword placement in a way this keyword contradicts. *Checked at:* srs#366.
+*Done its job:* srs-web restores "Tell apart by" with no client matching on names.
+
+
+**Title**: A field facet is one Field
+
+**Status**: Accepted
+
+**Decision Date**: 2026-11-05
+
+**Decision Rationale**: Grouping is an act `rfc-decision-b2ff7c91` requires to be done by identifier. A facet keyed by a label still counts by the label even with ids beside it, so a client cannot show honest counts for a Field it chose by id.
+
+**Decision**: An implementation that reports per-field facets makes each facet correspond to exactly one Field id, carrying `fieldId` beside the `field` name.
+
+**Scope**: Per-field facets under `ext:discovery`, where an implementation reports them. Eligibility, caps and value ordering stay implementation-defined, decided per Field. No shape is added to `discovery.json`.
+
+**Governing Values**:
+- semantic-integrity
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Do nothing: facets stay merged by name with no id. One facet per name with a list of `fieldIds`: counting is unchanged, but there are no per-id counts where a name is shared.
+
+**Accepted Costs**: The meaning of a field facet changes for any reader. One closed name (`kind`, in srs-programme) splits across the first-party corpora, a mixed shared name gains a facet, tied facets reorder, and under a cap one more facet may be cut. No first-party client reads field facets today.
+
+**Evidence**:
+- the-greenman/srs#998 (owner answers 2026-11-05 19:42 UTC; owner acceptance 2026-11-05)
+- rfcs/rfc-053-field-id-beside-field-name.md, Revision 6
+- the-greenman/srs-web#547 (D6 follow-up: 'Ask the engine for field ids')
+- programme decision 6b5e2810 (authorised the RFC)
+
+**Review Trigger**:
+1. Clients keep merging split facets back together by label. *Checked at:* srs-web#547's implementation and the next client to read field facets.
+2. The split pushes useful facets past an implementation's cap. *Checked at:* srs-rust's `find` when next changed.
+*Done its job:* a client offers a per-Field choice with honest counts.
+
+

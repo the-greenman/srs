@@ -87,7 +87,7 @@ See *Generated reference: `Vocabulary`* for `Vocabulary`'s current property tabl
 
 ## `Term`
 
-The generalisation of `TagDefinition`. A defined option within a `Vocabulary`.
+The generalisation of TagDefinition. A defined option within a `Vocabulary`.
 
 See *Generated reference: `Term`* for `Term`'s current property table, optional pseudo-IDL, and a link to the raw JSON Schema (srs#527, the #274 ratified ledger extended to the instance layer). This prose no longer hand-duplicates the property list.
 

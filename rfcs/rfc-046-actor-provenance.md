@@ -2,7 +2,7 @@
 
 # RFC-046: Actor provenance — `createdBy` on Record, Note and Relation
 
-**Status**: Accepted (Revision 6)
+**Status**: Accepted (Revision 7)
 **Affects**: `Record`, `Note`, `Relation` (new optional `createdBy`); new shared `Actor` shape; `FieldMeta.source` (vocabulary declared shared, no shape change); `docs/schema/2.0/record.json`, `note.json`, `relation.json`; `dataModelRevision` (8 → 9); the operations of conforming implementations that create, update or move instances. Builds on **RFC-038 (Accepted)** (independent relation files), **RFC-033 (Accepted)** (`dataModelRevision`) and the Attribution cell's principle, `rfc-decision-16b20c56` (Accepted).
 **Author**: Peter Brownell (owner ruling 2026-10-02, the-greenman/srs#850)
 **Date**: 2026-10-02
@@ -19,6 +19,7 @@
 | 4 | 2026-10-02 | Addressed review round 3. Blocking: [R8]'s exceptions now list the rules that actually read `createdBy`; transport that would place a stamped instance into a corpus below revision 9 is refused with `revision-too-old` ([R13]). Should-fix: `actor-invalid` is checked before `revision-too-old`; a session with no actor is never refused by [R11]/[R12]; the revision table is fixed. |
 | 5 | 2026-10-02 | Round 4: no blocking findings. Should-fix: a repair or migration that persists a *new* relation stamps it under [R3], and preservation covers existing instances only; one total precedence order for the three creation diagnostics ([R12]). |
 | 6 | 2026-10-02 | **Accepted by the owner.** Open Question 1 resolved: the Actor kind stays `ai` (no rename). Implementation started on branch `rfc/046-actor-provenance`. |
+| 7 | 2026-11-05 | **Clarification, on the owner's ruling (srs#1006).** An instance carried in by a copy, an unpack, a load or from another copy of the same repository is moved, not created, even when its id is new to the target, so its `createdBy` is preserved. The text pulled two ways: the operations table preserved a load "into a new or an existing repository", while the definition of creating and the last sentence of [R6] read as stamping it. Change C's definition of creating, its table and the future-operation test, [R3], [R6], [R11], [R12], [R13], the Consequences and Alt E are aligned, with the term *originates* for what stamps. No format or schema change and no `dataModelRevision` bump. |
 
 ---
 
@@ -122,7 +123,7 @@ Other entities with a `createdAt` (Field, Type, Container, Composition, Protocol
 
 *Conformance fixture shape.* A fixture states three things: a session actor (an Actor, or none), an operation from the table below with its request, and the expected `createdBy` of every instance the operation writes or keeps (an exact Actor, absent, or "unchanged"), or the expected diagnostic code. Each implementation runs the fixture by feeding the session actor through its documented input. The fixture itself stays implementation-neutral.
 
-**Creating means persisting a new instance.** An operation *creates* when it writes a Record, Note or Relation whose id did not exist in the repository. Creation is the **only** point where `createdBy` is set; every other operation carries it unchanged. The table below covers the operations of the reference implementation's CLI and MCP surfaces:
+**Creating means persisting a new instance.** An operation *originates* an instance when it writes one that is not read unchanged from an existing instance: a successor, a graduated record and any relation it writes as part of its work all originate. An operation *creates* when it originates a Record, Note or Relation under an id that did not exist in the repository. Carrying an existing instance in (a copy, an archive unpack, a `.srsj` load, or bringing instances in from another copy of the same repository, meaning the same `repositoryId`) is moving, not creating, even when its id is new to the target. Creation is the **only** point where `createdBy` is set; every other operation carries it unchanged. The table below covers the operations of the reference implementation's CLI and MCP surfaces:
 - **record:** create, update, delete, transition, successor and tag commands;
 - **note:** create, update, delete, graduate and tag commands;
 - **relation:** create and delete;
@@ -140,17 +141,17 @@ Other entities with a `createdAt` (Field, Type, Container, Composition, Protocol
 | Any other operation that writes a new relation as part of its work | **Stamp** that relation. |
 | Update a record, note or relation (whole-object or partial), including field values, tags, `meta`, `fieldMeta`, lifecycle transitions and type-version migration | **Preserve** ([R5]). |
 | Repository and data-model migrations, including revision migrations and repair operations | **Preserve** every existing instance. A migration moves data between shapes; it does not create content. If a repair or migration does persist a new Record, Note or Relation, that instance is stamped like any other creation ([R3]). |
-| Copy a repository; pack or unpack an archive; load or export a `.srsj` bundle (into a new or an existing repository) | **Preserve** ([R6]). These move existing instances and never create them. When an incoming instance meets an existing one with the same id, `createdBy` is never handled separately from the rest of the instance: whatever the operation does with the instance (replace it, keep it, or refuse), it does with `createdBy` too. |
+| Copy a repository; pack or unpack an archive; load or export a `.srsj` bundle (into a new or an existing repository); bring instances in from another copy of the same repository | **Preserve** ([R6]). These move existing instances and never create them, whether or not the target already holds the id. When an incoming instance meets an existing one with the same id, `createdBy` is never handled separately from the rest of the instance: whatever the operation does with the instance (replace it, keep it, or refuse), it does with `createdBy` too. |
 | Delete | **N/a**: nothing remains to attribute. |
 | Container, Composition, package, definition, lifecycle-definition and protocol-run operations | **N/a**: none of them persists a Record, Note or Relation. Container membership is container data, not relations. |
 
-A future operation is classified by the same test: if it persists a new Record, Note or Relation, it stamps that instance; otherwise it preserves.
+A future operation is classified by the same test: if it originates a new Record, Note or Relation, it stamps that instance; if it moves or changes an existing one, it preserves.
 
 **Requests never carry the actor.**
 - A creation request that contains a `createdBy` value is rejected with the diagnostic code `actor-supplied`, and nothing is written ([R4]).
 - An update request may carry `createdBy` only if it is identical to the stored value, including when both are absent. This is because many clients send the whole stored object back on update. A request that carries a different value, or a value where none is stored, is rejected with the diagnostic code `actor-changed`, and nothing is written ([R5]).
 
-*Consequences.* Within one implementation, an agent cannot impersonate another actor through the write API. That is the gap this RFC closes. It **cannot** stop anyone who edits the repository's files directly (a text editor, a git commit) from writing any `createdBy` they like. That is why Change D keeps `createdBy` testimony rather than authority.
+*Consequences.* Within one implementation, an agent cannot impersonate another actor through the write API. That is the gap this RFC closes. It **cannot** stop anyone who edits the repository's files directly (a text editor, a git commit), or the files of a copy that instances are later carried from, from writing any `createdBy` they like. That is why Change D keeps `createdBy` testimony rather than authority.
 
 ### Change D — attribution is testimony, never authority
 
@@ -196,13 +197,13 @@ The bump follows the established revision choreography:
 >
 > **[R2]** `createdBy` is OPTIONAL on Record, Note and Relation. Its absence MUST NOT make an instance invalid, and an implementation MUST NOT infer an actor for an instance that lacks it.
 >
-> **[R3]** When an operation persists a new Record, Note or Relation, the implementation MUST set that instance's `createdBy` to the session actor, or leave it absent if the session has no actor. This includes successor records, the record and relation produced by note graduation, and any relation an operation writes as part of its work. Outside creation, an implementation MUST NOT set, change or remove `createdBy`. Carrying it unchanged under [R5] and [R6] is not setting it.
+> **[R3]** When an operation originates a new Record, Note or Relation, the implementation MUST set that instance's `createdBy` to the session actor, or leave it absent if the session has no actor. This includes successor records, the record and relation produced by note graduation, and any relation an operation writes as part of its work. Outside creation, an implementation MUST NOT set, change or remove `createdBy`. Carrying it unchanged under [R5] and [R6] is not setting it.
 >
 > **[R4]** The session actor MUST come from the host, outside the request payload, through an input the implementation documents. A creation request that contains `createdBy` MUST be rejected with the diagnostic code `actor-supplied`, and nothing MUST be written.
 >
 > **[R5]** Every operation that updates an existing Record, Note or Relation MUST preserve its stored `createdBy` exactly, including its absence. An update request MAY contain `createdBy` only when it equals the stored value, absence matching absence. Otherwise the request MUST be rejected with the diagnostic code `actor-changed`, and nothing MUST be written.
 >
-> **[R6]** Repository copy, archive pack and unpack, `.srsj` load and export, and data-model and repair migrations MUST preserve the value of every existing instance's `createdBy`, and MUST NOT add, remove or alter one. An instance such an operation newly persists falls under [R3].
+> **[R6]** Repository copy, archive pack and unpack, `.srsj` load and export, bringing instances in from another copy of the same repository, and data-model and repair migrations MUST preserve the value of every existing instance's `createdBy`, and MUST NOT add, remove or alter one. An instance such an operation carries in is an existing instance, moved and not created, even when its id is new to the target. A request MUST NOT supply or override a carried instance's `createdBy`; one that does MUST be rejected as [R4] requires. An instance such an operation itself originates falls under [R3].
 >
 > **[R7]** An application that compares Actors MUST compare by `id` alone, using exact string equality, and MUST NOT treat `name` as identity. This rule constrains applications; no rule of the standard compares Actors ([R8]).
 >
@@ -212,11 +213,11 @@ The bump follows the established revision choreography:
 >
 > **[R10]** A corpus containing any `createdBy` MUST declare `dataModelRevision` 9 or later. An implementation that does not support revision 9 MUST refuse such a corpus rather than read it.
 >
-> **[R11]** If the session has an actor and the corpus declares a `dataModelRevision` below 9, every operation that would persist a new Record, Note or Relation MUST be refused with the diagnostic code `revision-too-old`, and nothing MUST be written.
+> **[R11]** If the session has an actor and the corpus declares a `dataModelRevision` below 9, every operation that would originate a new Record, Note or Relation MUST be refused with the diagnostic code `revision-too-old`, and nothing MUST be written.
 >
-> **[R12]** A session actor that does not satisfy [R1] MUST NOT be treated as "no actor". Every operation in that session that would persist a new Record, Note or Relation MUST be refused with the diagnostic code `actor-invalid`, and nothing MUST be written. When more than one creation diagnostic applies, exactly one is reported, in the order `actor-invalid`, then `actor-supplied`, then `revision-too-old`. [R11] and [R12] never apply to a session with no actor.
+> **[R12]** A session actor that does not satisfy [R1] MUST NOT be treated as "no actor". Every operation in that session that would originate a new Record, Note or Relation MUST be refused with the diagnostic code `actor-invalid`, and nothing MUST be written. When more than one creation diagnostic applies, exactly one is reported, in the order `actor-invalid`, then `actor-supplied`, then `revision-too-old`. [R11] and [R12] never apply to a session with no actor.
 >
-> **[R13]** A copy, archive unpack or `.srsj` load that would place an instance carrying `createdBy` into an existing corpus declaring a `dataModelRevision` below 9 MUST be refused with the diagnostic code `revision-too-old`, and nothing MUST be written.
+> **[R13]** A copy, archive unpack, `.srsj` load or bringing instances in from another copy that would place an instance carrying `createdBy` into an existing corpus declaring a `dataModelRevision` below 9 MUST be refused with the diagnostic code `revision-too-old`, and nothing MUST be written.
 
 ---
 
@@ -296,7 +297,7 @@ Restore `assertedBy`, `confidence`, `status`, `validFrom` and `validUntil` on Re
 ### Alt E — let a privileged caller supply `createdBy`
 
 For example, to impersonate an author during an import.
-- **Rejected.** Moving existing instances is already covered by preservation ([R6]).
+- **Rejected.** Moving existing instances is already covered by preservation ([R6]). Bringing an instance in from another copy is that same move (Revision 7): the `createdBy` comes from the copy, never from the request.
 - Any creation path that accepts a supplied actor is the forgery path this RFC closes.
 
 ### Alt F — no revision bump
