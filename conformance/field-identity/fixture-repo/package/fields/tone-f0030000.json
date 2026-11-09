@@ -1,0 +1,19 @@
+{
+  "id": "f0030000-0000-4000-8000-000000000003",
+  "namespace": "com.example.fieldid",
+  "name": "tone",
+  "version": 1,
+  "description": "tone, closed (the closed Field of the name)",
+  "aiGuidance": {
+    "purpose": "tone, closed (the closed Field of the name)"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "calm",
+      "loud"
+    ]
+  },
+  "createdAt": "2026-11-09T02:16:02.102782846+00:00"
+}

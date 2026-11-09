@@ -1,0 +1,19 @@
+{
+  "id": "f0080000-0000-4000-8000-000000000008",
+  "namespace": "com.example.fieldid",
+  "name": "size",
+  "version": 1,
+  "description": "inline composite carrying the range Type",
+  "aiGuidance": {
+    "purpose": "inline composite carrying the range Type"
+  },
+  "fieldType": {
+    "datatype": "ref",
+    "rangeType": {
+      "typeId": "a0070000-0000-4000-8000-000000000007",
+      "typeVersion": 1
+    },
+    "mode": "inline"
+  },
+  "createdAt": "2026-11-09T02:16:02.440910736+00:00"
+}

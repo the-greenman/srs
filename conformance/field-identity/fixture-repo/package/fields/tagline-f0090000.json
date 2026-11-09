@@ -1,0 +1,15 @@
+{
+  "id": "f0090000-0000-4000-8000-000000000009",
+  "namespace": "com.example.fieldid",
+  "name": "tagline",
+  "version": 1,
+  "description": "assigned by a Type but only the first of two ties",
+  "aiGuidance": {
+    "purpose": "assigned by a Type but only the first of two ties"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "open"
+  },
+  "createdAt": "2026-11-09T02:16:02.510496154+00:00"
+}

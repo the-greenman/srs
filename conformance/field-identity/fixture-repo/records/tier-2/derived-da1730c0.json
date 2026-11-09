@@ -1,0 +1,17 @@
+{
+  "instanceId": "da1730c0-2d74-4560-862f-e5bf6ec438bf",
+  "typeId": "a0050000-0000-4000-8000-000000000005",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.fieldid",
+  "typeName": "derived",
+  "fieldValues": {
+    "label": "x",
+    "stage": "early",
+    "size": {
+      "unit": "cm"
+    }
+  },
+  "createdAt": "2026-11-09T02:16:03.473076006+00:00",
+  "updatedAt": "2026-11-09T02:16:03.473083263+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
