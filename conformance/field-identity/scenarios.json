@@ -1,0 +1,78 @@
+{
+  "$comment": "RFC-053 conformance scenarios. Each is contract: adding one adds an obligation. The runner (tests/field-identity/run.mjs) evaluates them with the pinned srs CLI against fixture-repo. Field ids are written out; they are the fixture's own.",
+  "facets": [
+    {
+      "id": "facet-per-field",
+      "rules": ["R3", "R5"],
+      "description": "Two Types assign two different Fields both named kind (note|task, red|green); a third Type shares the first. Each reported facet corresponds to exactly one Field id, a facet spans the two Types that assign the shared Field, and no two facets carry the same fieldId.",
+      "find": ["--limit", "0", "--facets", "true"],
+      "expectFacets": {
+        "f0010000-0000-4000-8000-000000000001": { "field": "kind", "values": { "task": 2, "note": 1 } },
+        "f0060000-0000-4000-8000-000000000006": { "field": "kind", "values": { "red": 1 } }
+      }
+    },
+    {
+      "id": "facet-closed-not-open",
+      "rules": ["R3"],
+      "description": "The name tone is closed in one Field and open in another. Only the closed Field reports a facet; the open Field's value is counted in none.",
+      "find": ["--limit", "0", "--facets", "true"],
+      "expectFacets": {
+        "f0030000-0000-4000-8000-000000000003": { "field": "tone", "values": { "calm": 1, "loud": 1 } }
+      },
+      "expectNoFacetFor": ["f0040000-0000-4000-8000-000000000004"]
+    },
+    {
+      "id": "facet-tie-ascending-field-id",
+      "rules": ["R3"],
+      "description": "Two facets tie on total (one value each): stage (f002...) and the red kind (f006...). The tie breaks by ascending fieldId, which here is the opposite of ascending name, so a name-ordered implementation fails.",
+      "find": ["--limit", "0", "--facets", "true"],
+      "expectOrderAmong": [
+        "f0020000-0000-4000-8000-000000000002",
+        "f0060000-0000-4000-8000-000000000006"
+      ]
+    },
+    {
+      "id": "facet-no-duplicate-field-id",
+      "rules": ["R3"],
+      "description": "No two facets in one result carry the same fieldId, and every facet carries both fieldId and field.",
+      "find": ["--limit", "0", "--facets", "true"],
+      "expectUniqueFieldIds": true
+    }
+  ],
+  "projections": [
+    {
+      "id": "projection-own-and-inherited",
+      "rules": ["R1", "R5"],
+      "description": "derived extends base. Its authoring projection carries x-srs-field-id on the inherited property (label, base's Field) and on its own (stage, size), each the id of the Field assigned at that key in the effective field set.",
+      "typeId": "a0050000-0000-4000-8000-000000000005",
+      "expectIds": {
+        "label": "f0050000-0000-4000-8000-000000000005",
+        "stage": "f0020000-0000-4000-8000-000000000002",
+        "size": "f0080000-0000-4000-8000-000000000008"
+      }
+    },
+    {
+      "id": "projection-inline-composite-nested",
+      "rules": ["R1", "R2"],
+      "description": "size is an inline composite whose range Type is measure. The projection expands it in place and the nested unit property carries the id of the Field measure assigns at that key.",
+      "typeId": "a0050000-0000-4000-8000-000000000005",
+      "expectNested": {
+        "size": { "unit": "f0070000-0000-4000-8000-000000000007" }
+      }
+    },
+    {
+      "id": "projection-no-diagnostics",
+      "rules": ["R6"],
+      "description": "Every assignment resolves, so the projection reports no diagnostics and omits no property.",
+      "typeId": "a0050000-0000-4000-8000-000000000005",
+      "expectPropertyKeys": ["label", "stage", "size"],
+      "expectDiagnostics": 0
+    }
+  ],
+  "owed": [
+    {
+      "rules": ["R3", "R6"],
+      "description": "A record whose Type does not resolve (counted in no facet), and a Type assignment naming a Field the package does not hold (property omitted, key left out of required, warning naming the id). The CLI cannot produce either state: type delete refuses a Type that a record uses, and no command writes an assignment to a missing Field. A fixture needs a hand-written tree, which repository rules forbid, so these two stay owed until the CLI can express them."
+    }
+  ]
+}

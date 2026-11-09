@@ -1,0 +1,14 @@
+{
+  "instanceId": "a8b9ecf3-055d-4150-b95d-1c1b8e4a9d52",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.core",
+  "typeName": "purpose",
+  "fieldValues": {
+    "statement": "",
+    "title": "Field identity conformance fixture"
+  },
+  "createdAt": "2026-11-09T02:16:01.901631570+00:00",
+  "updatedAt": "2026-11-09T02:16:01.901631570+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

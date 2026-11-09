@@ -1,0 +1,14 @@
+{
+  "instanceId": "65742039-3fb9-458e-85c7-96b5d351b656",
+  "typeId": "a0020000-0000-4000-8000-000000000002",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.fieldid",
+  "typeName": "beta",
+  "fieldValues": {
+    "kind": "red",
+    "tone": "anything"
+  },
+  "createdAt": "2026-11-09T02:16:03.308921959+00:00",
+  "updatedAt": "2026-11-09T02:16:03.308928347+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

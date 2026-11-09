@@ -1,0 +1,19 @@
+{
+  "id": "f0020000-0000-4000-8000-000000000002",
+  "namespace": "com.example.fieldid",
+  "name": "stage",
+  "version": 1,
+  "description": "an inherited-field-adjacent closed Field of the derived Type",
+  "aiGuidance": {
+    "purpose": "an inherited-field-adjacent closed Field of the derived Type"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "early",
+      "late"
+    ]
+  },
+  "createdAt": "2026-11-09T02:16:02.303940131+00:00"
+}

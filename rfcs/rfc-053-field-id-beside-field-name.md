@@ -2,7 +2,7 @@
 
 # RFC-053: A Field's id travels beside its name in machine-facing outputs
 
-**Status**: Accepted (Revision 6)
+**Status**: Implemented (Revision 7)
 **Affects**:
 - **RFC-039 (Accepted, Revision 6):** reverses, for the authoring projection, the statement "`x-srs-field-id` is retired" in RFC-039's *Blast radius* section. RFC-039's conformance rules do not change: `fieldValues` stays keyed by `Field.name` ([R1], [R2b]).
 - **RFC-012 / `ext:discovery` (Accepted, Revision 13):** gains one conditional mechanism, *Field facets*, for implementations that report field facets. RFC-012's rules [R1]–[R12] do not change.
@@ -26,6 +26,7 @@ Answers SP-05. Requested by the-greenman/srs#931 and found by the-greenman/srs-w
 | 4 | 2026-11-04 | Round-2 integrity should-fixes (no blocking findings). The authoring projection is now defined against `projection-rules.md`'s facing distinction, and an implementation must name which of its outputs are authoring projections. [R1] now binds properties that project a FieldAssignment, and nested `items` properties are clarified. [R4] is restated as testable behaviour. [R3] uses MUST NOT. [R6] also drops the omitted key from `required` and resolves against the effective package. The tie-break's reordering of every tied result is stated. The fixtures cover the mixed-eligibility, unresolvable and tie cases. |
 | 5 | 2026-11-05 | **Owner answers on the-greenman/srs#998, 2026-11-05 19:42 UTC.** D1: "A: id beside name in the authoring schema and facets". D2: "One facet per Field". Open Questions 1 and 2 are resolved as written in Changes A and B, with no normative change. The status stays Draft until the owner accepts the RFC. |
 | 6 | 2026-11-05 | **Accepted by the owner on the-greenman/srs#998, 2026-11-05.** Folded into the canonical spec: the mechanism records *Authoring projection: Field identity* and *Field facets*, the `projection-rules.md` section, decisions `rfc-decision-51974ac3` and `rfc-decision-43e84d63`, and revision rows on RFC-012, RFC-035 and RFC-039. Open Questions 3 and 4 close as decided. **Owed, not folded here:** the conformance fixtures (see *Fold-in targets*); until they land, the level test's check is a debt owed by the-greenman/srs#1007, with implementation in the-greenman/srs-rust#1581. The PR's decision block read A as a renewal under axis 5-11's boundary clause, while *Charter alignment* below reads it as Reliability; both readings are recorded and neither changes a rule. |
+| 7 | 2026-11-09 | Implemented. Implemented in srs-rust (the-greenman/srs-rust#1591, with #1592 closed); published releases from v0.1.0-build.628 carry it. Conformance fixtures [R1]-[R3] and [R5] landed in `conformance/field-identity/` with check `field-identity-conformance` (the-greenman/srs#1007), and the pin advanced to v0.1.0-build.628. The unresolvable-Type case of [R3] and the unresolvable-assignment case of [R6] stay owed: the CLI cannot produce those states. Status bookkeeping only; no normative change. |
 
 ---
 

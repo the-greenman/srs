@@ -526,6 +526,15 @@
       "description": "The governance-seed-drift check demonstrably fails on a perturbed committed seed (red) and passes both on the real, unmodified corpus and once the perturbation is undone (green) — the guards-bite discipline (srs#308/#311/#391) applied to a pinned-cli check, which guards-bite itself (Node-pipeline-only) cannot reach."
     },
     {
+      "id": "field-identity-conformance",
+      "script": "../tests/field-identity/run.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "conformance",
+      "governing": "RFC-053 [R1]-[R6]; srs#1007",
+      "description": "Every RFC-053 scenario in conformance/field-identity/scenarios.json holds against the pinned srs CLI on conformance/field-identity/fixture-repo: find reports one facet per Field id (a facet spanning Types, only closed Fields, ascending-fieldId tie order, fieldId and field on every facet), and the authoring projection (type schema) carries x-srs-field-id on own, inherited and nested inline-composite properties and reports no diagnostic for a resolvable Type. A build from before RFC-053 fails it. The unresolvable-Type and unresolvable-assignment cases are owed (the CLI cannot produce them)."
+    },
+    {
       "id": "arrangement-storage-conformance",
       "script": "../tests/arrangement-storage/run.mjs",
       "args": [],
