@@ -1,0 +1,14 @@
+{
+  "instanceId": "e6170502-34dd-43b6-b82e-537e32d543d7",
+  "typeId": "a0010000-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.fieldid",
+  "typeName": "alpha",
+  "fieldValues": {
+    "kind": "task",
+    "tone": "loud"
+  },
+  "createdAt": "2026-11-09T02:16:03.224720350+00:00",
+  "updatedAt": "2026-11-09T02:16:03.224726355+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

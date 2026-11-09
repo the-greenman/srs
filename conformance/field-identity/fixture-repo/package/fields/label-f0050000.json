@@ -1,0 +1,15 @@
+{
+  "id": "f0050000-0000-4000-8000-000000000005",
+  "namespace": "com.example.fieldid",
+  "name": "label",
+  "version": 1,
+  "description": "an own field of the base Type",
+  "aiGuidance": {
+    "purpose": "an own field of the base Type"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "open"
+  },
+  "createdAt": "2026-11-09T02:16:02.238056205+00:00"
+}

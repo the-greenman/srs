@@ -1,0 +1,19 @@
+{
+  "id": "f0010000-0000-4000-8000-000000000001",
+  "namespace": "com.example.fieldid",
+  "name": "kind",
+  "version": 1,
+  "description": "kind, closed: note or task (the Field shared by two Types)",
+  "aiGuidance": {
+    "purpose": "kind, closed: note or task (the Field shared by two Types)"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "note",
+      "task"
+    ]
+  },
+  "createdAt": "2026-11-09T02:16:01.959765809+00:00"
+}

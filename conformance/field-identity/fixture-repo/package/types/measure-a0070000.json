@@ -1,0 +1,16 @@
+{
+  "id": "a0070000-0000-4000-8000-000000000007",
+  "namespace": "com.example.fieldid",
+  "name": "measure",
+  "version": 1,
+  "description": "",
+  "fields": [
+    {
+      "fieldId": "f0070000-0000-4000-8000-000000000007",
+      "order": 0,
+      "required": false
+    }
+  ],
+  "createdAt": "2026-11-09T02:16:02.985525698+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json"
+}

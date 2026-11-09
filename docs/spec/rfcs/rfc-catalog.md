@@ -1363,7 +1363,7 @@ mechanism:`Address`
 
 **RFC Number**: 053
 
-**Status**: Accepted
+**Status**: Implemented
 
 **Author**: agent:rfc-drafter (draft); the owner accepted it 2026-11-05 on the-greenman/srs#998
 

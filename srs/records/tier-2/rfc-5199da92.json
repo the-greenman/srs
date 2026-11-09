@@ -13,9 +13,9 @@
     "proposal_artifact_path": "rfcs/rfc-053-field-id-beside-field-name.md",
     "content": "A field name is a label, unique only within one Type. An implementation reports a Field's id beside its name in the two outputs where clients meet field names: each authoring-projection property carries `x-srs-field-id`, and each field facet is one Field carrying `fieldId`. Records stay keyed by `Field.name`, and nothing stored changes. Full text: rfcs/rfc-053-field-id-beside-field-name.md."
   },
-  "lifecycleState": "accepted",
+  "lifecycleState": "implemented",
   "createdAt": "2026-11-05T20:03:25.452183373+00:00",
-  "updatedAt": "2026-11-05T20:12:59.015389709+00:00",
+  "updatedAt": "2026-11-09T02:19:47.738936447+00:00",
   "createdBy": {
     "kind": "ai",
     "id": "agent:claude-code",
