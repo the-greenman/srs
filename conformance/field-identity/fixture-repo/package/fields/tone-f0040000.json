@@ -1,0 +1,15 @@
+{
+  "id": "f0040000-0000-4000-8000-000000000004",
+  "namespace": "com.example.fieldid",
+  "name": "tone",
+  "version": 1,
+  "description": "tone, open (the open Field of the name; no facet)",
+  "aiGuidance": {
+    "purpose": "tone, open (the open Field of the name; no facet)"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "open"
+  },
+  "createdAt": "2026-11-09T02:16:02.173489159+00:00"
+}

@@ -1,0 +1,14 @@
+{
+  "instanceId": "514aaeda-35a0-4eef-817c-844ba1ca55ff",
+  "typeId": "a0010000-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.fieldid",
+  "typeName": "alpha",
+  "fieldValues": {
+    "kind": "note",
+    "tone": "calm"
+  },
+  "createdAt": "2026-11-09T02:16:03.145739726+00:00",
+  "updatedAt": "2026-11-09T02:16:03.145746151+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

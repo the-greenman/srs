@@ -1,0 +1,19 @@
+{
+  "id": "f0070000-0000-4000-8000-000000000007",
+  "namespace": "com.example.fieldid",
+  "name": "unit",
+  "version": 1,
+  "description": "closed Field of the inline composite range",
+  "aiGuidance": {
+    "purpose": "closed Field of the inline composite range"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "cm",
+      "kg"
+    ]
+  },
+  "createdAt": "2026-11-09T02:16:02.370190441+00:00"
+}

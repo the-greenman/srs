@@ -1,0 +1,34 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/package-manifest.json",
+  "id": "6a8ccc5d-67ec-4ac5-8388-866d17ddd689",
+  "namespace": "com.example.fieldid",
+  "name": "primary",
+  "version": "1.0.0",
+  "title": "primary",
+  "description": "",
+  "status": "active",
+  "createdAt": "2026-01-01T00:00:00Z",
+  "fields": [
+    "fields/kind-f0010000.json",
+    "fields/kind-f0060000.json",
+    "fields/tone-f0030000.json",
+    "fields/tone-f0040000.json",
+    "fields/label-f0050000.json",
+    "fields/stage-f0020000.json",
+    "fields/unit-f0070000.json",
+    "fields/size-f0080000.json",
+    "fields/tagline-f0090000.json"
+  ],
+  "types": [
+    "types/alpha-a0010000.json",
+    "types/beta-a0020000.json",
+    "types/gamma-a0030000.json",
+    "types/base-a0040000.json",
+    "types/measure-a0070000.json",
+    "types/derived-a0050000.json"
+  ],
+  "relationTypes": [],
+  "views": [],
+  "compositions": [],
+  "blueprints": []
+}

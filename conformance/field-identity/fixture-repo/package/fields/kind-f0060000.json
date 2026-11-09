@@ -1,0 +1,19 @@
+{
+  "id": "f0060000-0000-4000-8000-000000000006",
+  "namespace": "com.example.fieldid",
+  "name": "kind",
+  "version": 1,
+  "description": "kind, closed: red or green (a different Field with the same name)",
+  "aiGuidance": {
+    "purpose": "kind, closed: red or green (a different Field with the same name)"
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "allowedValues": [
+      "red",
+      "green"
+    ]
+  },
+  "createdAt": "2026-11-09T02:16:02.036619259+00:00"
+}

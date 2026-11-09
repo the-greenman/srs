@@ -1,0 +1,13 @@
+{
+  "instanceId": "5a00e296-c6e8-4099-a9d8-0d145501cf5b",
+  "typeId": "a0030000-0000-4000-8000-000000000003",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.fieldid",
+  "typeName": "gamma",
+  "fieldValues": {
+    "kind": "task"
+  },
+  "createdAt": "2026-11-09T02:16:03.394455222+00:00",
+  "updatedAt": "2026-11-09T02:16:03.394461458+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
