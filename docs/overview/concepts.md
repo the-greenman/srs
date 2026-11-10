@@ -123,8 +123,9 @@ flowchart LR
 ```
 
 Relations live in their own file (`relations/relations.json`), separate from the records.
-Ordering relations such as `precedes`/`section-sequence` use `members[]` arrays to impose
-document order; point-to-point relations use `from`/`to`.
+Every relation is one typed edge from a `sourceInstanceId` to a `targetInstanceId`; there is no
+multi-member or hyperedge form (R1). Document order is the Container's entry order (RFC-043);
+`precedes` is a semantic claim about the records only (R6).
 
 ## Container — a grouping boundary
 
