@@ -387,6 +387,8 @@ gh pr create \
 
 **`## Decisions you need to make`** — every open question, each with the options, their consequences, and your recommendation. If the RFC can be accepted without any owner input, say **"None — this is fully specified"**. Never bury a decision in an Open Questions section of a file the reviewer was not asked to open.
 
+Write each one in words for the owner, and also as an ask in the PR's `srs-decisions` block that carries what the owner needs to judge it: the decision in one sentence, what the Charter Check settled and what it leaves open, the decision ids consulted (Stage 1.5), the stakes, when to revisit, and for each option the strategic paths it opens and shuts and the problems and remedies it serves. The fields and the checklist articles behind them are in clerk `docs/pr-decisions.md`, *What it takes to judge an ask*; `clerk pr-check` warns on a gap. Ask only what the compass leaves open: a question it settles is stated as settled, with its case.
+
 **`## Implementation tasks`** — what accepting this RFC sets in motion: each task from the Stage 8 list, its repository, and what it waits on. Before acceptance these are plans in words; once Stage 8 has run, each line links its issue. If nothing follows, say **"None"** and say why.
 
 **`## Reading the diff`** — tell the reviewer what to skip:
