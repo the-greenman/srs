@@ -8,7 +8,9 @@
  *      [R3]; `null` deletes the path); `given.flatten` turns every container back into its revision-10
  *      flat file (the logical form `container get` reports) and stamps the manifest 10;
  *   2. `git` (optional) commits that tree, runs each branch's `steps` on its own branch, then merges
- *      the second branch into the first twice: with rename detection off (`merge.renames=false`),
+ *      the second branch into the first twice: with rename detection off (`-s recursive -X no-renames`, which
+ *      git 2.43's default `ort` strategy needs: it pairs near-identical one-line entry files as renames
+ *      even with `merge.renames=false`),
  *      which is RFC-051 [R10]'s per-path merge and is what `expect.merge` and the expectations
  *      check; and with stock git, which MAY conflict more (`expect.stockMerge: "conflict"` requires
  *      it to) but, when clean, MUST give the same outlines;
@@ -143,7 +145,7 @@ for (const raw of doc.scenarios) {
       if (!stockClean) git(repo, ["merge", "--abort"]);
       // 2. The per-path merge [R10] defines: git with rename detection off.
       git(repo, ["checkout", "-q", into]);
-      const clean = git(repo, ["-c", "merge.renames=false", "merge", "-q", "--no-edit", "--no-gpg-sign", from], false);
+      const clean = git(repo, ["-c", "merge.renames=false", "-c", "diff.renames=false", "merge", "-s", "recursive", "-X", "no-renames", "-q", "--no-edit", "--no-gpg-sign", from], false);
       const want = sc.expect.merge;
       if (want === "clean" && !clean) problems.push("the per-path merge conflicted, expected a clean merge");
       if (want === "conflict" && clean) problems.push("the per-path merge was clean, expected a conflict");
