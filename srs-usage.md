@@ -1603,6 +1603,38 @@ The same services are exposed to the browser:
 - `export_package_bundle(inputJson)` with `inputJson = {"selector"?, "publishedAt"?, "publisher"?, "homepage"?, "mode"?}` (`mode` is `bundled` or `standalone`); returns `{text, summary}` where `summary` has the export payload's fields. Read-only (the write epoch does not move). It returns the text rather than writing a file; the caller saves it.
 - `install_package_bundle(bundleJson, optionsJson)` with `bundleJson` the file's text and `optionsJson = {"boundaryPath"?, "strict"?}` (`"{}"` for defaults); returns the same fields as the CLI install payload, including `notes`. It advances the write epoch, so the session is dirty. Verify the file's sha256 over its bytes before passing the text, and call `check_package_requirements(bundleJson)` first for RFC-044 requirement outcomes.
 
+### Moving a definition to another package boundary
+
+`srs package move` (srs-rust#1639) moves a definition to another package boundary of the same repository, keeping its id, version and content. Only the file's location and the two boundaries' `package.json` lists change, so the records and relations that use the definition stay valid. Use it to refine packages: for example, to move a relation type from the unpublished primary package into the package you publish, so that package carries it.
+
+```bash
+srs package move <definition-id> --to packages/website --repo /path/to/repo --dry-run   # report only
+srs package move <definition-id> --to packages/website --repo /path/to/repo             # move it
+srs repo validate --repo /path/to/repo                                                  # 0 errors
+```
+
+- `--to` is the target boundary path; `package` names the primary package. The target must be a registered boundary.
+- **Every version of the id moves together**, because a definition's lineage lives in one boundary. Any kind of definition moves: field, type, relation type, view, composition, theme, protocol, blueprint, vocabulary or lifecycle.
+- The file keeps its name, unless the target already holds a different definition under that name; then it gets the collision-safe name.
+- **Always run `--dry-run` first.** It writes nothing and returns the same payload:
+  - `moved[]`: `{kind, id, version, from, to, path}`, one per version;
+  - `referencedBy`: definition files in the source boundary that mention the moved id. A bundled export of the source still carries it.
+  - `references`: definition files outside the target that the moved definition mentions, such as the fields a moved type uses. A `--mode standalone` export of the target leaves them out, so export it `bundled` or move them too.
+- **A move that failed partway is finished by running it again.** Target copies identical to their source versions count as already moved.
+- **You cannot move into or out of a package installed from a bundle** (one with `.srs-import` tracking). Refine such a package in its source package; it reaches the repository by upgrade (owner, 2026-11-11).
+- The move refuses (`ok: false`, nothing written) with:
+
+| Code | Meaning |
+|---|---|
+| `definition-not-found` | no boundary lists a definition with this id |
+| `package-not-found` | `--to` is not a registered boundary |
+| `move-same-boundary` | the definition is already in the target |
+| `move-split-lineage` | the id is already in more than one boundary, and this is not a half-done move; repair the duplicate first |
+| `move-definition-imported` | an installed package's import records track the definition |
+| `move-target-installed` | the target is a package installed from a bundle |
+
+The same operation is the WASM `move_definition(input_json)` (`{id, to, dryRun?}`) and the MCP tool `package_move {id, to?, dryRun?}`.
+
 ### Package requirements (`packageDependencies`, RFC-044)
 
 A package manifest's `packageDependencies` lists the packages it requires. Each entry is a `DependencyRef`: `packageId` (the required package's `id`, the key), `namespace` and `name` (display labels only) and `version` (SemVer 2.0.0). An installed version satisfies the entry when it is in the same compatibility band (same MAJOR; below 1.0 the same `0.MINOR`; for `0.0.z` the same release), is not a pre-release of a different release, and is at least the stated version. The bundle's `dependencyRefs` is a different list (definition References the content points at); never read one as the other.
