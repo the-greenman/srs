@@ -1,0 +1,20 @@
+{
+  "id": "0b0000b1-0000-4000-8000-000000000001",
+  "namespace": "com.example.relations",
+  "name": "doc",
+  "version": 1,
+  "description": "A titled document that moves through the doc_flow lifecycle.",
+  "fields": [
+    {
+      "fieldId": "0b0000e1-0000-4000-8000-000000000001",
+      "order": 1,
+      "required": true
+    }
+  ],
+  "lifecycleRef": "0b0000d1-0000-4000-8000-000000000001",
+  "aiGuidance": {
+    "purpose": "A document with a lifecycle."
+  },
+  "createdAt": "2026-11-08T00:00:00Z",
+  "$schema": "https://srs.semanticops.com/schema/2.0/type.json"
+}

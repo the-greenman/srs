@@ -1,0 +1,14 @@
+{
+  "instanceId": "db3e53ba-826b-41a9-b62c-4752f8c56b7c",
+  "typeId": "3c000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.core",
+  "typeName": "purpose",
+  "fieldValues": {
+    "statement": "",
+    "title": "Relation Conformance Fixture"
+  },
+  "createdAt": "2026-11-08T19:18:26.047700510+00:00",
+  "updatedAt": "2026-11-08T19:18:26.047700510+00:00",
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "0b0000e1-0000-4000-8000-000000000001",
+  "namespace": "com.example.relations",
+  "name": "title",
+  "version": 1,
+  "description": "The title.",
+  "aiGuidance": {
+    "purpose": "The title of a document."
+  },
+  "fieldType": {
+    "datatype": "string"
+  },
+  "createdAt": "2026-11-08T00:00:00Z"
+}
