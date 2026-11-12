@@ -544,6 +544,15 @@
       "description": "Every RFC-051 storage scenario in conformance/arrangement/storage-scenarios.json holds against the pinned srs CLI on a fresh copy of conformance/arrangement/fixture-repo: deterministic migration (the flat outlines migrate to the committed directories byte for byte), the Appendix key vectors and arrangement-key refusals, write sets with tie runs, detached entries followed by an operation ([R8]), orphans, loops (with and without an attached entry) and repair, a dangling pointer, head/entry classification, stray and misplaced files, and the plain-git merge cases (concurrent appends, add/add, a container deleted against an added entry, rename pairing, rename/delete and rename/rename)."
     },
     {
+      "id": "relation-conformance",
+      "script": "../tests/relation-conformance/run.mjs",
+      "args": [],
+      "tier": "pinned-cli",
+      "cell": "conformance",
+      "governing": "srs#180; I-20, I-88, I-98, I-100, mechanism-eec1e40c (Resolution invariants)",
+      "description": "Every scenario in conformance/relations/scenarios.json holds against the pinned srs CLI on a fresh copy of conformance/relations/fixture-repo: dangling endpoints and unresolvable relation types refused on write, a containerId as a relation endpoint refused (I-20), a hard requiresRelation transition refused until satisfied and allowed after (I-98), an advisory one allowed with a warning at rest (I-100), a sourceRole outside the closed set refused (I-88). Pending cases must name an srs-rust issue. The runner also alters two expectations in memory and requires the run to fail, so the check cannot pass vacuously."
+    },
+    {
       "id": "governance-seed-root-container",
       "script": "check-governance-seed-root-container.mjs",
       "args": [],
