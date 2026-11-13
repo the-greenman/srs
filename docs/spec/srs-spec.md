@@ -239,6 +239,13 @@ How one definition points at another. The human-facing canonical string form is 
 
 **Examples**: `core/decision_statement@2`; `{ typeId: <uuid>, typeVersion: 3 }`
 
+##### A LINEAGE reference resolves to the highest installed version
+
+**Number**: I-155
+
+When the effective package set (the RFC-014 union of installed package versions, with the RFC-029 core package) holds more than one version of the definition named by a LINEAGE reference, an implementation MUST resolve the reference to the version with the highest `version`. This applies at every LINEAGE site of the Package export reference sites table, for every use of the reference (validation, rendering, type dispatch, discovery and Protocol execution), and for LINEAGE references made by every installed definition, including one reached only through a PINNED reference. An implementation MUST NOT let any of these change which version is selected: the order in which packages, package versions or definition files are listed or loaded; the package the referring definition belongs to; a package's SemVer version or pre-release status; import provenance; file timestamps; or any lifecycle state a definition record carries. The rule does not change whether a LINEAGE reference resolves: it resolves when any installed version holds its `id`. One definition carried by several packages whose files parse to equal JSON values is one definition; two definitions with the same `id` and `version` whose JSON values differ are an identity conflict, which an implementation MUST report as an error and MUST NOT settle by version or by any order. PINNED, KEYED and LOCATOR references are unaffected. (RFC-055 [R1]–[R3].)
+
+
 
 #### Address
 
@@ -892,6 +899,8 @@ Applies to: `Note.tags`, `NoteSection.tags`.
 
 **V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
 
+A `vocabularyRef` names its target by bare id (a LINEAGE reference). Where several versions of the target are installed, it resolves to the highest (I-155, RFC-055).
+
 **V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
 1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
 2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
@@ -1092,6 +1101,8 @@ Declaring both is a validation error (V7). An inline lifecycle's effective state
 **V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.
 
 **V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.
+
+A `lifecycleRef` names its target by bare id (a LINEAGE reference). Where several versions of the target are installed, it resolves to the highest (I-155, RFC-055).
 
 **V9 — Lifecycle integrity.** Over the effective state set (V5):
 - Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.
@@ -3781,7 +3792,7 @@ A Package Bundle MUST carry definitions only, plus the package metadata `package
 
 ###### Package export reference sites
 
-A reference site is every property of a definition schema that holds another definition's UUID, bare or as an `{id, version}` pair, with the strength `rfc-decision-c8704763` declares for it. A site added by a later RFC declares its strength where it is defined. An empty value (a Protocol's `targetType` of `""`) is not a reference. Not reference sites: a definition's `Lineage` provenance (`sourceDefinitionId`, `forkedFromDefinitionId`) and a Composition source's `containerId`/`containerIds`. Package export follows PINNED and LINEAGE sites and no others (RFC-003 [C1]).
+A reference site is every property of a definition schema that holds another definition's UUID, bare or as an `{id, version}` pair, with the strength `rfc-decision-c8704763` declares for it. A site added by a later RFC declares its strength where it is defined. An empty value (a Protocol's `targetType` of `""`) is not a reference. Not reference sites: a definition's `Lineage` provenance (`sourceDefinitionId`, `forkedFromDefinitionId`) and a Composition source's `containerId`/`containerIds`. Package export follows PINNED and LINEAGE sites and no others (RFC-003 [C1]). Export reaches every installed version of a LINEAGE target; resolution uses the highest of them (I-155, RFC-055).
 
 | Strength | Followed | Sites |
 |---|---|---|
@@ -6844,6 +6855,10 @@ These values govern the SRS standard layer. Rust, web, and other implementation 
 - **I-99.** A fulfillment supplied with a lifecycle transition MUST be applied as one all-or-nothing operation:…
 - **I-100.** Allowed-transitions projections MUST include the target state's `requiresRelation` declaration on ea…
 - **I-154.** When `record successor` omits `relationType`, an implementation MUST derive it from the effective li…
+
+#### Canonical reference
+
+- **I-155.** When the effective package set (the RFC-014 union of installed package versions, with the RFC-029 co…
 
 #### AI guidance
 
