@@ -2416,3 +2416,35 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 *Done its job:* a client offers a per-Field choice with honest counts.
 
 
+**Title**: A LINEAGE reference resolves to the highest installed version
+
+**Status**: Accepted
+
+**Decision Date**: 2026-11-13
+
+**Decision Rationale**: LINEAGE was made version-independent so a definition can evolve without re-versioning its referrers (rfc-decision-c8704763, RFC-008); only the newest installed version serves that purpose. Several installed versions are a legal state (RFC-003 [C1], RFC-014 [R6]), so some rule must choose, and Conformance's one way over many rules out per-site or per-implementation choices. srs-rust had already diverged by definition kind (Views highest, Fields, Vocabularies and Lifecycles first-loaded).
+
+**Decision**: Where the effective package set holds more than one version of the definition a LINEAGE reference names, the reference resolves to the highest `version`, at every LINEAGE site and for every use (validation, rendering, type dispatch, discovery, Protocols). Load order, the referrer's package, package SemVer and lifecycle state never decide it.
+
+**Scope**: Every LINEAGE site of the Package export reference sites table, in every installed definition including superseded ones reached through a PINNED reference. PINNED, KEYED and LOCATOR references are unaffected; existence and identity-conflict rules are unchanged. No schema change.
+
+**Governing Values**:
+- semantic-integrity
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Forbid more than one installed version of a LINEAGE target (rejected: the state is legal and needed); prefer the referrer's own package (does not settle the essay case, where one package lists both versions); a rendering-only rule (leaves validation, the larger consequence, open); a repository-level version pin (a second mechanism for what PINNED serves); rank by the carrying package's SemVer (a definition's identity is its own id and version).
+
+**Accepted Costs**: A new version is live everywhere at once: a Vocabulary or Lifecycle version that drops an entry invalidates existing values, and a Field version that changes its contract re-validates every record of every Type assigning it, including records whose Type version is pinned. Keeping an old behaviour needs a new id.
+
+**Evidence**:
+- the-greenman/srs#1029 (owner acceptance 2026-11-13)
+- rfcs/rfc-055-lineage-version-resolution.md, Revision 4
+- the-greenman/srs-rust#1648, #1651, #1658 (the essay image-paragraph-view case)
+- Invariant I-155
+
+**Review Trigger**:
+1. A package needs an installed lower version to stay in force for a LINEAGE site; that is evidence for a strength change at that site, not for a second resolution path. 2. The Field-contract follow-up (RFC-055 Open Question 1) is decided; re-read the accepted costs against it.
+
+

@@ -6,10 +6,10 @@
   "typeName": "mechanism",
   "fieldValues": {
     "title": "Validation invariants (V7–V9)",
-    "content": "**V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.\n\n**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.\n\n**V9 — Lifecycle integrity.** Over the effective state set (V5):\n- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.\n- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.\n- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.\n- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.\n- Transition `id`s must be unique within the effective transition set.\n- `Record.lifecycleState` resolves under V1."
+    "content": "**V7 — Lifecycle exclusivity.** A Type declares exactly one of `lifecycle` or `lifecycleRef`.\n\n**V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.\n\nA `lifecycleRef` names its target by bare id (a LINEAGE reference). Where several versions of the target are installed, it resolves to the highest (I-155, RFC-055).\n\n**V9 — Lifecycle integrity.** Over the effective state set (V5):\n- Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.\n- The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.\n- Every `transition.from`/`transition.to` must reference a state `key` in the effective state set.\n- A state with `isFinal: true` MUST NOT appear as the `from` of any transition.\n- Transition `id`s must be unique within the effective transition set.\n- `Record.lifecycleState` resolves under V1."
   },
   "createdAt": "2026-09-08T17:48:37.563435681+00:00",
-  "updatedAt": "2026-09-08T17:48:37.563441610+00:00",
+  "updatedAt": "2026-11-13T22:37:59.259606883+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "meta": {
     "derivedFrom": "d5d3f88f-8cc6-5247-8d35-41b189804dc5"

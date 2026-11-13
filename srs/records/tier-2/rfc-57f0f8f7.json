@@ -1,0 +1,24 @@
+{
+  "instanceId": "57f0f8f7-689c-4a31-8b12-c3bd6c5b5ff2",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-055: A LINEAGE reference resolves to the highest installed version",
+    "rfc_number": "055",
+    "author": "agent (Claude Code), drafted from the-greenman/srs#1029; the owner accepted it 2026-11-13",
+    "affected_components": "The LINEAGE reference strength (`rfc-decision-c8704763`) gains a selection rule: where the effective package set holds several versions of a LINEAGE target, the reference resolves to the highest `version`, at every LINEAGE site and for every use. Folded as Invariant I-155 under the Canonical reference concept, with cross-pointers in V4 and V8 (Resolution invariants, Validation invariants V7–V9) and in the Package export reference sites mechanism. No schema change, no `dataModelRevision` bump. Conformance fixture `conformance/lineage-resolution/` owed by a follow-up issue.\n\n<!-- srs-integration:v1\nI-155\ncell:reference\ncell:versioning\ncell:conformance\n-->",
+    "dependency_refs": "Refines rfc-decision-c8704763. Builds on RFC-003, RFC-008, RFC-014 and RFC-029. Records its decision as an rfc-decision record linked to c8704763 by `refines`. Follow-up: whether a Field version may change its contract (Open Question 1).",
+    "proposal_artifact_path": "rfcs/rfc-055-lineage-version-resolution.md",
+    "content": "A LINEAGE reference names a definition by `id` alone, meaning whatever version the context installs. When the effective package set holds more than one version, the reference resolves to the highest `version`: at every LINEAGE site, for validation, rendering, type dispatch, discovery and Protocols alike, and regardless of load order, package or package SemVer. Existence and identity-conflict rules are unchanged. Full text: rfcs/rfc-055-lineage-version-resolution.md."
+  },
+  "lifecycleState": "accepted",
+  "createdAt": "2026-11-13T22:31:41.231476595+00:00",
+  "updatedAt": "2026-11-13T22:32:09.733227549+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

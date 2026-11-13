@@ -1384,3 +1384,27 @@ cell:conformance
 **Content**: A field name is a label, unique only within one Type. An implementation reports a Field's id beside its name in the two outputs where clients meet field names: each authoring-projection property carries `x-srs-field-id`, and each field facet is one Field carrying `fieldId`. Records stay keyed by `Field.name`, and nothing stored changes. Full text: rfcs/rfc-053-field-id-beside-field-name.md.
 
 
+**Title**: RFC-055: A LINEAGE reference resolves to the highest installed version
+
+**RFC Number**: 055
+
+**Status**: Accepted
+
+**Author**: agent (Claude Code), drafted from the-greenman/srs#1029; the owner accepted it 2026-11-13
+
+**Affected Components**: The LINEAGE reference strength (`rfc-decision-c8704763`) gains a selection rule: where the effective package set holds several versions of a LINEAGE target, the reference resolves to the highest `version`, at every LINEAGE site and for every use. Folded as Invariant I-155 under the Canonical reference concept, with cross-pointers in V4 and V8 (Resolution invariants, Validation invariants V7–V9) and in the Package export reference sites mechanism. No schema change, no `dataModelRevision` bump. Conformance fixture `conformance/lineage-resolution/` owed by a follow-up issue.
+
+<!-- srs-integration:v1
+I-155
+cell:reference
+cell:versioning
+cell:conformance
+-->
+
+**Dependency Refs**: Refines rfc-decision-c8704763. Builds on RFC-003, RFC-008, RFC-014 and RFC-029. Records its decision as an rfc-decision record linked to c8704763 by `refines`. Follow-up: whether a Field version may change its contract (Open Question 1).
+
+**Proposal Artifact Path**: rfcs/rfc-055-lineage-version-resolution.md
+
+**Content**: A LINEAGE reference names a definition by `id` alone, meaning whatever version the context installs. When the effective package set holds more than one version, the reference resolves to the highest `version`: at every LINEAGE site, for validation, rendering, type dispatch, discovery and Protocols alike, and regardless of load order, package or package SemVer. Existence and identity-conflict rules are unchanged. Full text: rfcs/rfc-055-lineage-version-resolution.md.
+
+

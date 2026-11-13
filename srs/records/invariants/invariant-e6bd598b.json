@@ -1,0 +1,19 @@
+{
+  "instanceId": "e6bd598b-6a9a-414e-9952-e9b0d9555014",
+  "typeId": "2a000006-0000-4000-a000-000000000006",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "invariant",
+  "fieldValues": {
+    "invariant_number": "I-155",
+    "title": "A LINEAGE reference resolves to the highest installed version",
+    "normative_statement": "When the effective package set (the RFC-014 union of installed package versions, with the RFC-029 core package) holds more than one version of the definition named by a LINEAGE reference, an implementation MUST resolve the reference to the version with the highest `version`. This applies at every LINEAGE site of the Package export reference sites table, for every use of the reference (validation, rendering, type dispatch, discovery and Protocol execution), and for LINEAGE references made by every installed definition, including one reached only through a PINNED reference. An implementation MUST NOT let any of these change which version is selected: the order in which packages, package versions or definition files are listed or loaded; the package the referring definition belongs to; a package's SemVer version or pre-release status; import provenance; file timestamps; or any lifecycle state a definition record carries. The rule does not change whether a LINEAGE reference resolves: it resolves when any installed version holds its `id`. One definition carried by several packages whose files parse to equal JSON values is one definition; two definitions with the same `id` and `version` whose JSON values differ are an identity conflict, which an implementation MUST report as an error and MUST NOT settle by version or by any order. PINNED, KEYED and LOCATOR references are unaffected. (RFC-055 [R1]–[R3].)"
+  },
+  "createdAt": "2026-11-13T22:31:03.069381277+00:00",
+  "updatedAt": "2026-11-13T22:31:03.069385535+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
