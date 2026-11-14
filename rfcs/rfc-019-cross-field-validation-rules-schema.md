@@ -2,7 +2,7 @@
 
 # RFC-019: Cross-Field Validation Rules — `validationRules` on `Type` and `CrossFieldRule` Schema
 
-**Status**: Accepted (Revision 5)
+**Status**: Accepted (Revision 7)
 **Affects**: `docs/schema/2.0/type.json`; `ext:cross-field-validation` (extension record `c16793d7-005a-58d2-88d0-9e7d9b4967b1`); spec invariants I-10 (`e1000010`) and I-11 (`e1000011`)
 **Author**: the-greenman (from issue the-greenman/srs#139)
 **Date**: 2026-07-09
@@ -20,6 +20,7 @@
 | 3 | 2026-07-09 | Implementation started; RFC file committed to branch `rfc/019-cross-field-validation-rules-schema`; schema fix applied ("Temporal direction" → "Ordering direction" in `CrossFieldRuleEffect`). |
 | 4 | 2026-07-09 | Accepted; spec records authored (I-85–I-93) in `srs/srs/records/tier-2/`; extension record `c16793d7` updated to reference RFC-019; spec rendered and release-drift check passed. |
 | 5 | 2026-08-01 | RFC-032 Rev-7 erratum (#284): replace R6's legacy `valueType` subset with an exact effective-single `fieldType.datatype ∈ {string,date,date-time}` predicate. Admission of `date-time` is intentional; requiring scalar cardinality intentionally closes the legacy repeatable-date equality hole. The assignment-level conjunct remains until the atomic #242 Phase-B removal gate passes. |
+| 7 | 2026-11-14 | srs-programme decision e36be60a (ratified 2026-11-10; srs#1024): the fourth rule kind `conditional-forbidden` (RFC-040 Change F) takes exactly the properties of `conditional-required`, so supplying `fieldIds` on it is a Type-level error. Change D gains the `conditional-forbidden` row; [R9] names the four recognised kinds (I-95); [R10] adds `conditional-forbidden` to the rules that MUST NOT supply `fieldIds` (I-96). `type.json` is unchanged (the shape is already open to these properties). |
 
 ---
 
@@ -139,6 +140,7 @@ Add the following $def to `type.json`:
 |---|---|---|
 | `conditional-required` | `predicateFieldId`, `predicateValue`, `targetFieldId` | `effect`, `fieldIds` |
 | `field-ordering` | `predicateFieldId`, `targetFieldId`, `effect` | `predicateValue`, `fieldIds` |
+| `conditional-forbidden` | `predicateFieldId`, `predicateValue`, `targetFieldId` | `effect`, `fieldIds` |
 | `mutual-exclusion` | `fieldIds` (min 2 UUIDs) | `predicateFieldId`, `predicateValue`, `targetFieldId`, `effect` |
 
 Presence of a "MUST NOT supply" property on a rule that does not use it MUST be reported as a
@@ -216,8 +218,8 @@ R0–R11 apply only to conforming implementations that declare support for `ext:
 > validation error. (Normative restatement of I-11 `e1000011`.)
 
 > **[R9]** A `CrossFieldRule` with a `type` value not in
-> `["conditional-required", "field-ordering", "mutual-exclusion"]` MUST be reported as a
-> Type-level validation error. Implementations MUST NOT silently ignore unknown rule types.
+> `["conditional-required", "conditional-forbidden", "field-ordering", "mutual-exclusion"]` MUST be
+> reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types.
 
 > **[R10]** A `CrossFieldRule` that contains a property in the "MUST NOT supply" column for its
 > `type` (see Change D) MUST be reported as a Type-level validation error.

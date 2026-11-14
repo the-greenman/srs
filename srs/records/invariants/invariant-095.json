@@ -7,13 +7,13 @@
   "fieldValues": {
     "invariant_number": "I-95",
     "title": "CrossFieldRule with unrecognized type value MUST be reported as a Type-level error; unknown types MUST NOT be silently ignored",
-    "normative_statement": "A `CrossFieldRule` with a `type` value not in `[\"conditional-required\", \"field-ordering\", \"mutual-exclusion\"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)"
+    "normative_statement": "A `CrossFieldRule` with a `type` value not in `[\"conditional-required\", \"conditional-forbidden\", \"field-ordering\", \"mutual-exclusion\"]` MUST be reported as a Type-level validation error. Implementations MUST NOT silently ignore unknown rule types. (RFC-019 R9.)"
   },
   "tags": [
     "concern:validation",
     "topic:conformance"
   ],
   "createdAt": "2026-07-09T12:34:05.084906046+00:00",
-  "updatedAt": "2026-09-07T19:59:44.312921124+00:00",
+  "updatedAt": "2026-11-14T05:14:30.099291655+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }
