@@ -2,7 +2,7 @@
 
 # RFC-038: Tree-authoritative repositories and conflict-free Git storage
 
-**Status**: Accepted (Revision 17)
+**Status**: Accepted (Revision 18)
 **Affects**: `RepositoryManifest` (`instanceIndex`, `containerIndex`, `sourceDocumentIndex`, `relationsChecksums`, `relationsPath`), `InstanceIndexEntry`, `ContainerIndexEntry`, `SourceDocumentIndexEntry`, `RelationsChecksumEntry`, `Relation` storage, `ext:repository` repository layout and archive format, `ext:json-store` (`.srsj`) membership and version gate, `ext:slices` (RFC-026 [R5], [R6], [R13]), `dataModelRevision`; `docs/schema/2.0/{manifest,relations-collection,relation-type}.json` a new `docs/schema/2.0/relation.json`, and three further schemas recorded as owed and absent (a `.revisions.json` sidecar schema, a `protocol.json` definition schema, and a `{srsj, manifest, data}` envelope schema that has never existed). Resolves a standing contradiction between the manifest schema / `RepositoryManifest` prose and RFC-012 [R6] / RFC-013 [R2] / I-80 / I-118. **Amends Accepted RFC-039 [R13]/[R14], RFC-026 [R5]/[R6]/[R13] and migration steps, RFC-013 [R6]/[R9], and RFC-017 [R2]/[R12].** Composed with RFC-039 (Accepted Rev 6 — `#242`) in one first-party cutover at a single `dataModelRevision: 2`. **Breaking (storage layer).**
 **Author**: the-greenman (epic-256 worker)
 **Date**: 2026-07-31
@@ -13,6 +13,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 18 | 2026-11-14 | Door 3 amendment executing srs-programme decision ba478783 (ratified by the owner 2026-11-10, "Unrecognised instance content is carried with a warning"; it follows rfc-decision-2e0cd70a and mechanism f92f27a0): for the instance layer only (Records, Notes, Relations), an unrecognised top-level key is a non-fatal warning (`SRS038-R7-UNKNOWN-INSTANCE-KEY`) carved out of [R7] and [R24], the instance loads, and every write carries the key. [R7], [R8] and [R24]; no schema file changes. Definition-layer rules for packages are untouched, and the out-of-contract value of a known key is not decided here. |
 | 17 | 2026-10-20 | Door 3 amendment executing RFC-051 (the-greenman/srs#940, accepted): containers are stored per entry. [R5], [R8], [R9], [R13], [R14], [R22] and [R23]. Effective at `dataModelRevision` 11. |
 | 16 | 2026-10-20 | Door 3 amendment executing RFC-052 (the-greenman/srs#941, accepted): [R1]'s root-container exception removed, [R22]'s manifest clause, Change F's root-delete paragraph, Change K's retained list and root-container sentences, and Phase 2 read by the reading rule. Effective at `dataModelRevision` 10. |
 | 15 | 2026-10-08 | **Door 3 amendment resolving a standing contradiction with Accepted RFC-029 [R1] (owner ruling on srs-rust#1291, 2026-10-08: "Ruling: option A... The R13 check and `type create` both resolve against the merged package + core set (ADR-025)").** RFC-029 [R1] already requires `com.semanticops.core/*` types and fields to "resolve against [the implicit core merge] exactly as if they appeared in an explicit local package" for *every* conforming implementation — but this RFC's own **definition set** table (just below [R1]) and [R13]'s prose scoped resolution to "local package roots... resolved through each package manifest's declared arrays" only, silently excluding the implicitly-merged core package RFC-029 mandates. The reference implementation followed this RFC's narrower text: `type create` rejected a `FieldAssignment.fieldId` naming a core field (e.g. `com.semanticops.core/title`) with `field not found`, and a hand-written Type referencing one by id made the repository catalog fatally unloadable at the next `repo validate` (srs-rust#1039, srs-rust#1291). **Both now read as amended below**: the **definition set** row gains the clause "plus every field and type definition the implementation implicitly merges per RFC-029 [R1] (and any future RFC establishing an equivalent always-available package), resolved identically regardless of source"; [R13]'s `FieldAssignment.fieldId` sentence gains the parenthetical "(including implicitly-merged definitions, RFC-029 [R1])". No schema or stored-data shape changes — this is a resolution-scope clarification, not a storage change, so no `dataModelRevision` bump. The matching `srs-rust` fix (PR implementing srs-rust#1291) updates `catalog.rs::resolve_references` and `package_service::create_type_in_package`'s mirror of it to the merged set, and gives `update_type` the same field-existence check `create_type_in_package` already had. |
@@ -30,6 +31,25 @@
 | 3 | 2026-07-31 | Self-verification pass over Rev 2's own claims, before round-2 review returned. **Classification was still scoped to instance roots** while [R5] made five location classes discoverable — and **12 of 12 Containers declare no `$schema`**, so [R7]/[R8] are now written over reserved *locations* with a per-location admissible-entity set, or Change D's "nothing is skipped quietly" would have been false everywhere except instance roots. **Corrected counts** measured by shape rather than declaration: **150 Fields (not 146) and 45 Types (not 44)** — 4 Fields and 1 Type carry no `$schema`, so the `$schema`-keyed figures undercounted; `$schema` absence is now shown as a corpus-wide pattern rather than a Records quirk. **Invariant identifiers corrected**: the spec uses bare numbers for core invariants and `I-` prefixes for extension ones, so Rev 2's "I-46, I-49, I-50" named nothing — they are **Invariant 46, 49, 50** (contents verified). **Phase 2 step 13's ordering citation was wrong** — document order is Rule [N+12]'s `precedes` sort with a **`createdAt`** tiebreak, `instanceId` only secondary via RFC-013 [R5]; RFC-013's own Rev-3 history records that exact simplification being caught once before. **Phase 1 step 8 over-reached**: `core-bundle.srspkg` has no `srsj`, no `manifest` and no `data`, so 3 of 4 artifacts take the bump, not 4. Added two positive evidence results — an independent implementation of [R3] returns **exactly the 375 instances `instanceIndex` lists**, and of 13 in-repo `package.json` files exactly **one** has a reserved directory beside it — plus an explicit note that **muSrs is unmeasured** (outside this repository) and cross-references to #285 and #272. |
 | 2 | 2026-07-31 | Review round 1, both reviewers (18 blocking). *(Rule numbers in this row are Rev-1 numbering.)* **The rule set was not closed over the entities a repository actually contains**: [R8] forbade validating or modifying `manifest.json`, `relations/`, `containers/`, `source-documents/` and all of `package/**` — **262 of 637 files in `srs/`** — while [R2], [R9], [R12] and [R13] each required exactly that. Rules are now stated over **five named authoritative sets** and a two-level location model (reserved *instance* roots vs reserved *repository* locations), which also closes the hole where Change J removed `containerIndex` while no rule made `containers/` discoverable — it is **not** in the spec's reserved-folder table, so containers were located only by the index being deleted. **Two Accepted-RFC conflicts were asserted away rather than stated**: RFC-039 [R13] *mandates* `instanceIndex` enumeration (Rev 1 cited it three times as if it were only an anti-glob rule) and [R14] resolves references against it; RFC-026 `ext:slices` [R5]/[R13] quantify over `containerIndex` and `instanceIndex`. Both are now stated as **amendments this RFC makes**, with RFC-039's own cession of placement/enumeration as the warrant. **Version discrimination (Required decision #9) was entirely missing** — now [R24], using the `.srsj` `srsj` version gate, which already requires readers to reject unrecognised versions; the previous silent-empty-repository failure mode is named. Added the `relation.json` wire shape in prose (16 properties, 4 required) rather than by reference; a diagnostic model with fatality semantics ([R25]); delete semantics; recognised-sidecar recognition as a closed list; the `allOf` domain-`$schema` branch that `record.json` explicitly sanctions; [R6]'s candidate set with its verified disjointness property. **Corrected counts:** relations **222 across 3 collections** (205 `srs/` + 17 gallery + 0 fixture), not 205 — Rev 1 quoted an `srs/`-scoped figure beside corpus-wide instance counts, the exact CC-10 failure; package manifests **13 in-repo / 8 first-party**, not 6; `base` and `core` each miss 5 required properties so [R3] would silently disqualify them. Retirement list extended from 5 sites to the full set (I-46, I-49, I-50, I-82, I-102, I-112 and 9 further prose sites), and **citations moved from generated-projection line numbers to stable invariant/section ids** — re-rendering shifted every `srs-spec.md` line by +37 mid-review, which is precisely why line numbers into a projection are not citations. |
 | 1 | 2026-07-31 | Initial draft. Design and migration plan only, per the process gate on #296. |
+
+## Charter alignment
+
+**Cell(s):** cell:repository, cell:conformance
+**Decision mode:** complicated
+
+The substance was ruled by the owner (srs-programme decision ba478783, ratified 2026-11-10). This revision executes it by amending an Accepted RFC's own surface, so it is Door 3 and the owner merges.
+
+**Governing cell preference:**
+- **Repository, "catalog over circumstance":** aligned. One unrecognised key no longer makes the catalog unloadable.
+- **Conformance, "one way over many":** aligned. Unknown instance content is carried and warned about one way, for Records, Notes and Relations alike.
+
+**Decisions consulted:** ba478783 (srs-programme), rfc-decision-2e0cd70a, rfc-decision-7caca3a1, rfc-decision-e99a9437; mechanism f92f27a0 (schemas closed, engines tolerant).
+
+**Contradictions found:** [R7] and [R24] made any instance schema failure fatal, which rfc-decision-2e0cd70a ("unknown instance-layer content never fails a load") rules out. The ruling is applied to the instance layer's unrecognised top-level keys only; [R7] and [R24] stand for every other failure.
+
+**One-way-per-goal:** one carve-out in the reader replaces two incompatible rulings; no schema changes.
+
+**Layer test:** the behaviour is a reader and writer rule (implementation), the schemas stay the production contract.
 
 ---
 
@@ -809,6 +829,8 @@ the closure `ext:slices` needs.
 > reported as an error naming the file and the declared schema. The implementation MUST NOT
 > reclassify by shape.
 
+> **Amended by Revision 18 (decision ba478783; no `dataModelRevision` bump, no schema change).** **[R7]**, for the instance layer only (a Record, Note or Relation under a reserved instance root or `relations/`): a validation failure whose every violation is an unrecognised top-level key is not an error. It MUST be reported as a **warning** naming the file and the key, with the stable identifier `SRS038-R7-UNKNOWN-INSTANCE-KEY`. The object loads and is classified as if the key were absent. An implementation MUST carry the key through every write of that object and MUST NOT drop it silently; where it cannot carry a key it MUST refuse the write loudly rather than discard it. Any other violation (a missing required property, a wrong type or value of a known key, a nested unrecognised key) stays an error under this rule as written, so the out-of-contract value of a known key is not decided here. The instance schemas stay `additionalProperties: false` (mechanism f92f27a0: schemas closed, engines tolerant): the tolerance lives in the reader, not in the schema. Definition-layer locations (packages, definitions, `.meta.json` sidecars, containers, manifests) are unchanged: an unrecognised key there remains a schema failure. *(Prior text, in force until a corpus is read by an implementation at Revision 18: an unrecognised top-level key in an instance file was a schema failure and so an error.)*
+
 > **[R8]** When an object under a reserved repository location does not declare `$schema`, it MUST
 > validate as exactly one entity admissible at that location. Zero matches, or two or more, MUST be
 > reported as an error naming the file and the candidates. The admissible sets are: under a reserved
@@ -826,6 +848,8 @@ the closure `ext:slices` needs.
 > discriminate against. Both conjuncts nonetheless require one schema change — `relation-type.json`
 > does not set `additionalProperties` today, and RelationType is a declared definition kind (23 in
 > `srs/`, 5 in each governance package), so the blanket clause is false until it does.
+
+> **Amended by Revision 18 (decision ba478783).** **[R8]**: for an instance candidate without `$schema`, "validates as exactly one entity" is tested with unrecognised top-level keys ignored; the exactly-one and pairwise-distinguishability conjuncts are otherwise unchanged, and every schema in the admissible set stays `additionalProperties: false`. The ignored keys are reported by [R7]'s warning.
 
 > **Amended by RFC-051 (effective at `dataModelRevision` 11).** **[R8]**: the admissible set under `containers/` is the head (`container.json`) and the entry (`stored-container-entry.json`), told apart by content (RFC-051 [R12]).
 
@@ -946,6 +970,8 @@ the closure `ext:slices` needs.
 > repository MUST NOT be reported as successfully loaded, and an implementation MUST NOT return a
 > partial catalog as if complete. A `validate` operation MUST report all diagnostics rather than
 > stopping at the first.
+
+> **Amended by Revision 18 (decision ba478783).** **[R24]**: an `error` under a reserved repository location is fatal to the load as written, and the warning `SRS038-R7-UNKNOWN-INSTANCE-KEY` is not an `error`: it MUST NOT make the load fatal, MUST NOT cause a partial catalog, and a `validate` operation MUST still report it among all diagnostics. Its declared severity is `warning`.
 
 > **[R25]** Amendments to Accepted RFCs, effective at the cutover. **RFC-039**: [R13]'s enumeration
 > source becomes the authoritative store per [R1]; [R14]'s reference target becomes the authoritative
@@ -1200,6 +1226,8 @@ mechanism. There is no downgrade converter and none is owed: a staged-tree-plus-
 procedure would be right for a public migration and is unnecessary for a first-party one.
 
 ### Acceptance tests
+
+> **Amended by Revision 18 (decision ba478783).** Added test: an instance file carrying one unrecognised top-level key loads, `validate` reports exactly one `SRS038-R7-UNKNOWN-INSTANCE-KEY` warning naming the file and the key, an update of that object writes the key back unchanged, and the load is not fatal. The same file with a missing required property is still an error and still fatal. (A malformed JSON file in test 5 stays fatal.)
 
 1. Two branches from one base each add a Tier-0 Note. Neither diff touches `manifest.json`. The
    branches merge with no textual conflict, and enumeration from the merge result finds both notes.
