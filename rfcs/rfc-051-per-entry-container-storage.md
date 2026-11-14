@@ -2,7 +2,7 @@
 
 # RFC-051: Per-entry container storage — one file per entry, so concurrent membership edits merge cleanly
 
-**Status**: Accepted (Revision 15)
+**Status**: Implemented (Revision 16)
 **Affects**:
 - **Storage:** container storage under `containers/` (`ext:repository`).
 - **Schemas:** new `stored-container-entry.json`; `container.json` (description); `manifest.json` (revision description). Both existing files are generated, through the metamodel package, generation ledger and closure tests.
@@ -25,6 +25,7 @@ Answers SP-30 (srs-programme: "Several writers can overwrite each other").
 |---|---|---|
 | 1–5 | 2026-10-20 | Draft and four review rounds (#940 comments) |
 | 6–9 | 2026-10-20 | Owner rulings applied (#940); three more review rounds; the last found no blocking findings |
+| 16 | 2026-11-14 | **Door 3 correction: [R8] states the whole-outline replace rule; Implemented** (the-greenman/srs#1026; executes srs-programme decision 6114cc72, the owner's ruling on srs#940 via srs-rust#1463 ask A1). [R8] now says what a whole-outline replace (an operation that names no moved entry, such as a member swap) writes: the keys of the longest run already in `(key, instanceId)` order are kept, and every other entry is rewritten under [R9]. The rule gains a worked example, Change C follows, and the conformance case *whole-outline replace* pins its keys. Implemented: srs-rust shipped revision 11 and the rule (srs-rust#1414's sub-issues), the corpora are at `dataModelRevision` 11. Status bookkeeping apart from the [R8] rule, which only states what the reference tool already does; no other rule changes. |
 | 15 | 2026-10-23 | **Door 3 correction: [R8] two passes, owner ruling on srs-rust#1438 A1** (the-greenman/srs#954). [R8] and [R9] could be read as one keying pass. [R8] now says outright: an operation on a container with detached entries first re-attaches them exactly as [R11] does, then keys its own writes under [R9] against that re-attached state, so the result is the re-attachment followed by the operation. [R9] and Change C follow; [R8] gains the worked example, and the conformance case *detached entries followed by an operation* pins its keys. |
 | 14 | 2026-10-20 | **Correction** (rfc-decision-4431046e's correction class; no position changes): the merge counts in Motivation were per conflicted file, not per merge. Corrected to merges: srs 22 (0 on a container), srs-context 4, muSrs 7; total 40, of which 12 on a container (was 62 and 13). |
 | 13 | 2026-10-20 | **Accepted by the owner** (2026-10-20, the-greenman/srs#940). Two-phase landing, as RFC-043 and RFC-052: now, this text, the Door 3 amendment notes, the gated records, the key-algorithm mechanism record (the Appendix) and the successor decision record, with the schemas staged under `docs/schema/staged/rfc-051/`; later, in one PR after srs-rust#1414 ships revision 11 (and after RFC-052's promotion), the corpus migration, the schema promotion and the pin advance. No normative rule changes. |
@@ -162,7 +163,7 @@ Every RFC-043 Change D operation keeps its exact behaviour and inputs: add, inse
 
 An append writes one file. A remove also rewrites its children. No operation writes the head.
 
-An operation on a container that holds detached entries first re-attaches them, as part of the same all-or-nothing outcome. Otherwise some outlines (an append at the very end) would have no encoding. It then keys its own writes against that re-attached state, so it writes the same bytes as repair's re-attachment followed by the operation ([R8]).
+An operation on a container that holds detached entries first re-attaches them, as part of the same all-or-nothing outcome. Otherwise some outlines (an append at the very end) would have no encoding. It then keys its own writes against that re-attached state, so it writes the same bytes as repair's re-attachment followed by the operation ([R8]). A whole-outline replace names no moved entry, so it keeps the longest run already in key order and writes the rest ([R8]).
 
 ### Change D — Keys from one algorithm
 
@@ -268,6 +269,8 @@ These are added to `conformance/arrangement`; the detail is in srs-rust#1414:
 > The result MUST be the same bytes as [R11]'s re-attachment followed by the operation.
 > - **Example:** a container holds the attached top-level entry `t` (key `a0`) and the orphans `b` and `o`, in that decoding order. Inserting `n` at the top level after `t` re-attaches `b` = `a1` and `o` = `a2`, then keys `n` = `a0V`, between `a0` and `a1`. A single [R9] pass that counted `b` and `o` as written would give `n` = `a1`, `b` = `a2`, `o` = `a3`, and does not conform.
 > - **Write set:** it MUST write exactly the entries [R11] re-attaches; the entry it adds, moves or removes; the entries whose `parent` changes; and the tied siblings that [R9] requires. It MUST NOT write any other entry, or the head.
+> - **Whole-outline replace:** an operation that sets the whole outline and names no moved entry (such as a member swap, or a replace that reorders) MUST keep the keys of the longest run of siblings already in strictly increasing `(key, instanceId)` order, comparing keys bytewise and then `instanceId`, and MUST treat every other sibling of that list as written and key it under [R9]. Where several runs are equally long, which one is kept is not specified (the reference tool takes the one its patience-sorting pass ends on); every choice decodes to the target. A replace whose kept entries are already in order writes nothing more.
+> - **Example:** a container holds `a`, `b`, `c` and `d` at the top level, keyed `a0`, `a1`, `a2`, `a3`. Replacing the outline with `d`, `a`, `b`, `c` keeps `a`, `b` and `c` (the longest run in key order) and writes only `d`, keyed `Zz`, before `a0`. Replacing it with `c`, `b`, `a`, `d` has no run longer than two, so it writes two entries and keeps two.
 > - **Record-delete cascade:** a cascade MAY write entries only in this way, as declared cascade targets.
 >
 > *(Amends RFC-043 [R7] and RFC-038 [R22].)*

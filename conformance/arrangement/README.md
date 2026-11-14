@@ -91,3 +91,11 @@ v0.1.0-build.554 and checked against the rule each cites.
 The srs-web `rfc038-concurrency` end-to-end acceptance (two writers, one container, a plain merge) is
 srs-web's test (the-greenman/srs-web#584); `concurrent_appends_with_equal_keys_merge_cleanly` is the
 same property at the CLI.
+- **Whole-outline replace** ([R8]; Revision 16, the-greenman/srs#1026). A container holds `a`, `b`,
+  `c` and `d` at depth 0, keyed `a0`, `a1`, `a2`, `a3`. Replace the outline with `d`, `a`, `b`, `c`
+  (no entry is named as moved). The operation keeps the longest run already in `(key, instanceId)`
+  order, `a`, `b`, `c`, and writes exactly `d` = `{key: "Zz"}`; nothing else, and not the head.
+  Replacing it with `c`, `b`, `a`, `d` writes two entries and keeps two. The keys are those of the
+  reference tool's unit test (`a_whole_replace_writes_only_the_entries_out_of_order`,
+  `srs-core/src/container_write.rs`). The runner cannot drive it yet: no CLI step does a
+  whole-outline replace without a stdin body, so it becomes a scenario once one does.
