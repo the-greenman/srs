@@ -91,3 +91,11 @@ v0.1.0-build.554 and checked against the rule each cites.
 The srs-web `rfc038-concurrency` end-to-end acceptance (two writers, one container, a plain merge) is
 srs-web's test (the-greenman/srs-web#584); `concurrent_appends_with_equal_keys_merge_cleanly` is the
 same property at the CLI.
+
+## Pending scenarios (RFC-043 Revision 13, decision 7753b32f)
+
+Not yet in `scenarios.json`: every expectation there is captured from a build, and no build refuses these writes until srs-rust#1636 lands. Each is `expectedOutcome: refused`, `expectedCode: arrangement-pointer`, and the repository is unchanged afterwards. Capture them from the first build that implements [R7] as amended, then move them into `scenarios.json`.
+
+- `anchor_cannot_be_set_to_a_non_member` ([R7], [R3]): `container update` of `Outline` (`0a0000c1-...`) with `anchorInstanceId` set to an instance that is not an entry of it.
+- `container_create_refuses_a_non_member_anchor` ([R7], [R3]): `container create` supplying an `anchorInstanceId` that names no entry of the new container.
+- `identity_cannot_be_set_to_a_non_member` ([R7], [R3]): `container update` of the root container with `identityInstanceId` set to a non-member.
