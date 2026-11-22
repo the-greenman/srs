@@ -1,0 +1,18 @@
+{
+  "instanceId": "a3f918f1-20dc-4efe-94c6-d0459e5d3ced",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Field filter refusals",
+    "content": "A query with an invalid field filter is refused, and none of it is evaluated (mechanism Field filters). Checks run over the whole query in order: malformed filters ([R7]), then filters that do not fit their resolved Field ([R8]), and only then evaluation, where an unresolved `fieldId` selects nothing with a warning ([R6]).\n\n**[R7]** An implementation MUST refuse a query containing a malformed field filter, with an error and without evaluating any part of the query. A filter is malformed if any of these holds:\n- it has no `fieldId`;\n- it carries not exactly one test;\n- it has an empty `in` or `notIn` list, or an empty string as a listed value;\n- it has a `range` with neither bound;\n- it has a `range` bound that is neither a JSON number nor a real date, month or year in the form `YYYY`, `YYYY-MM` or `YYYY-MM-DD`;\n- it has a `range` with one numeric bound and one date bound.\n\nThis check applies to every filter in the query, whether or not its `fieldId` resolves.\n\n**[R8]** Where the `fieldId` resolves, an implementation MUST refuse, with an error and without evaluating any part of the query, a query containing a field filter that:\n- carries a test the Field's datatype does not allow;\n- lists a value whose type does not match the Field's datatype;\n- carries a `range` bound of the wrong kind for the Field: a number on a `date` Field, or a date on an `integer` or `number` Field;\n- lists a value outside the domain of a closed Field: its `allowedValues`, or the keys and aliases of the entries in its bound Vocabulary's effective entry set (RFC-006); or\n- targets a closed Field whose `vocabularyRef` resolves to no Vocabulary.\n\nIntroduced by RFC-056 (`rfcs/rfc-056-discovery-field-filters.md`)."
+  },
+  "createdAt": "2026-11-22T08:30:58.665988367+00:00",
+  "updatedAt": "2026-11-22T08:46:44.944259501+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
