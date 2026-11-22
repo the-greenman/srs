@@ -16,7 +16,8 @@
     ],
     "word_count": 75,
     "is_published": false,
-    "publish_date": "2025-01-01"
+    "publish_date": "2025-01-01",
+    "read_minutes": 4
   },
   "tags": [],
   "createdAt": "2026-06-27T00:00:00Z"

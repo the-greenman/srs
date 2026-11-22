@@ -1,0 +1,10 @@
+{
+  "id": "2d8b2232-7d5f-4814-942f-165d5e3e5ffe",
+  "version": 1,
+  "namespace": "com.example.discovery",
+  "name": "fixture-tags",
+  "mode": "open",
+  "description": "An open Vocabulary with no terms. A package that declares a closed Vocabulary must also declare an open one for tags to stay legal (validation.rs, srs-rust#702); this keeps the fixture's free-form tags valid beside the closed article-sections Vocabulary.",
+  "terms": [],
+  "createdAt": "2026-06-27T00:00:00Z"
+}
