@@ -1,0 +1,26 @@
+{
+  "id": "ec7bab2a-d7b9-404f-9926-8d34615ab7c3",
+  "version": 1,
+  "namespace": "com.example.discovery",
+  "name": "article-sections",
+  "mode": "closed",
+  "description": "Two sections with one alias, for the RFC-056 alias-resolution scenarios.",
+  "terms": [
+    {
+      "id": "0f50ea1b-643e-4e22-989c-8983cf2d5fba",
+      "version": 1,
+      "namespace": "com.example.discovery",
+      "key": "feature",
+      "label": "Feature"
+    },
+    {
+      "id": "03d2eb3f-cc06-45e0-bbe4-cf94c561486a",
+      "version": 1,
+      "namespace": "com.example.discovery",
+      "key": "brief",
+      "label": "Brief",
+      "aliases": ["short-form"]
+    }
+  ],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

@@ -2,7 +2,7 @@
 
 # RFC-056: Discovery filters on a record's own field values
 
-**Status**: Accepted (Revision 8)
+**Status**: Accepted (Revision 9)
 **Affects**:
 - `ext:discovery` (RFC-012, Accepted Revision 14; this RFC amends its surface, and RFC-012 gains a revision-history line at the fold).
 - `DiscoveryQuery` in `discovery.json` and its inline copy in `composition.json`.
@@ -54,6 +54,7 @@ Uses, without depending on its outcome, the rule by which a Type's bare `fieldId
 - Open Question 7 gains two mechanics. |
 | 7 | 2026-11-22 | Owner rulings on every Open Question, all as recommended: OQ1 and OQ2 are recorded as decisions at acceptance (OQ2 with its review trigger), OQ6 accepts independently of RFC-055, OQ7 accepts all thirteen mechanics, and the deferrals OQ3–OQ5 are agreed. |
 | 8 | 2026-11-22 | Accepted by the owner (2026-11-22). Fold correction: the metamodel is not changed. A field filter's shape is almost entirely the srs#543 class of gap (`oneOf`, mixed-type value lists, number-or-date bounds), so `fieldFilters` is excluded from the closure whole, as `DocumentSection.source` and `View.fieldViews` are, rather than modelled as `field-filter` and `value-range` Types with most of their content excluded. Spec records authored in `srs/srs`. |
+| 9 | 2026-11-22 | Door 1 correction (srs#1046): Change F's fixture count is two Vocabularies, not one, as the built fixture needed. |
 
 ---
 
@@ -341,7 +342,7 @@ A Composition section of type `discovery-query` already carries a full `Discover
 2. **A list-of-dates field on `article`** (`review_dates`), set on two articles, so that `range` on a list-valued field can be tested.
 3. **A Vocabulary with two terms and one alias, and a closed `article` field bound to it,** set on three articles, so that alias resolution can be tested. Closed values are searchable text (RFC-012 [R8]), so the term keys and aliases must contain none of the existing `contentMatch` query strings.
 4. **`read_minutes` set on two more articles,** written `4` and `12.0`, so that an integer range can prove a fractional bound, an inclusive bound and an integral value written with a decimal point. Integers are not in the text projection (RFC-012 [R8]), so no `contentMatch` scenario changes.
-5. **Updated counts in the README:** the fixture grows from 9 instances to 10, and its package gains two Fields and one Vocabulary.
+5. **Updated counts in the README:** the fixture grows from 9 instances to 10, and its package gains two Fields and two Vocabularies: the closed `article-sections`, and an empty open `fixture-tags` that the existing free-form tags need once a closed Vocabulary exists.
 
 The `article` Type gains its two Fields in place, at its current version. The fixture is test data, not a published package, so no successor Type version is needed. Every article's bound version then carries the new Fields.
 

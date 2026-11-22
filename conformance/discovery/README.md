@@ -4,9 +4,9 @@ Normative test data for the Discovery Contract. RFC-012 `[R11]`/`[R12]` bind `ex
 conformance to this fixture, so **every scenario here is contract, not a test convenience**: adding
 one adds an obligation, and changing an expectation changes what conformance means.
 
-- `fixture-repo/` — the repository under test: 9 instances across Tiers 0 and 2, four Types, 27
-  Fields spanning every RFC-032 `fieldType` classification I-120 rules on.
-- `scenarios.json` — 34 scenarios, each a `DiscoveryQuery` plus its expected instance ids; one also
+- `fixture-repo/` — the repository under test: 10 instances across Tiers 0 and 2, four Types, 29
+  Fields and 2 Vocabularies, spanning every RFC-032 `fieldType` classification I-120 rules on.
+- `scenarios.json` — 88 scenarios, each a `DiscoveryQuery` plus its expected instance ids; one also
   carries an `expectedSegments` expectation (srs#483).
 
 > **Open question before the exclusion scenarios can be relied on as conformance.** The 13
@@ -30,6 +30,33 @@ one adds an obligation, and changing an expectation changes what conformance mea
 > #317 requires these assertions, so they are here. Landing them as conformance wants I-123/I-124
 > scoped explicitly and reconciled with I-115 — a no-false-positive obligation over probe tokens.
 > Raised on #317; the owner's call.
+
+## RFC-056 additions (field filters, srs#1044)
+
+The `fieldFilters` scenarios (`ff_*`, all `exactMatch: true`) needed these fixture additions. The
+`article` Type gained the two new Fields in place, at version 1.
+
+1. **A tenth instance, article `3400d14f-5404-45e4-9eaf-7e7b6851fc81`** ("Release Notes Summary"): no
+   `status`, `topics: []`, no `publish_date`, `word_count`, `read_minutes`, `review_dates` or
+   `section`, no tags, no lifecycle state and no container membership. Its text contains none of the
+   `contentMatch` query strings, so no content scenario changes. It proves that `notIn` and `in` skip a
+   record with no value and that an empty list is no value.
+2. **`review_dates`** (`6c198349-4a71-43f3-8a8f-b263f0b0f659`): a list-of-dates Field on `article`,
+   set on article 1 (`2026-03-10`, `2026-09-20`) and article 2 (`2025-12-01`).
+3. **`section`** (`c8b7b8a5-832f-45a0-8bbf-1066028ef747`): a closed string Field bound to the
+   `article-sections` Vocabulary (`ec7bab2a-d7b9-404f-9926-8d34615ab7c3`, two terms `feature` and
+   `brief`, one alias `short-form` of `brief`). Set on article 1 (`feature`), article 2 (`brief`) and
+   article 3 (`short-form`, the alias). Term keys and aliases are searchable text, so none contains a
+   `contentMatch` probe. A second Vocabulary, `fixture-tags` (`2d8b2232-7d5f-4814-942f-165d5e3e5ffe`,
+   open, no terms), exists only because `repo validate` rejects the fixture's free-form tags once a
+   closed Vocabulary is declared unless an open one is declared too (srs-rust#702).
+4. **`read_minutes`** set on article 4 (`4`) and article 5 (`12.0`, an integral value written with a
+   decimal point; RFC-056 [R5] says it conforms). The pinned CLI before srs-rust#1240 reports
+   `expected integer, got number` for the `12.0`; that error clears with the implementing build.
+5. **Counts**: instances 9 to 10, Fields +2, Vocabularies +2 (the second only as the tag shim above).
+
+Four existing expected sets gained the new article: `empty_query` (9 to 10), `tier_filter_record`
+(8 to 9), `type_name_article` (5 to 6) and `type_namespace` (8 to 9).
 
 ## Two layers, now both migrated
 
@@ -64,7 +91,7 @@ repository:
 
 ```
 $ srs repo validate --repo conformance/discovery/fixture-repo
-{"ok": true, ..., "summary": {"checked": 9, "errors": 0, "warnings": 9}}
+{"ok": true, ..., "summary": {"checked": 10, "errors": 0, "warnings": 9}}
 ```
 
 The 9 warnings are the two accepted gaps above (8 I-82 hits + 1 I-81 hit).
