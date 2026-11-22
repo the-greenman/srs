@@ -34,7 +34,9 @@
     "fields/article-byline.json",
     "fields/article-legacy-note.json",
     "fields/byline-display-name.json",
-    "fields/article-legacy-score.json"
+    "fields/article-legacy-score.json",
+    "fields/article-review-dates.json",
+    "fields/article-section.json"
   ],
   "types": [
     "types/article.json",
@@ -43,5 +45,9 @@
     "types/byline.json"
   ],
   "createdAt": "2026-06-27T00:00:00Z",
-  "dataModelRevision": 11
+  "dataModelRevision": 11,
+  "vocabularies": [
+    "vocabularies/article-sections.json",
+    "vocabularies/fixture-tags.json"
+  ]
 }

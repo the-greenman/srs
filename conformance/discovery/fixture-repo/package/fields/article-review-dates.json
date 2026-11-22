@@ -1,0 +1,16 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "6c198349-4a71-43f3-8a8f-b263f0b0f659",
+  "namespace": "com.example.discovery",
+  "name": "review_dates",
+  "version": 1,
+  "description": "Dates on which the article was editorially reviewed. Multiple values allowed.",
+  "aiGuidance": {
+    "purpose": "RFC-056 range on a list-valued date Field: a range holds when any element falls within the bounds. Non-searchable (datatype date)."
+  },
+  "fieldType": {
+    "datatype": "date",
+    "cardinality": "list"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}
