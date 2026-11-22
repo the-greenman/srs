@@ -14,7 +14,8 @@
         "00000002-0000-4000-8000-000000000001",
         "00000002-0000-4000-8000-000000000002",
         "00000003-0000-4000-8000-000000000001",
-        "00000005-0000-4000-8000-000000000001"
+        "00000005-0000-4000-8000-000000000001",
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81"
       ],
       "exactMatch": true
     },
@@ -41,6 +42,7 @@
         "00000001-0000-4000-8000-000000000003",
         "00000001-0000-4000-8000-000000000004",
         "00000001-0000-4000-8000-000000000005",
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81",
         "00000002-0000-4000-8000-000000000001",
         "00000002-0000-4000-8000-000000000002",
         "00000003-0000-4000-8000-000000000001"
@@ -58,7 +60,8 @@
         "00000001-0000-4000-8000-000000000002",
         "00000001-0000-4000-8000-000000000003",
         "00000001-0000-4000-8000-000000000004",
-        "00000001-0000-4000-8000-000000000005"
+        "00000001-0000-4000-8000-000000000005",
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81"
       ],
       "exactMatch": true
     },
@@ -74,6 +77,7 @@
         "00000001-0000-4000-8000-000000000003",
         "00000001-0000-4000-8000-000000000004",
         "00000001-0000-4000-8000-000000000005",
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81",
         "00000002-0000-4000-8000-000000000001",
         "00000002-0000-4000-8000-000000000002",
         "00000003-0000-4000-8000-000000000001"
@@ -409,6 +413,1020 @@
         "contentMatch": "2025-01-01"
       },
       "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_string_single",
+      "description": "RFC-056 [R3]: in on a closed string selects records whose value equals a listed value. Articles 1 and 3 are published; the new article has no status and is not selected.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000004",
+            "in": [
+              "published"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_string_multi",
+      "description": "RFC-056 [R3]: in is OR over its listed values. Draft (2, 5) or archived (4).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000004",
+            "in": [
+              "draft",
+              "archived"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_notin_string",
+      "description": "RFC-056 [R3]: notIn selects records that have a value and it is not listed. The new article has no status, so it is NOT returned (notIn is not the complement of in).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000004",
+            "notIn": [
+              "published"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_notin_all_values_empty",
+      "description": "RFC-056 [R3]/[R5]: every article with a status holds one of the three listed values, and the article with no status never satisfies notIn, so the result is empty.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000004",
+            "notIn": [
+              "draft",
+              "published",
+              "archived"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_list_string",
+      "description": "RFC-056 Change B: on a list-valued string, in holds when any element is listed. Articles 1 and 3 list indexing.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000005",
+            "in": [
+              "indexing"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_list_any_element",
+      "description": "RFC-056 Change B: in holds when any element is listed, whichever one. Article 1 has search, article 4 has legacy.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000005",
+            "in": [
+              "search",
+              "legacy"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000004"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_notin_list_string",
+      "description": "RFC-056 [R3]: notIn on a list holds when the list is non-empty and no element is listed. Article 6 (empty list) is not returned.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000005",
+            "notIn": [
+              "indexing"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_notin_list_any_listed_element_excludes",
+      "description": "RFC-056 [R3]: one listed element anywhere in the list excludes the record. Article 1 (search), 2 (text) and 4 (legacy) each hold a listed element; 3 (performance, indexing) and 5 (metadata) hold none.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000005",
+            "notIn": [
+              "search",
+              "text",
+              "legacy"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_empty_list_in_all_values",
+      "description": "RFC-056 [R5]: an empty list is no value, so it satisfies no in. Listing every topic selects articles 1-5, never the new article whose topics is [].",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000005",
+            "in": [
+              "search",
+              "indexing",
+              "text",
+              "segments",
+              "performance",
+              "legacy",
+              "metadata"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_empty_list_missing_true",
+      "description": "RFC-056 [R5]: an empty list is no value, so missing:true holds. Only the new article has no topics.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000005",
+            "missing": true
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_integer",
+      "description": "RFC-056 [R3]: in on an integer compares by numeric value. Only article 4 holds 4.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000013",
+            "in": [
+              4
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000004"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_integer_written_with_decimal_point",
+      "description": "RFC-056 [R3]: 12 equals a stored 12.0. Article 5 stores 12.0.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000013",
+            "in": [
+              12
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_integer_large",
+      "description": "RFC-056 [R3]: exact decimal comparison for a large integer. Article 1 holds 987654321.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000013",
+            "in": [
+              987654321
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_boolean_true",
+      "description": "RFC-056 [R3]: in on a boolean. Articles 1 and 3 are published (is_published true); the metric Type has no is_published.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000007",
+            "in": [
+              true
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_in_boolean_false",
+      "description": "RFC-056 [R3]: in [false] selects stored false only. The new article stores no is_published and is not selected.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000007",
+            "in": [
+              false
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_notin_boolean",
+      "description": "RFC-056 [R3]: notIn [true] selects records that hold false, not records with no value.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000007",
+            "notIn": [
+              true
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_vocab_alias_listed",
+      "description": "RFC-056 Change B: a listed alias resolves to its term key. short-form is an alias of brief; article 2 stores brief and article 3 stores the alias, and both are selected.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "c8b7b8a5-832f-45a0-8bbf-1066028ef747",
+            "in": [
+              "short-form"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_vocab_key_listed",
+      "description": "RFC-056 Change B: the listed key brief selects the same records, both the key stored by article 2 and the alias stored by article 3.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "c8b7b8a5-832f-45a0-8bbf-1066028ef747",
+            "in": [
+              "brief"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_vocab_notin_alias",
+      "description": "RFC-056 Change B: notIn resolves aliases too. Listing the alias short-form excludes briefs; article 1 (feature) remains. Articles with no section are not returned.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "c8b7b8a5-832f-45a0-8bbf-1066028ef747",
+            "notIn": [
+              "short-form"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_vocab_in_two_terms",
+      "description": "RFC-056 Change B: in over a key and an alias of different terms. feature (article 1) or short-form, resolved to brief (articles 2, 3).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "c8b7b8a5-832f-45a0-8bbf-1066028ef747",
+            "in": [
+              "feature",
+              "short-form"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000002",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_date_day_bounds",
+      "description": "RFC-056 [R4]: day bounds, both included. 2026-06-01 (article 1) through 2026-06-26 (article 5) are both selected; 2026-05-15 is before and 2025-01-01 earlier still.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2026-06-01",
+              "to": "2026-06-26"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_date_month_bounds",
+      "description": "RFC-056 [R4]: a month bound covers the whole month. June 2026 holds 2026-06-01 (article 1) and 2026-06-26 (article 5).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2026-06",
+              "to": "2026-06"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_date_year_2026",
+      "description": "RFC-056 [R4]: a year bound covers the whole year. 2026 holds articles 1, 3 and 5.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2026",
+              "to": "2026"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_date_year_2025",
+      "description": "RFC-056 [R4]: a year bound covers the whole year. 2025 holds only article 4 (2025-01-01).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2025",
+              "to": "2025"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000004"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_date_open_forward",
+      "description": "RFC-056 [R4]: a range with only from is open-ended forward. On or after 2026-06-02 leaves article 5 (2026-06-26); article 1 (2026-06-01) is before the bound.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2026-06-02"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_date_open_backward_month",
+      "description": "RFC-056 [R4]: a range with only to is open-ended backward, and a month to-bound ends at the month end. On or before 31 May 2026 holds article 3 (2026-05-15) and article 4 (2025-01-01).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "to": "2026-05"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_date_from_after_to",
+      "description": "RFC-056 [R4]: a range whose from lies after its to is valid and selects nothing.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2026-08",
+              "to": "2026-06"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_list_dates_any_element",
+      "description": "RFC-056 Change B: range on a list holds when any element falls within the bounds. Article 1 has 2026-09-20 in September 2026.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "6c198349-4a71-43f3-8a8f-b263f0b0f659",
+            "range": {
+              "from": "2026-09",
+              "to": "2026-09"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_list_dates_between_elements",
+      "description": "RFC-056 Change B: a range lying between the elements selects nothing. Article 1 holds 2026-03-10 and 2026-09-20, neither within April to August 2026.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "6c198349-4a71-43f3-8a8f-b263f0b0f659",
+            "range": {
+              "from": "2026-04",
+              "to": "2026-08"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_list_dates_open_backward",
+      "description": "RFC-056 Change B: open-ended range on a list. Only article 2 has an element (2025-12-01) on or before the end of 2025.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "6c198349-4a71-43f3-8a8f-b263f0b0f659",
+            "range": {
+              "to": "2025"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_number_inclusive",
+      "description": "RFC-056 Change B: both bounds included. word_count 40 to 80 selects 42 (article 1) and 75 (article 4).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000006",
+            "range": {
+              "from": 40,
+              "to": 80
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000004"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_number_bound_equals_value",
+      "description": "RFC-056 Change B: a bound equal to a stored value includes it. word_count from 75 selects 75 (article 4), 99 (article 5) and 150 (article 3).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000006",
+            "range": {
+              "from": 75
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_number_decimal_bound",
+      "description": "RFC-056 Change B: a decimal bound is compared as given. 41.5 to 42 selects 42 (article 1) only.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000006",
+            "range": {
+              "from": 41.5,
+              "to": 42
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_number_open_backward",
+      "description": "RFC-056 Change B: only to is open-ended backward, and the bound is included. word_count to 28 selects article 2 (28).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000006",
+            "range": {
+              "to": 28
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_number_from_after_to",
+      "description": "RFC-056 Change B: a numeric range whose from exceeds its to selects nothing.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000006",
+            "range": {
+              "from": 80,
+              "to": 40
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_integer_fractional_bound",
+      "description": "RFC-056 Change B: an integer Field accepts a fractional bound, compared as given. 3.5 to 12 selects 4 (article 4) and 12.0 (article 5), and not 987654321 (article 1).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000013",
+            "range": {
+              "from": 3.5,
+              "to": 12
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_range_integer_open_forward",
+      "description": "RFC-056 Change B: open-ended integer range. From 12.5 selects only 987654321 (article 1); 12.0 is below the bound.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000013",
+            "range": {
+              "from": 12.5
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_missing_true",
+      "description": "RFC-056 [R5]: missing:true selects articles with no publish_date: article 2 and the new article. Other Types and Notes are never returned.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "missing": true
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000002",
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_missing_false",
+      "description": "RFC-056 [R5]: missing:false selects articles that hold a publish_date (1, 3, 4, 5).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "missing": false
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_missing_true_no_status",
+      "description": "RFC-056 [R5]: only the new article lacks a status.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000004",
+            "missing": true
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_missing_false_integer",
+      "description": "RFC-056 [R5]: missing:false on read_minutes selects the three articles that hold one (1, 4, 5), including the one written 12.0.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000013",
+            "missing": false
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000004",
+        "00000001-0000-4000-8000-000000000005"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_missing_true_boolean_owning_type_only",
+      "description": "RFC-056 [R6]: is_published belongs to article. missing:true selects the new article only; the metric, projects and the note, whose Types lack the Field, are not returned.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000007",
+            "missing": true
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "3400d14f-5404-45e4-9eaf-7e7b6851fc81"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_field_outside_type_selects_nothing",
+      "description": "RFC-056 [R6]: is_active belongs to metric, not article. With typeName article no record can satisfy the filter.",
+      "query": {
+        "typeName": "article",
+        "fieldFilters": [
+          {
+            "fieldId": "0000f003-0000-4000-8000-000000000003",
+            "in": [
+              true
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_field_outside_type_missing_true",
+      "description": "RFC-056 [R6]: missing:true on a metric Field returns no article, project or Note. The only metric record holds is_active, so the result is empty.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f003-0000-4000-8000-000000000003",
+            "missing": true
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_field_in_own_type_control",
+      "description": "RFC-056 [R6]: control for the two scenarios above. is_active in [true] selects the metric record, whose Type contains the Field.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f003-0000-4000-8000-000000000003",
+            "in": [
+              true
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000003-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_project_field_outside_article",
+      "description": "RFC-056 [R6]: priority belongs to project. With typeName article nothing is selected, though project-1 holds high.",
+      "query": {
+        "typeName": "article",
+        "fieldFilters": [
+          {
+            "fieldId": "0000f002-0000-4000-8000-000000000003",
+            "in": [
+              "high"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_project_field_own_type_control",
+      "description": "RFC-056 [R6]: control. priority in [high] selects project-1 only; articles lack the Field.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f002-0000-4000-8000-000000000003",
+            "in": [
+              "high"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000002-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_unknown_field_id_in",
+      "description": "RFC-056 [R6]: a fieldId that names no installed Field selects no instances (the implementation also warns, which a set cannot express).",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "9d1c0e47-2b6f-4a3e-8f10-5c7a1d3e9b24",
+            "in": [
+              "published"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_unknown_field_id_missing_true",
+      "description": "RFC-056 [R6]: an unresolved fieldId selects nothing even for missing:true; no record counts as lacking a Field that does not exist.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "9d1c0e47-2b6f-4a3e-8f10-5c7a1d3e9b24",
+            "missing": true
+          }
+        ]
+      },
+      "expectedInstanceIds": [],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_with_type_name_and_tag",
+      "description": "RFC-056 [R1]: field filters conjoin with typeName and tag. Articles tagged searchable are 1 and 2; word_count from 30 leaves article 1 (42), dropping article 2 (28).",
+      "query": {
+        "typeName": "article",
+        "tag": [
+          "searchable"
+        ],
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000006",
+            "range": {
+              "from": 30
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_with_tag_and_in",
+      "description": "RFC-056 [R1]: tag indexed carries articles 1 and 3 and project-1; status in [published] keeps articles 1 and 3 only, since a project lacks the Field.",
+      "query": {
+        "tag": [
+          "indexed"
+        ],
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000004",
+            "in": [
+              "published"
+            ]
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_with_container",
+      "description": "RFC-056 [R1]: container-alpha holds articles 1, 2 and 3; publish_date in 2026 leaves 1 and 3 (article 2 has none).",
+      "query": {
+        "containerId": "0000c001-0000-4000-8000-000000000001",
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2026",
+              "to": "2026"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001",
+        "00000001-0000-4000-8000-000000000003"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_two_filters_conjunction",
+      "description": "RFC-056 [R1]: every filter must hold. status published (1, 3) and publish_date from 2026-06 (1, 5) leaves article 1.",
+      "query": {
+        "fieldFilters": [
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000004",
+            "in": [
+              "published"
+            ]
+          },
+          {
+            "fieldId": "0000f001-0000-4000-8000-000000000008",
+            "range": {
+              "from": "2026-06"
+            }
+          }
+        ]
+      },
+      "expectedInstanceIds": [
+        "00000001-0000-4000-8000-000000000001"
+      ],
+      "exactMatch": true
+    },
+    {
+      "name": "ff_empty_filter_list_no_effect",
+      "description": "RFC-056 [R1]: an empty fieldFilters list does not change the selection. typeName project selects both projects.",
+      "query": {
+        "typeName": "project",
+        "fieldFilters": []
+      },
+      "expectedInstanceIds": [
+        "00000002-0000-4000-8000-000000000001",
+        "00000002-0000-4000-8000-000000000002"
+      ],
       "exactMatch": true
     }
   ]
