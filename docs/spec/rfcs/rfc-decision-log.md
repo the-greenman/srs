@@ -2416,3 +2416,94 @@ SETTLED BY EXISTING RFCs, no change needed. Upgrade is in place in the same pack
 *Done its job:* a client offers a per-Field choice with honest counts.
 
 
+**Title**: A portable query filter has an exact result set
+
+**Status**: Accepted
+
+**Decision Date**: 2026-11-22
+
+**Decision Rationale**: Portability is the point of the standard query: a Composition section or an agent query must select the same records on every implementation, and shared `exactMatch` fixtures can only prove a filter whose answer is exact. Ranked or approximate recall is already allowed, as extra recall on the content side, so nothing useful is lost by keeping it out of the portable filters. This was the line RFC-056 chose its tests by; recording it binds the next RFCs on srs#726 (relation selection, grouped sections).
+
+**Decision**: A predicate enters the portable `DiscoveryQuery` only if the repository's content alone defines its result set exactly, so that every conforming implementation returns the same set. Ranking, stemming and similarity stay outside it, behind the `DiscoveryIndex` seam (RFC-012 [R3]/[R4]).
+
+**Scope**: The predicates of `DiscoveryQuery` (`ext:discovery`), and so every Composition section that consumes it. Not implementation search features outside the query.
+
+**Governing Values**:
+- portability
+- shared-coherence
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Core plus named optional profiles for costly exact predicates (OData conformance levels, CMIS capabilities): deferred to the relation RFC, where it would be weighed against rfc-decision-43249f53. Everything required, including approximate predicates: results would differ by implementation. Leave the line unrecorded as RFC-056's working rule only.
+
+**Accepted Costs**: A useful approximate predicate (vector similarity, stemmed match) can never be a portable filter; a persisted artefact that wants one must depend on an implementation extension. Every new portable predicate must come with exact conformance scenarios.
+
+**Evidence**:
+- the-greenman/srs#1044 (owner rulings and acceptance, 2026-11-22)
+- rfcs/rfc-056-discovery-field-filters.md, Revision 8
+- the-greenman/srs#726 (research comment 2026-11-21)
+
+**Review Trigger**: A real use needs a persisted artefact (a Composition section, a saved index) to select by an approximate predicate, and declaring an implementation extension cannot serve it. *Checked at:* the vector-path ruling (srs#726 question 6) and each later RFC adding a DiscoveryQuery axis.
+
+
+**Title**: Discovery queries stay flat
+
+**Status**: Accepted
+
+**Decision Date**: 2026-11-22
+
+**Decision Rationale**: Every real-use question reported on srs#726 fits a flat conjunction with value lists. A boolean expression language makes every implementer carry a full evaluator and multiplies conformance cases (OData's `$filter`, required even at its minimal level). Flat queries keep fixtures enumerable and keep a query readable as a list of conditions.
+
+**Decision**: A `DiscoveryQuery` stays a conjunction of filters. OR appears only as a list of values inside one filter (as `lifecycleStates` and `in` do), and exclusion only as a per-filter test (as `excludeLifecycleStates` and `notIn` do). There are no nested boolean expressions.
+
+**Scope**: The shape of `DiscoveryQuery` (`ext:discovery`), including axes added by later RFCs.
+
+**Governing Values**:
+- shared-coherence
+- practical-expression
+
+**Project Phase**: formation
+
+**Alternatives Considered**: A general boolean expression (`and`, `or`, `not`, nested). Flat now with boolean trees named as a later optional profile. Leave each RFC to choose its own shape.
+
+**Accepted Costs**: "kind is email OR status is draft" cannot be asked in one query; a reader runs two queries and unions them. "Not archived, or no status" likewise takes two queries.
+
+**Evidence**:
+- the-greenman/srs#1044 (owner rulings and acceptance, 2026-11-22)
+- rfcs/rfc-056-discovery-field-filters.md, Revision 8
+- the-greenman/srs#726 (research comment 2026-11-21)
+
+**Review Trigger**: A real use that cannot be expressed as two queries. *Checked at:* each RFC that adds a DiscoveryQuery axis.
+
+
+**Title**: Numeric ranges enter discovery without a real-use case
+
+**Status**: Accepted
+
+**Decision Date**: 2026-11-22
+
+**Decision Rationale**: The owner directed it (2026-11-22). A numeric range reuses everything date ranges already need: the bound shape, open ends, empty ranges and the misfit checks. Leaving it out made the datatype table inconsistent, since an exact integer could be asked for but not "between". `date-time` stays out, because it needs a new rule (the timezone) that has no case to test it against.
+
+**Decision**: `range` on `integer` and `number` Fields enters `DiscoveryQuery` without a real-use case, as a deliberate exception to rfc-decision-4f1e12e5's evidence-shaped rule.
+
+**Scope**: RFC-056's numeric `range` test only. It sets no precedent for other features without evidence.
+
+**Governing Values**:
+- practical-expression
+- evolution
+
+**Project Phase**: formation
+
+**Alternatives Considered**: Leave numeric ranges out until a real use asks (RFC-056 Revisions 1 to 4). Add `date-time` ranges at the same time.
+
+**Accepted Costs**: One more comparison every implementation must carry, with exact decimal comparison, before any repository has used it.
+
+**Evidence**:
+- the-greenman/srs#1044 (owner rulings and acceptance, 2026-11-22)
+- rfcs/rfc-056-discovery-field-filters.md, Revision 8
+- the-greenman/srs#726 (research comment 2026-11-21)
+- rfc-decision-4f1e12e5
+
+**Review Trigger**: No repository, Composition or agent query uses a numeric range by the time RFC-012 next changes revision: that revision proposes removing it.
+
+

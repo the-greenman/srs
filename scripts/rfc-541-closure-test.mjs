@@ -25,6 +25,8 @@
  *   - `discovery-query`: `tier` (a bare untyped-integer enum — the #534-tracked emitter gap
  *     discovery.json's own standalone generation is gated on; per srs#541's own scope, modelling
  *     everything else does not need to wait on #534).
+ *   - `discovery-query` (RFC-056, srs#1044): `fieldFilters` — the srs#543 class of gap (exactly-one-test
+ *     `oneOf`, mixed-type value lists, number-or-date bounds); excluded whole.
  *   - `manifest`: `changelogPath` (deprecated, no per-property deprecation mechanism modelled — same
  *     reason as Container.containerType in rfc-272); `meta` (an openly-shaped bag with one
  *     documented-but-optional legacy nested key, not a clean map like RelationTypeDefinition.meta).
