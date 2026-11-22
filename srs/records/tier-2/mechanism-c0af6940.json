@@ -1,0 +1,18 @@
+{
+  "instanceId": "c0af6940-7494-446d-a148-a46db118f2ce",
+  "typeId": "6655e3fb-6f4c-450e-a9c2-b2f5711fef92",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "mechanism",
+  "fieldValues": {
+    "title": "Field filter values",
+    "content": "An empty string, list or object states nothing, so for a filter it is no value, unlike storage (RFC-039 [R5a]) and rendering (RFC-001).\n\n**[R5]** The value of a field filter is the record's `fieldValues` entry under the resolved Field's `name` (RFC-039). The field has no value when that entry is absent, an empty string, an empty list, or (for a `map` or inline `ref` Field) an empty object. `missing: true` MUST hold if and only if the field has no value, and `missing: false` if and only if it has one. A field with no value MUST NOT satisfy `in`, `notIn` or `range`. A value that does not conform to the resolved Field's datatype, or to its closed domain, MUST NOT satisfy `in`, `notIn` or `range`. A value on an `integer` Field conforms if and only if it is a JSON number with an integral value. A number written as a JSON string conforms to neither `integer` nor `number`. On a list-valued Field, conformance MUST be judged per element.\n\nIntroduced by RFC-056 (`rfcs/rfc-056-discovery-field-filters.md`)."
+  },
+  "createdAt": "2026-11-22T08:31:23.755969241+00:00",
+  "updatedAt": "2026-11-22T08:46:45.025737247+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
