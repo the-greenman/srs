@@ -6,8 +6,8 @@
   "typeName": "invariant",
   "fieldValues": {
     "invariant_number": "52",
-    "title": "Every SourceDocument sidecar present under sourceDocumentsPath must…",
-    "normative_statement": "Every `SourceDocument` sidecar present under `sourceDocumentsPath` must have a `contentPath` that resolves to an existing content file in the same directory. A sidecar whose `contentPath` does not resolve is invalid. A conforming producer must not emit such a sidecar; a conforming consumer must surface the resolution failure before processing any `SourceReference` pointing at that `documentId`."
+    "title": "A SourceDocument sidecar is the document's identity under sourceDocumentsPath; absent content is a valid tombstone",
+    "normative_statement": "A `SourceDocument` sidecar present under `sourceDocumentsPath` is the document's identity (RFC-038 [R15]). Its `contentPath` MUST resolve relative to `sourceDocumentsPath` (I-109) and MUST NOT traverse upward out of the sidecar's directory (I-110). A sidecar whose content file is absent is a valid tombstone, not an error: an implementation MUST NOT reject, refuse to load, or refuse to export a repository solely because of it, and MAY surface an informational, non-blocking diagnostic that the content is unavailable (I-112)."
   },
   "tags": [
     "concern:validation",
@@ -15,7 +15,7 @@
     "topic:conformance"
   ],
   "createdAt": "2026-05-27T00:00:00Z",
-  "updatedAt": "2026-09-07T19:59:39.512933977+00:00",
+  "updatedAt": "2026-11-22T13:15:23.535129548+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
   "sourceRefs": [
     {
