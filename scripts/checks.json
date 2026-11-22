@@ -617,6 +617,15 @@
       "description": "The `$defs/Actor` entries in docs/schema/2.0/record.json, note.json and relation.json are byte-identical (compared as exact source text, so whitespace drift fails). The committed schemas use no cross-file $ref, so the one Actor shape is repeated; this check keeps the three copies one shape (RFC-046 [R1])."
     },
     {
+      "id": "discovery-query-defs-identical",
+      "script": "check-discovery-query-defs-identical.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-056 Change E; srs#1044",
+      "description": "composition.json's inline copy of `$defs/DiscoveryQuery`, and the FieldFilter defs it references, match discovery.json (parsed, ignoring the copy's $comment). The seed validator resolves only local refs, so the one query shape is repeated; this check keeps the copies one shape."
+    },
+    {
       "id": "pr-classification",
       "script": "check-pr-classification.mjs",
       "args": [],

@@ -2,7 +2,7 @@
 
 # RFC-056: Discovery filters on a record's own field values
 
-**Status**: Draft (Revision 7)
+**Status**: Accepted (Revision 8)
 **Affects**:
 - `ext:discovery` (RFC-012, Accepted Revision 14; this RFC amends its surface, and RFC-012 gains a revision-history line at the fold).
 - `DiscoveryQuery` in `discovery.json` and its inline copy in `composition.json`.
@@ -53,6 +53,7 @@ Uses, without depending on its outcome, the rule by which a Type's bare `fieldId
 - Open Question 4 says why its bar differs;
 - Open Question 7 gains two mechanics. |
 | 7 | 2026-11-22 | Owner rulings on every Open Question, all as recommended: OQ1 and OQ2 are recorded as decisions at acceptance (OQ2 with its review trigger), OQ6 accepts independently of RFC-055, OQ7 accepts all thirteen mechanics, and the deferrals OQ3–OQ5 are agreed. |
+| 8 | 2026-11-22 | Accepted by the owner (2026-11-22). Fold correction: the metamodel is not changed. A field filter's shape is almost entirely the srs#543 class of gap (`oneOf`, mixed-type value lists, number-or-date bounds), so `fieldFilters` is excluded from the closure whole, as `DocumentSection.source` and `View.fieldViews` are, rather than modelled as `field-filter` and `value-range` Types with most of their content excluded. Spec records authored in `srs/srs`. |
 
 ---
 
@@ -130,7 +131,7 @@ Two statements in this RFC fail the level test, and are kept out of the conforma
 **Integration manifest (for the fold, Stage 6):**
 - `schema:discovery.json` and `schema:composition.json`.
 - New invariants for [R1]–[R8] under the Discovery concept, given the next free invariant numbers at fold time.
-- The metamodel records listed under *Schema changes*, with their closure exclusion.
+- The `fieldFilters` closure exclusion, documented as listed under *Schema changes* (no metamodel records change).
 - A Door 3 revision-history line on RFC-012, as RFC-053 added for RFC-012 Revision 14.
 
 ---
@@ -442,15 +443,7 @@ Schema changes must be synced to:
 - `srs-vscode/schemas/2.0/` (manual copy).
 
 **Also changed (not schemas):**
-- **`srs/package/metamodel/`.** The metamodel models `DiscoveryQuery` as the `discovery-query` Type (10 Fields). The `rfc-534-closure` and `rfc-541-closure` checks prove the metamodel can generate the seed. The metamodel gains:
-  - a `field-filter` Type, with Fields for `fieldId`, `in`, `notIn`, `range` and `missing`;
-  - a `value-range` value Type with `from` and `to`, modelled as string Fields (numeric bounds are a recorded fidelity gap, covered by the exclusion below);
-  - a `field_filters` Field (an inline `ref` list) assigned on `discovery-query`;
-  - a package version bump.
-  
-  In the metamodel, `in` and `notIn` are modelled as string-list Fields.
-
-  Three parts of the shape cannot be emitted by today's emitter: the "exactly one test" `oneOf`, the mixed integer, boolean and string items of `in` and `notIn`, and the number-or-string `from` and `to`. `DiscoveryQuery` has zero closure exclusions today (`rfc-534-closure-test.mjs`; `generation-ledger.md`). This RFC introduces its first, through the per-entity EXCLUSIONS mechanism documented in `rfc-534-closure-test.mjs`. The precedents are `DocumentSection.source` (srs#543, a `oneOf`) and `theme.elementTemplates.compositeRendererConfig`.
+- **`srs/package/metamodel/`: unchanged; `fieldFilters` is a documented closure exclusion.** The metamodel models `DiscoveryQuery` as the `discovery-query` Type (10 Fields), and the `rfc-534-closure` and `rfc-541-closure` checks prove it can generate the seed. Three parts of a field filter have no metamodel datatype: the "exactly one test" `oneOf`, the mixed integer, boolean and string items of `in` and `notIn`, and the number-or-date `from` and `to`. Only `fieldId` and `missing` could be modelled, so the whole `fieldFilters` property is excluded, the srs#543 class of gap. The precedents are `DocumentSection.source` and `View.fieldViews`, excluded whole for the same reason. `DiscoveryQuery` had zero closure exclusions; this is its first, documented in the headers of both closure checks.
 - **`docs/schema/2.0/projection-rules.md`, `metamodel-fidelity.md` and `generation-ledger.md`.** Each describes the `DiscoveryQuery` closure. Each gains one line introducing the new exclusion.
 - `conformance/discovery/` (Change F).
 - `scripts/checks.json` (the guard, Change E).
