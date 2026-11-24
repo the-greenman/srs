@@ -7,12 +7,12 @@
   "fieldValues": {
     "invariant_number": "I-105",
     "title": "deterministic-ZIP archive production",
-    "normative_statement": "A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps zeroed (`0x0000`), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1."
+    "normative_statement": "A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps fixed at DOS time `0x0000` and DOS date `0x0021` (1980-01-01 00:00:00), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1."
   },
   "tags": [
     "construct:archive"
   ],
   "createdAt": "2026-07-17T01:41:59.652565772+00:00",
-  "updatedAt": "2026-09-07T19:59:52.039720562+00:00",
+  "updatedAt": "2026-11-24T14:17:06.824843935+00:00",
   "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
 }

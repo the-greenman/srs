@@ -3148,7 +3148,7 @@ A standard envelope for exchanging a Container together with its full Record set
 
 **Number**: I-105
 
-A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps zeroed (`0x0000`), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1.
+A conformant archive producer MUST produce deterministic ZIP archives: entries sorted byte-lexicographically by forward-slash-normalised path, `last mod` timestamps fixed at DOS time `0x0000` and DOS date `0x0021` (1980-01-01 00:00:00), compression method Deflate (8) or Store (0) only with consistent per-file choice across invocations, `extra` fields empty, Language encoding flag (bit 11) set to 1.
 
 
 ###### byte-identical archive per implementation across invocations
