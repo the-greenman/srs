@@ -1398,7 +1398,7 @@ Relations span tiers. A Note may be the target of `derived-from` Relations from 
 
 `contains`, `depends-on`, `supersedes`, `refines`, `derived-from`, `evidences`, `precedes`
 
-Custom types not covered by these should use `namespace/name` format (e.g. `com.acme.hr/transferred-to`) to prevent collision. Extended relation type metadata is defined in `ext:recommended-relations`.
+Custom types not covered by these should use `namespace/name` format (e.g. `com.acme.hr/transferred-to`) to prevent collision. `ext:recommended-relations` is a compatibility label only and defines nothing (RFC-005); relation types are installed definitions.
 
 **Relations do not change lifecycle state.** A `supersedes` Relation does not mutate the prior Record's `lifecycleState`. Lifecycle state changes are explicit acts by an implementation's transition mechanism.
 
