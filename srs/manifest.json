@@ -1,6 +1,16 @@
 {
+  "rootContainerId": "6587bc86-9461-43f4-b790-504b2bcbddb5",
   "sourceDocumentsPath": "source-documents",
   "$schema": "https://srs.semanticops.com/schema/2.0/manifest.json",
+  "aiGuidance": {
+    "summary": "The SRS specification, authored as an SRS repository: records are the source of truth and the rendered spec is a projection. Written by the spec maintainers through RFCs. Read the purpose record first, then \"Reading this specification\".",
+    "suggestedEntryPoints": [
+      "records/tier-2/purpose-9288ed3d.json",
+      "records/tier-2/concept-69010931.json",
+      "records/tier-2/concept-785e457a.json"
+    ],
+    "navigationHints": "Areas, in order: Reading this specification, Foundations, Instances, Structure, Distribution, Presentation, Extensions, Conformance, Governance. Content is type com.semanticops.spec/concept, with mechanism, invariant, example and design-note beneath; a parent concept contains its children (contains) and sections follow each other with precedes. Concepts depend on each other with depends-on, so neighbours on a concept gives its prerequisites; each invariant hangs off the concept it constrains. RFCs are com.semanticops.spec/rfc records; their rulings are rfc-decision records with their own lifecycle; a replaced record is linked with supersedes. Normative changes need a recorded decision or an RFC: add new content under the concept it belongs to, not as a loose record. Rendered docs/spec, docs/agents and docs/llms.txt are generated and never hand-edited. Read CLAUDE.md before changing anything."
+  },
   "createdAt": "2026-05-28T00:00:00Z",
   "dataModelRevision": 11,
   "declaredExtensions": [
@@ -76,6 +86,5 @@
   "repositoryId": "4172fada-bc38-5479-ac18-4be3194a68ca",
   "srsVersion": "2.0-draft",
   "title": "Semantic Record System Specification",
-  "updatedAt": "2026-06-03T00:00:00Z",
-  "rootContainerId": "6587bc86-9461-43f4-b790-504b2bcbddb5"
+  "updatedAt": "2026-06-03T00:00:00Z"
 }

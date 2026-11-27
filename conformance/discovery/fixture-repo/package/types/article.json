@@ -108,6 +108,16 @@
       "fieldId": "0000f001-0000-4000-8000-000000000019",
       "order": 18,
       "required": false
+    },
+    {
+      "fieldId": "6c198349-4a71-43f3-8a8f-b263f0b0f659",
+      "order": 19,
+      "required": false
+    },
+    {
+      "fieldId": "c8b7b8a5-832f-45a0-8bbf-1066028ef747",
+      "order": 20,
+      "required": false
     }
   ],
   "createdAt": "2026-06-27T00:00:00Z"

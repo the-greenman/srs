@@ -97,7 +97,8 @@ detail this section does not repeat):
   excluded from the *live* metamodel corpus for tooling-parity reasons (the pinned srs-rust binary's
   embedded `field.json` predates the two new emitter capabilities that would express them) — tracked
   at srs-rust#932, same disposition as the `FieldAssignment.description`/`packageDependencies`
-  precedent (srs-rust#868/#867).
+  precedent (srs-rust#868/#867). **RFC-056 (srs#1044)** adds `DiscoveryQuery.fieldFilters`, a
+  seed-only exclusion: the srs#543 class of gap: its exactly-one-test `oneOf`, its mixed integer/boolean/string value lists and its number-or-date range bounds have no metamodel datatype (no discriminated union, no mixed-type value), so the whole property is excluded, as `DocumentSection.source` and `View.fieldViews` are.
 
 **Outside the emitter's closure: `registry.json` (RFC-049, srs#995).** The `ext:registry` registry document is hand-authored; no metamodel Type models it and no closure test covers it, the same standing as `package-manifest.json` (see the generation ledger's row). Its entry shapes are rules (RFC-049 [R3], [R4], [R14]), not schema.
 

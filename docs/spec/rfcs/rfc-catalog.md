@@ -348,11 +348,15 @@ I-124
 I-142
 I-143
 mechanism:field-facets
+mechanism:field-filters
+mechanism:field-filter-values
+mechanism:field-filter-comparison
+mechanism:field-filter-refusals
 -->
 
 **Proposal Artifact Path**: rfcs/rfc-012-discovery-contract-text-projection.md
 
-**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md. RFC-043 Door 3 amendment (Revision 13, 2026-10-01, effective at dataModelRevision 8): the containerId filter reads the entry ids of the container or of its effective(C) closure (one condition, not three); the conformance fixture's containers move to the entry shape. RFC-053 Door 3 amendment (Revision 14, 2026-11-05): a new conditional mechanism, Field facets, binds an implementation that reports per-field facets; [R1]–[R12] are untouched.
+**Content**: Defines a portable Discovery Contract (structured filter axes), a deterministic Text Projection, normalization rules, and an opt-in `ext:discovery` extension, plus a conformance fixture. The `discovery.json` schema, `conformance/discovery/` fixture, `ext:discovery` extension record, and I-113–I-124 invariants are all folded into the canonical spec. Full text: rfcs/rfc-012-discovery-contract-text-projection.md. RFC-043 Door 3 amendment (Revision 13, 2026-10-01, effective at dataModelRevision 8): the containerId filter reads the entry ids of the container or of its effective(C) closure (one condition, not three); the conformance fixture's containers move to the entry shape. RFC-053 Door 3 amendment (Revision 14, 2026-11-05): a new conditional mechanism, Field facets, binds an implementation that reports per-field facets; [R1]–[R12] are untouched. RFC-056 Door 3 amendment (Revision 15, 2026-11-22): `DiscoveryQuery` gains `fieldFilters`, governed by the mechanism Field filters; [R1]–[R12] are untouched.
 
 
 **Title**: RFC-013: Required Root Container & Structural Navigation
@@ -1382,5 +1386,36 @@ cell:conformance
 **Proposal Artifact Path**: rfcs/rfc-053-field-id-beside-field-name.md
 
 **Content**: A field name is a label, unique only within one Type. An implementation reports a Field's id beside its name in the two outputs where clients meet field names: each authoring-projection property carries `x-srs-field-id`, and each field facet is one Field carrying `fieldId`. Records stay keyed by `Field.name`, and nothing stored changes. Full text: rfcs/rfc-053-field-id-beside-field-name.md.
+
+
+**Title**: RFC-056: Discovery filters on a record's own field values
+
+**RFC Number**: 056
+
+**Status**: Accepted
+
+**Author**: agent:rfc-drafter (draft); the owner accepted it 2026-11-22 on the-greenman/srs#1044
+
+**Affected Components**: `DiscoveryQuery` gains `fieldFilters` (`discovery.json`, and the inline copy in `composition.json`, kept identical by `check-discovery-query-defs-identical`); the mechanisms Field filters, Field filter values, Field filter comparison and Field filter refusals under the Discovery concept; a documented closure exclusion for `fieldFilters` (no metamodel change); a Door 3 revision row on RFC-012. Conformance fixtures land after srs-rust#1240, on a held branch. No stored shape changes, no `dataModelRevision` bump.
+
+<!-- srs-integration:v1
+schema:discovery.json
+schema:composition.json
+ext:discovery
+mechanism:field-filters
+mechanism:field-filter-values
+mechanism:field-filter-comparison
+mechanism:field-filter-refusals
+cell:conformance
+cell:identity
+cell:reference
+cell:portability
+-->
+
+**Dependency Refs**: Amends the surface of RFC-012 (Door 3). Builds on RFC-006 (Vocabulary resolution), RFC-032 (fieldType), RFC-039 (field values keyed by name), RFC-040 (effective field set). Follows whatever rule resolves a Type's fieldId (RFC-055, srs#1029, independent). Consults rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-0750c62f, rfc-decision-4f1e12e5, rfc-decision-43249f53, rfc-decision-43e84d63, rfc-decision-2e0cd70a, rfc-decision-c20fcff8. Records its decisions as rfc-decision-91d52a0f, rfc-decision-6a49ce32 and rfc-decision-131f1448.
+
+**Proposal Artifact Path**: rfcs/rfc-056-discovery-field-filters.md
+
+**Content**: A `DiscoveryQuery` can select Tier 2 Records by their own field values through `fieldFilters`: each filter names a Field by id and tests it with `in`, `notIn`, `range` (date or numeric, inclusive) or `missing`, the tests allowed depending on the Field's datatype. Queries stay a flat conjunction. Invalid filters refuse the query; an unknown field id selects nothing with a warning. Full text: rfcs/rfc-056-discovery-field-filters.md.
 
 
