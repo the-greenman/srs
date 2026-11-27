@@ -137,6 +137,8 @@ Applies to: `Note.tags`, `NoteSection.tags`.
 
 **V4 — Vocabulary reference resolution.** A `vocabularyRef` must resolve to an installed `Vocabulary` in the effective package set.
 
+A `vocabularyRef` names its target by bare id (a LINEAGE reference). Where several versions of the target are installed, it resolves to the highest (I-155, RFC-055).
+
 **V5 — Effective entry set.** The effective entry set of a `Vocabulary` or `Lifecycle` is constructed as:
 1. Include entries with effective `status` in {`active`, `deprecated`, `tombstone`}. Exclude `retired` entirely (before uniqueness, before V1).
 2. Add transitively the entries of any extended container. The `extends*Version` must match the resolved upstream version; a mismatch is a hard validation error (not silent degradation).
