@@ -1,0 +1,15 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json",
+  "instanceId": "3400d14f-5404-45e4-9eaf-7e7b6851fc81",
+  "typeId": "0000a001-0000-4000-8000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.example.discovery",
+  "typeName": "article",
+  "fieldValues": {
+    "title": "Release Notes Summary",
+    "body": "A short summary of the release cycle.",
+    "topics": []
+  },
+  "tags": [],
+  "createdAt": "2026-06-27T00:00:00Z"
+}

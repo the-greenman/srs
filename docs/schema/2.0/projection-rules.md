@@ -317,7 +317,8 @@ test.mjs` uses). Per-entity exclusions (printed by the check each run):
 - `RelationTypeDefinition`: none — every non-`$schema` property is covered.
 - `DiscoveryQuery`: `tier` (a bare, untyped-integer enum — the #534-tracked emitter gap the
   standalone `discovery.json` file's own generation is also gated on; documented per-entity
-  exclusion, not a fix to #534 here).
+  exclusion, not a fix to #534 here). **RFC-056 (srs#1044):** `fieldFilters`, a list of
+  `FieldFilter`, is the srs#543 class of gap: its exactly-one-test `oneOf`, its mixed integer/boolean/string value lists and its number-or-date range bounds have no metamodel datatype (no discriminated union, no mixed-type value), so the whole property is excluded, as `DocumentSection.source` and `View.fieldViews` are.
 - `Manifest`: `changelogPath` (deprecated, no per-property deprecation mechanism modelled — same
   reason as `Container.containerType` in the srs#526 set); `meta` (an openly-shaped bag with one
   documented-but-optional legacy nested key, unlike `RelationTypeDefinition.meta`/`lifecycle-

@@ -2,7 +2,7 @@
 
 # RFC-012: Discovery Contract & Text Projection
 
-**Status**: Accepted (Revision 14)
+**Status**: Accepted (Revision 15)
 **Affects**: `Field` (`fieldType` searchability classification; Tier-1 `TypedField.valueType` transitional carve-out), `Record` (Tier 2), `TypedRecord` (Tier 1), `Note` (Tier 0), `Container`, `ext:lifecycle`, `discovery.json` schema, `ext:views-l2` (`SectionSource.discovery-query`, RFC-011 Rev 2)
 **Author**: Peter Brownell (scoped from srs-rust#213)
 **Date**: 2026-06-26
@@ -14,6 +14,7 @@
 
 | Rev | Date | Summary |
 |---|---|---|
+| 15 | 2026-11-22 | **Door 3 amendment (RFC-056, the-greenman/srs#1044).** `DiscoveryQuery` gains one optional axis, `fieldFilters`: tests on a Tier 2 Record's own field values (`in`, `notIn`, `range`, `missing`), all of which must hold, in conjunction with every other predicate under [R5]. The rules are the mechanism *Field filters* (RFC-056 [R1]–[R8]). `discovery.json` and the inline copy in `composition.json` gain `fieldFilters` and `FieldFilter`. [R1]–[R12] are untouched; an absent or empty `fieldFilters` changes no selection. |
 | 14 | 2026-11-05 | **Door 3 amendment (RFC-053, the-greenman/srs#998).** `ext:discovery` gains one conditional mechanism, *Field facets* (RFC-053 [R3], [R5]), for an implementation that reports per-field facets. [R1]–[R12] are untouched, and `discovery.json` does not change. |
 | 11 | 2026-08-09 | srs#242 Phase B cutover: RFC-039 [R18] (canonical I-141) supersedes the deliberate `fieldValues` array-order signal at :139 — instance keys serialise in `FieldAssignment.order`, and the Tier-2 text projection iterates that order. The write-history signal is unrecoverable under a keyed carrier; recorded as an accepted capability loss (RFC-039 Cross-references). |
 | 1 | 2026-06-26 | Initial draft |
