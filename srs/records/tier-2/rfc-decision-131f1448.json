@@ -1,0 +1,41 @@
+{
+  "instanceId": "131f1448-941c-40f1-97b8-8ac90294657d",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "Numeric ranges enter discovery without a real-use case",
+    "accepted_revision": 8,
+    "decision_date": "2026-11-22",
+    "decision_rationale": "The owner directed it (2026-11-22). A numeric range reuses everything date ranges already need: the bound shape, open ends, empty ranges and the misfit checks. Leaving it out made the datatype table inconsistent, since an exact integer could be asked for but not \"between\". `date-time` stays out, because it needs a new rule (the timezone) that has no case to test it against.",
+    "decision_statement": "`range` on `integer` and `number` Fields enters `DiscoveryQuery` without a real-use case, as a deliberate exception to rfc-decision-4f1e12e5's evidence-shaped rule.",
+    "decision_scope": "RFC-056's numeric `range` test only. It sets no precedent for other features without evidence.",
+    "governing_values": [
+      "practical-expression",
+      "evolution"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Leave numeric ranges out until a real use asks (RFC-056 Revisions 1 to 4). Add `date-time` ranges at the same time.",
+    "accepted_costs": "One more comparison every implementation must carry, with exact decimal comparison, before any repository has used it.",
+    "evidence_refs": [
+      "the-greenman/srs#1044 (owner rulings and acceptance, 2026-11-22)",
+      "rfcs/rfc-056-discovery-field-filters.md, Revision 8",
+      "the-greenman/srs#726 (research comment 2026-11-21)",
+      "rfc-decision-4f1e12e5"
+    ],
+    "review_trigger": "No repository, Composition or agent query uses a numeric range by the time RFC-012 next changes revision: that revision proposes removing it."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:conformance"
+  ],
+  "createdAt": "2026-11-22T08:19:08.158234543+00:00",
+  "updatedAt": "2026-11-22T08:19:08.158238127+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
