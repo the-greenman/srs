@@ -387,6 +387,15 @@
       "description": "The residual entities #526/PR#533 parked (RelationTypeDefinition, DiscoveryQuery minus tier, the shared ExportConfig, Manifest, Composition, View, plus View's own FieldView/RecordPropertyView row shapes) emit output that is a subset of their committed docs/schema/2.0/*.json seed over the covered authoritative features, same discipline as rfc-272-closure. Proves the metamodel could generate these files without overwriting them (authorship flip is #260). DocumentSection.source and View.fieldViews stay excluded (srs#543, a discriminated-union emitter gap)."
     },
     {
+      "id": "oneof-disjoint",
+      "script": "check-oneof-disjoint.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#1054; rfc-decision-a270e98a (Protocol targetType is a bare UUID or the empty string)",
+      "description": "A schema oneOf pairing a uuid-format branch with an empty-string const needs disjoint branches: format is only an annotation, so the uuid branch must exclude the empty string (minLength or pattern), or the empty string matches both and is rejected."
+    },
+    {
       "id": "rfc-379-closure",
       "script": "rfc-379-closure-test.mjs",
       "args": [],

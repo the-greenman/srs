@@ -1,0 +1,17 @@
+{
+  "$schema": "https://srs.semanticops.com/schema/2.0/field.json",
+  "id": "c8b7b8a5-832f-45a0-8bbf-1066028ef747",
+  "namespace": "com.example.discovery",
+  "name": "section",
+  "version": 1,
+  "description": "The publication section the article belongs to.",
+  "aiGuidance": {
+    "purpose": "RFC-056 alias resolution: a closed string bound to the article-sections Vocabulary. Term keys and aliases are searchable text, so they must contain none of the contentMatch probe strings in scenarios.json."
+  },
+  "fieldType": {
+    "datatype": "string",
+    "valueDomain": "closed",
+    "vocabularyRef": "ec7bab2a-d7b9-404f-9926-8d34615ab7c3"
+  },
+  "createdAt": "2026-06-27T00:00:00Z"
+}
