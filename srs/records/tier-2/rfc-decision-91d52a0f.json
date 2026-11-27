@@ -1,0 +1,40 @@
+{
+  "instanceId": "91d52a0f-74d0-4898-99b1-9b5e74a22a01",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "A portable query filter has an exact result set",
+    "accepted_revision": 8,
+    "decision_date": "2026-11-22",
+    "decision_rationale": "Portability is the point of the standard query: a Composition section or an agent query must select the same records on every implementation, and shared `exactMatch` fixtures can only prove a filter whose answer is exact. Ranked or approximate recall is already allowed, as extra recall on the content side, so nothing useful is lost by keeping it out of the portable filters. This was the line RFC-056 chose its tests by; recording it binds the next RFCs on srs#726 (relation selection, grouped sections).",
+    "decision_statement": "A predicate enters the portable `DiscoveryQuery` only if the repository's content alone defines its result set exactly, so that every conforming implementation returns the same set. Ranking, stemming and similarity stay outside it, behind the `DiscoveryIndex` seam (RFC-012 [R3]/[R4]).",
+    "decision_scope": "The predicates of `DiscoveryQuery` (`ext:discovery`), and so every Composition section that consumes it. Not implementation search features outside the query.",
+    "governing_values": [
+      "portability",
+      "shared-coherence"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "Core plus named optional profiles for costly exact predicates (OData conformance levels, CMIS capabilities): deferred to the relation RFC, where it would be weighed against rfc-decision-43249f53. Everything required, including approximate predicates: results would differ by implementation. Leave the line unrecorded as RFC-056's working rule only.",
+    "accepted_costs": "A useful approximate predicate (vector similarity, stemmed match) can never be a portable filter; a persisted artefact that wants one must depend on an implementation extension. Every new portable predicate must come with exact conformance scenarios.",
+    "evidence_refs": [
+      "the-greenman/srs#1044 (owner rulings and acceptance, 2026-11-22)",
+      "rfcs/rfc-056-discovery-field-filters.md, Revision 8",
+      "the-greenman/srs#726 (research comment 2026-11-21)"
+    ],
+    "review_trigger": "A real use needs a persisted artefact (a Composition section, a saved index) to select by an approximate predicate, and declaring an implementation extension cannot serve it. *Checked at:* the vector-path ruling (srs#726 question 6) and each later RFC adding a DiscoveryQuery axis."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:portability"
+  ],
+  "createdAt": "2026-11-22T08:19:07.997639908+00:00",
+  "updatedAt": "2026-11-22T08:19:07.997643310+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

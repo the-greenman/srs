@@ -29,7 +29,11 @@
  *     emits `additionalProperties:false`; the seed's own doc comment says "the key grammar is
  *     deliberately not constrained here", i.e. it resists static modelling by design).
  *   - `discovery-query`/`text-segment`/`expected-segments`/`conformance-scenario`/`srsj-envelope`:
- *     none — every property of all five is covered.
+ *     none — every property of all five is covered (until RFC-056, below).
+ * RFC-056 (srs#1044): `discovery-query`: `fieldFilters` — a list of FieldFilter, whose exactly-one-test
+ *   `oneOf`, mixed integer/boolean/string value lists and number-or-date range bounds are the srs#543
+ *   class of gap (no discriminated-union or mixed-type datatype); excluded whole, as
+ *   DocumentSection.source and View.fieldViews are.
  *
  * `theme.assets` (map-of-`$ref`) and `discovery-query.tier` (untyped integer enum) were parked as
  * TOOLING-PARITY exclusions (not modelling gaps) until a compatible srs-rust release existed:

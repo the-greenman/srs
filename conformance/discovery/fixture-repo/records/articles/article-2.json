@@ -16,7 +16,11 @@
       "segments"
     ],
     "word_count": 28,
-    "is_published": false
+    "is_published": false,
+    "review_dates": [
+      "2025-12-01"
+    ],
+    "section": "brief"
   },
   "tags": [
     "searchable"

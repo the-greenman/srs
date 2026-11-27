@@ -387,6 +387,15 @@
       "description": "The residual entities #526/PR#533 parked (RelationTypeDefinition, DiscoveryQuery minus tier, the shared ExportConfig, Manifest, Composition, View, plus View's own FieldView/RecordPropertyView row shapes) emit output that is a subset of their committed docs/schema/2.0/*.json seed over the covered authoritative features, same discipline as rfc-272-closure. Proves the metamodel could generate these files without overwriting them (authorship flip is #260). DocumentSection.source and View.fieldViews stay excluded (srs#543, a discriminated-union emitter gap)."
     },
     {
+      "id": "oneof-disjoint",
+      "script": "check-oneof-disjoint.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "srs#1054; rfc-decision-a270e98a (Protocol targetType is a bare UUID or the empty string)",
+      "description": "A schema oneOf pairing a uuid-format branch with an empty-string const needs disjoint branches: format is only an annotation, so the uuid branch must exclude the empty string (minLength or pattern), or the empty string matches both and is rejected."
+    },
+    {
       "id": "rfc-379-closure",
       "script": "rfc-379-closure-test.mjs",
       "args": [],
@@ -615,6 +624,15 @@
       "cell": "identity",
       "governing": "RFC-046 [R1]; srs#850",
       "description": "The `$defs/Actor` entries in docs/schema/2.0/record.json, note.json and relation.json are byte-identical (compared as exact source text, so whitespace drift fails). The committed schemas use no cross-file $ref, so the one Actor shape is repeated; this check keeps the three copies one shape (RFC-046 [R1])."
+    },
+    {
+      "id": "discovery-query-defs-identical",
+      "script": "check-discovery-query-defs-identical.mjs",
+      "args": [],
+      "tier": "always",
+      "cell": "conformance",
+      "governing": "RFC-056 Change E; srs#1044",
+      "description": "composition.json's inline copy of `$defs/DiscoveryQuery`, and the FieldFilter defs it references, match discovery.json (parsed, ignoring the copy's $comment). The seed validator resolves only local refs, so the one query shape is repeated; this check keeps the copies one shape."
     },
     {
       "id": "pr-classification",

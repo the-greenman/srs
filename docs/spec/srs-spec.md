@@ -3786,7 +3786,7 @@ A reference site is every property of a definition schema that holds another def
 | Strength | Followed | Sites |
 |---|---|---|
 | PINNED: this definition at this `version` | yes, to that version | a `ref` Field's target Type; Type inheritance (`extendsTypeId` with its version); `extendsVocabularyId`, `extendsLifecycleId`; a Composition's `rootTypeRefs`; a Blueprint's `rootTypes`, `requiredTypes` and `RelationSpec` source and target Types |
-| LINEAGE: this definition, any version the context installs | yes, to every version the effective set holds | `fieldId` in a Type's field assignments, overrides, cross-field rules and `fieldOrder`; the Field ids that are `roles` values of a View's composite-renderer binding and a Composition's composite-renderer directive; Field ids in a View's rows, a section's `titleFieldId` and `ordering.fieldId`, a composite-renderer directive and a Theme's `cssClassFields`; the View ids that are `typeDispatch` values; a Type's `identityFieldId` and `lifecycleRef`; a Field's `vocabularyRef`; a section's `renderViewId`; a `typeId` in a discovery query, a Theme's record wrapper override or a Protocol's `FieldRef`; the `fieldId` of a Protocol's `FieldRef` (`/stages/*/contributesTo/*/fieldId`); a Protocol's target and output Types |
+| LINEAGE: this definition, any version the context installs | yes, to every version the effective set holds | `fieldId` in a Type's field assignments, overrides, cross-field rules and `fieldOrder`; the Field ids that are `roles` values of a View's composite-renderer binding and a Composition's composite-renderer directive; Field ids in a View's rows, a section's `titleFieldId` and `ordering.fieldId`, a composite-renderer directive and a Theme's `cssClassFields`; the View ids that are `typeDispatch` values; a Type's `identityFieldId` and `lifecycleRef`; a Field's `vocabularyRef`; a section's `renderViewId`; a `typeId` or a field filter's `fieldId` in a discovery query, a Theme's record wrapper override or a Protocol's `FieldRef`; the `fieldId` of a Protocol's `FieldRef` (`/stages/*/contributesTo/*/fieldId`); a Protocol's target and output Types |
 | KEYED: whatever matches the key in the consumer's set | no | `relationType` keys, lifecycle state keys, term keys, `namespace/name` keys (`typeFilter`, `typeDispatch` keys, a discovery query's `typeNamespace`/`typeName`), a View's `compatibleTypes` |
 | LOCATOR: where to fetch bytes | no | a Composition's `themeRef` and `themeVariants` |
 
@@ -6414,6 +6414,73 @@ An implementation that reports none is unaffected, and `discovery.json` gains no
 **[R5]** *(Every adapter agrees, and no client resolves.)* Over the same repository state, every adapter of one implementation (command line, embedded binding, MCP) MUST report the same Field id for the same authoring-projection property and the same facet. The ids that [R1]–[R3] require MUST be present in the output itself, so that no client needs to read Type or Field definitions to learn them.
 
 Introduced by RFC-053 (`rfcs/rfc-053-field-id-beside-field-name.md`). Decision: `rfc-decision-43e84d63`.
+
+
+##### Field filters
+
+A `DiscoveryQuery` can select Tier 2 Records by what their own fields hold, through `fieldFilters`: a list of filters, every one of which holds for a selected record. Each filter names one Field by `fieldId` and carries one test: `in`, `notIn`, `range` (date or numeric, both bounds included) or `missing`. Which value a filter reads is the mechanism Field filter values; how it compares, Field filter comparison; which queries are refused, Field filter refusals. Compositions consume the axis unchanged through the `discovery-query` section source.
+
+Tests by Field datatype: `string` and `boolean` take `in`, `notIn`, `missing`; `integer` takes `in`, `notIn`, `range`, `missing`; `number` and `date` take `range`, `missing`; `date-time`, `ref`, `dependent` and `map` take `missing` only.
+
+**[R1]** A `DiscoveryQuery` MAY carry `fieldFilters`, a list of field filters. An instance is selected only if every filter in the list holds for it, in conjunction with every other predicate of the query (RFC-012's conformance rule [R5]). An absent or empty `fieldFilters` MUST NOT change the selection.
+
+**[R2]** A field filter MUST name exactly one Field by `fieldId`, and MUST carry exactly one of the tests `in`, `notIn`, `range` or `missing`. The `fieldId` MUST resolve by the rule that resolves a Type FieldAssignment's `fieldId`. The tests a filter may carry are fixed by the resolved Field's datatype, as listed in Change B.
+
+**[R6]** A field filter MUST NOT hold for an instance other than a Tier 2 Record whose bound Type version's effective field set contains the named Field. Where no filter in the query is refused under [R7] or [R8], a filter whose `fieldId` resolves to no installed Field MUST select no instances, and the implementation MUST report a warning naming the unresolved id.
+
+Introduced by RFC-056 (`rfcs/rfc-056-discovery-field-filters.md`). Decisions: `rfc-decision-91d52a0f` (the portable line), `rfc-decision-6a49ce32` (flat queries), `rfc-decision-131f1448` (numeric ranges as an evidence exception).
+
+
+##### Field filter comparison
+
+How a field filter compares a value with its test (mechanism Field filters). Which value a filter reads, and when a field has none, is the mechanism Field filter values.
+
+**[R3]** `in` MUST hold if and only if the field has a value and the value (for a list-valued field, at least one element) equals a listed value. `notIn` MUST hold if and only if the field has a value and no value (for a list-valued field, no element) equals a listed value. Comparison works as follows:
+- Strings MUST be compared exactly, code point by code point, with no case folding or normalisation. The one exception is a Field with a `vocabularyRef`:
+  - Listed and stored values MUST first be resolved to their term keys by RFC-006 key-or-alias resolution, over the Vocabulary's effective entry set only, never through a retired entry.
+  - On an open Field, a value that resolves to no entry, or every value where the `vocabularyRef` itself resolves to nothing, MUST be compared exactly as written.
+- Integers MUST be compared exactly by the decimal value written, so `2.0` equals `2`, and booleans by value.
+
+**[R4]** `range` MUST hold if and only if the field has a value and the value (for a list-valued field, at least one element) lies within the bounds, both bounds included:
+- On a `date` Field, the value MUST be a valid calendar date that is on or after the start of `from`, where given, and on or before the end of `to`, where given. Dates are compared as calendar dates, without time of day or timezone. A bound written as `YYYY` or `YYYY-MM` MUST be read as the whole year or month: its start for `from`, its end for `to`.
+- On an `integer` or `number` Field, the value MUST be greater than or equal to `from`, where given, and less than or equal to `to`, where given, compared exactly by the decimal value each is written as, with no rounding of either the value or the bound.
+
+A range whose `from` lies after its `to` MUST select nothing.
+
+Introduced by RFC-056 (`rfcs/rfc-056-discovery-field-filters.md`).
+
+
+##### Field filter refusals
+
+A query with an invalid field filter is refused, and none of it is evaluated (mechanism Field filters). Checks run over the whole query in order: malformed filters ([R7]), then filters that do not fit their resolved Field ([R8]), and only then evaluation, where an unresolved `fieldId` selects nothing with a warning ([R6]).
+
+**[R7]** An implementation MUST refuse a query containing a malformed field filter, with an error and without evaluating any part of the query. A filter is malformed if any of these holds:
+- it has no `fieldId`;
+- it carries not exactly one test;
+- it has an empty `in` or `notIn` list, or an empty string as a listed value;
+- it has a `range` with neither bound;
+- it has a `range` bound that is neither a JSON number nor a real date, month or year in the form `YYYY`, `YYYY-MM` or `YYYY-MM-DD`;
+- it has a `range` with one numeric bound and one date bound.
+
+This check applies to every filter in the query, whether or not its `fieldId` resolves.
+
+**[R8]** Where the `fieldId` resolves, an implementation MUST refuse, with an error and without evaluating any part of the query, a query containing a field filter that:
+- carries a test the Field's datatype does not allow;
+- lists a value whose type does not match the Field's datatype;
+- carries a `range` bound of the wrong kind for the Field: a number on a `date` Field, or a date on an `integer` or `number` Field;
+- lists a value outside the domain of a closed Field: its `allowedValues`, or the keys and aliases of the entries in its bound Vocabulary's effective entry set (RFC-006); or
+- targets a closed Field whose `vocabularyRef` resolves to no Vocabulary.
+
+Introduced by RFC-056 (`rfcs/rfc-056-discovery-field-filters.md`).
+
+
+##### Field filter values
+
+An empty string, list or object states nothing, so for a filter it is no value, unlike storage (RFC-039 [R5a]) and rendering (RFC-001).
+
+**[R5]** The value of a field filter is the record's `fieldValues` entry under the resolved Field's `name` (RFC-039). The field has no value when that entry is absent, an empty string, an empty list, or (for a `map` or inline `ref` Field) an empty object. `missing: true` MUST hold if and only if the field has no value, and `missing: false` if and only if it has one. A field with no value MUST NOT satisfy `in`, `notIn` or `range`. A value that does not conform to the resolved Field's datatype, or to its closed domain, MUST NOT satisfy `in`, `notIn` or `range`. A value on an `integer` Field conforms if and only if it is a JSON number with an integral value. A number written as a JSON string conforms to neither `integer` nor `number`. On a list-valued Field, conformance MUST be judged per element.
+
+Introduced by RFC-056 (`rfcs/rfc-056-discovery-field-filters.md`).
 
 
 

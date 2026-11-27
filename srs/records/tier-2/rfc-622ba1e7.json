@@ -1,0 +1,27 @@
+{
+  "instanceId": "622ba1e7-5e9d-47c4-b084-75762295306f",
+  "typeId": "6a000001-0000-4000-a000-000000000001",
+  "typeVersion": 1,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc",
+  "fieldValues": {
+    "title": "RFC-056: Discovery filters on a record's own field values",
+    "rfc_number": "056",
+    "author": "agent:rfc-drafter (draft); the owner accepted it 2026-11-22 on the-greenman/srs#1044",
+    "affected_components": "`DiscoveryQuery` gains `fieldFilters` (`discovery.json`, and the inline copy in `composition.json`, kept identical by `check-discovery-query-defs-identical`); the mechanisms Field filters, Field filter values, Field filter comparison and Field filter refusals under the Discovery concept; a documented closure exclusion for `fieldFilters` (no metamodel change); a Door 3 revision row on RFC-012. Conformance fixtures land after srs-rust#1240, on a held branch. No stored shape changes, no `dataModelRevision` bump.\n\n<!-- srs-integration:v1\nschema:discovery.json\nschema:composition.json\next:discovery\nmechanism:field-filters\nmechanism:field-filter-values\nmechanism:field-filter-comparison\nmechanism:field-filter-refusals\ncell:conformance\ncell:identity\ncell:reference\ncell:portability\n-->",
+    "dependency_refs": "Amends the surface of RFC-012 (Door 3). Builds on RFC-006 (Vocabulary resolution), RFC-032 (fieldType), RFC-039 (field values keyed by name), RFC-040 (effective field set). Follows whatever rule resolves a Type's fieldId (RFC-055, srs#1029, independent). Consults rfc-decision-cce3c00e, rfc-decision-9ee14517, rfc-decision-0750c62f, rfc-decision-4f1e12e5, rfc-decision-43249f53, rfc-decision-43e84d63, rfc-decision-2e0cd70a, rfc-decision-c20fcff8. Records its decisions as rfc-decision-91d52a0f, rfc-decision-6a49ce32 and rfc-decision-131f1448.",
+    "proposal_artifact_path": "rfcs/rfc-056-discovery-field-filters.md",
+    "content": "A `DiscoveryQuery` can select Tier 2 Records by their own field values through `fieldFilters`: each filter names a Field by id and tests it with `in`, `notIn`, `range` (date or numeric, inclusive) or `missing`, the tests allowed depending on the Field's datatype. Queries stay a flat conjunction. Invalid filters refuse the query; an unknown field id selects nothing with a warning. Full text: rfcs/rfc-056-discovery-field-filters.md."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc"
+  ],
+  "createdAt": "2026-11-22T08:19:29.492780641+00:00",
+  "updatedAt": "2026-11-22T08:31:24.129855964+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}

@@ -1,0 +1,40 @@
+{
+  "instanceId": "6a49ce32-ca73-421a-bddc-25dda3afb60c",
+  "typeId": "6a000004-0000-4000-a000-000000000004",
+  "typeVersion": 2,
+  "typeNamespace": "com.semanticops.spec",
+  "typeName": "rfc-decision",
+  "fieldValues": {
+    "title": "Discovery queries stay flat",
+    "accepted_revision": 8,
+    "decision_date": "2026-11-22",
+    "decision_rationale": "Every real-use question reported on srs#726 fits a flat conjunction with value lists. A boolean expression language makes every implementer carry a full evaluator and multiplies conformance cases (OData's `$filter`, required even at its minimal level). Flat queries keep fixtures enumerable and keep a query readable as a list of conditions.",
+    "decision_statement": "A `DiscoveryQuery` stays a conjunction of filters. OR appears only as a list of values inside one filter (as `lifecycleStates` and `in` do), and exclusion only as a per-filter test (as `excludeLifecycleStates` and `notIn` do). There are no nested boolean expressions.",
+    "decision_scope": "The shape of `DiscoveryQuery` (`ext:discovery`), including axes added by later RFCs.",
+    "governing_values": [
+      "shared-coherence",
+      "practical-expression"
+    ],
+    "project_phase": "formation",
+    "alternatives_considered": "A general boolean expression (`and`, `or`, `not`, nested). Flat now with boolean trees named as a later optional profile. Leave each RFC to choose its own shape.",
+    "accepted_costs": "\"kind is email OR status is draft\" cannot be asked in one query; a reader runs two queries and unions them. \"Not archived, or no status\" likewise takes two queries.",
+    "evidence_refs": [
+      "the-greenman/srs#1044 (owner rulings and acceptance, 2026-11-22)",
+      "rfcs/rfc-056-discovery-field-filters.md, Revision 8",
+      "the-greenman/srs#726 (research comment 2026-11-21)"
+    ],
+    "review_trigger": "A real use that cannot be expressed as two queries. *Checked at:* each RFC that adds a DiscoveryQuery axis."
+  },
+  "lifecycleState": "accepted",
+  "tags": [
+    "topic:rfc",
+    "cell:conformance"
+  ],
+  "createdAt": "2026-11-22T08:19:08.078183306+00:00",
+  "updatedAt": "2026-11-22T08:19:08.078186853+00:00",
+  "createdBy": {
+    "kind": "ai",
+    "id": "claude-code"
+  },
+  "$schema": "https://srs.semanticops.com/schema/2.0/record.json"
+}
