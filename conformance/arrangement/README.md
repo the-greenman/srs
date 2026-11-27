@@ -95,7 +95,7 @@ same property at the CLI.
   `c` and `d` at depth 0, keyed `a0`, `a1`, `a2`, `a3`. Replace the outline with `d`, `a`, `b`, `c`
   (no entry is named as moved). The operation keeps the longest run already in `(key, instanceId)`
   order, `a`, `b`, `c`, and writes exactly `d` = `{key: "Zz"}`; nothing else, and not the head.
-  Replacing it with `c`, `b`, `a`, `d` writes two entries and keeps two. The keys are those of the
-  reference tool's unit test (`a_whole_replace_writes_only_the_entries_out_of_order`,
-  `srs-core/src/container_write.rs`). The runner cannot drive it yet: no CLI step does a
+  Replacing it with `c`, `b`, `a`, `d` is a tie of three runs of two; the first in the new outline,
+  `c`, `d`, is kept, and it writes exactly `b` = `{key: "a2V"}` then `a` = `{key: "a2l"}`. The keys
+  are the Appendix's *key between* as the reference tool computes it (`arrangement_key::key_between`). The runner cannot drive it yet: no CLI step does a
   whole-outline replace without a stdin body, so it becomes a scenario once one does.
