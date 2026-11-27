@@ -171,7 +171,7 @@ A Package Bundle MUST carry definitions only, plus the package metadata `package
 
 ### Package export reference sites
 
-A reference site is every property of a definition schema that holds another definition's UUID, bare or as an `{id, version}` pair, with the strength `rfc-decision-c8704763` declares for it. A site added by a later RFC declares its strength where it is defined. An empty value (a Protocol's `targetType` of `""`) is not a reference. Not reference sites: a definition's `Lineage` provenance (`sourceDefinitionId`, `forkedFromDefinitionId`) and a Composition source's `containerId`/`containerIds`. Package export follows PINNED and LINEAGE sites and no others (RFC-003 [C1]).
+A reference site is every property of a definition schema that holds another definition's UUID, bare or as an `{id, version}` pair, with the strength `rfc-decision-c8704763` declares for it. A site added by a later RFC declares its strength where it is defined. An empty value (a Protocol's `targetType` of `""`) is not a reference. Not reference sites: a definition's `Lineage` provenance (`sourceDefinitionId`, `forkedFromDefinitionId`) and a Composition source's `containerId`/`containerIds`. Package export follows PINNED and LINEAGE sites and no others (RFC-003 [C1]). Export reaches every installed version of a LINEAGE target; resolution uses the highest of them (I-155, RFC-055).
 
 | Strength | Followed | Sites |
 |---|---|---|
