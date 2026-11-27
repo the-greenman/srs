@@ -183,6 +183,8 @@ Declaring both is a validation error (V7). An inline lifecycle's effective state
 
 **V8 — Lifecycle reference resolution.** A `lifecycleRef` must resolve to an installed `Lifecycle` in the effective package set.
 
+A `lifecycleRef` names its target by bare id (a LINEAGE reference). Where several versions of the target are installed, it resolves to the highest (I-155, RFC-055).
+
 **V9 — Lifecycle integrity.** Over the effective state set (V5):
 - Exactly one state MUST have `isInitial: true`; `initialState` MUST reference that state's `key`.
 - The initial state MUST have effective `status: active`. A lifecycle whose initial state is deprecated, tombstone, or retired is invalid.
