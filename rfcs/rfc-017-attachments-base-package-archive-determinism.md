@@ -2,7 +2,7 @@
 
 # RFC-017: Decision-log Attachments, Base-package Settings, Archive Determinism, and srsj-gzip Retirement
 
-**Status**: Accepted (Revision 6)
+**Status**: Accepted (Revision 7)
 **Affects**: `SourceReference.sourceRole` enum (RFC-023) — new `attaches` value in all four SourceReference-bearing schemas (`record.json`, `note.json`, `typed-record.json`, `relations-collection.json`); `ext:repository` (archive determinism, attachment model, tombstone reference-only state, subdirectory support); `ext:json-store` (retire srsj-gzip); `docs/schema/2.0/source-document-meta.json` (subdirectory contentPath clarification)
 **Author**: the-greenman (from issue the-greenman/srs#101)
 **Date**: 2026-07-06
@@ -19,6 +19,7 @@
 | 4 | 2026-07-17 | Review pass (Spec Integrity + Completeness reviewers): fix Change A to list all four SourceReference-bearing schemas (prose body was not updated when Rev 3 expanded scope); narrow [R6] byte-identity guarantee to within-implementation consistency (the cross-implementation claim contradicted [R5]'s implementation-defined Store/Deflate choice); add gzip magic-byte detection to Change F; upgrade Change E non-blocking-diagnostics emission from SHOULD to MUST; add UUID-assignment note to Change B; define "identical repository content" for [R6]; expand [R7] with explicit trigger conditions; add [R3]/[R4] cross-reference to [R11]; add `manifest.json` to schema changes table; correct Rationale srsj-gzip history; scope [R4] diagnostics clause. |
 | 5 | 2026-07-17 | Accepted; spec records authored in `srs/srs` — RFC record `747f61db`, Changes A–G, invariants I-101–I-112. PR #186 merged to master. |
 | 6 | 2026-08-08 | **Erratum, no normative change.** This RFC named the four `attachment_policy` fields `allowedMimeTypes`, `maxPerFileBytes`, `maxDocBytes` and `maxTotalBytes`, in camelCase. The `com.semanticops.base` Field definitions authored under Change B have always been `allowed_mime_types`, `max_per_file_bytes`, `max_doc_bytes` and `max_total_bytes` — snake_case, per the Field-name convention — so the RFC text has never matched the fields it defines. Corrected here, and in invariant I-107 and the Change B / Change E records. The camelCase spellings in the `attachment policy-get` **CLI payload** are unaffected: payload keys are camelCase by contract (ADR-011) and are a separate namespace from Field names. Found while implementing #308, which banned kebab-case Field names outright; srs#359. |
+| 7 | 2026-11-24 | **Erratum, no change to what conforming archives hold.** Change D item 2 and I-105 said both DOS fields are `0x0000` ("DOS time zero = 1980-01-01 00:00:00"), but DOS date `0x0000` is month 0, day 0; 1980-01-01 is date `0x0021`. The value is now stated once: `last mod file time` `0x0000` and `last mod file date` `0x0021` (1980-01-01 00:00:00), as ruled by decision 773ae4a6. srs-rust already writes exactly this. |
 
 ---
 
@@ -131,7 +132,7 @@ An implementation MUST NOT refuse to load, validate, or export a repository on t
 Strengthen the archive section of `ext:repository` to require deterministic archive production. A conforming archive producer MUST:
 
 1. **Sort entries by path**: entries MUST appear in the ZIP central directory in byte-lexicographic order of their forward-slash-normalised relative paths. `manifest.json` is not exempt — it sorts alphabetically with all other entries.
-2. **Zero local file header timestamps**: the `last mod file time` and `last mod file date` fields in every local file header and central directory entry MUST be set to `0x0000` (DOS time zero = 1980-01-01 00:00:00). No other timestamp fields (e.g. Info-ZIP extended timestamp) may be written.
+2. **Zero local file header timestamps**: the `last mod file time` and `last mod file date` fields in every local file header and central directory entry MUST be set so that `last mod file time` is `0x0000` and `last mod file date` is `0x0021` (1980-01-01 00:00:00). No other timestamp fields (e.g. Info-ZIP extended timestamp) may be written.
 3. **Use Deflate or Store only**: compression method MUST be 0 (Store) or 8 (Deflate). Methods 1–7 and 9–255 are not permitted. The choice between Store and Deflate is implementation-defined, but it MUST be consistent per file across repeated invocations of the same content (i.e., a producer that uses Deflate for `.json` files must always use Deflate for `.json` files).
 4. **Omit host-metadata extra fields**: the `extra` field in each local file header and central directory entry MUST be empty (`0x0000` length). Host-originated extra fields (Info-ZIP, NTFS, Unix, WinZip AES) MUST NOT be written.
 5. **UTF-8 filenames**: the general-purpose bit flag byte 11 (Language encoding flag) MUST be set to 1 in all local file headers and central directory entries.
