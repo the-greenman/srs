@@ -99,3 +99,11 @@ same property at the CLI.
   `c`, `d`, is kept, and it writes exactly `b` = `{key: "a2V"}` then `a` = `{key: "a2l"}`. The keys
   are the Appendix's *key between* as the reference tool computes it (`arrangement_key::key_between`). The runner cannot drive it yet: no CLI step does a
   whole-outline replace without a stdin body, so it becomes a scenario once one does.
+
+## Pending scenarios (RFC-043 Revision 13, decision 7753b32f)
+
+Not yet in `scenarios.json`: every expectation there is captured from a build, and no build refuses these writes until srs-rust#1636 lands. Each is `expectedOutcome: refused`, `expectedCode: arrangement-pointer`, and the repository is unchanged afterwards. Capture them from the first build that implements [R7] as amended, then move them into `scenarios.json`.
+
+- `anchor_cannot_be_set_to_a_non_member` ([R7], [R3]): `container update` of `Outline` (`0a0000c1-...`) with `anchorInstanceId` set to an instance that is not an entry of it.
+- `container_create_refuses_a_non_member_anchor` ([R7], [R3]): `container create` supplying an `anchorInstanceId` that names no entry of the new container.
+- `identity_cannot_be_set_to_a_non_member` ([R7], [R3]): `container update` of the root container with `identityInstanceId` set to a non-member.
