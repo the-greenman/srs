@@ -91,6 +91,14 @@ v0.1.0-build.554 and checked against the rule each cites.
 The srs-web `rfc038-concurrency` end-to-end acceptance (two writers, one container, a plain merge) is
 srs-web's test (the-greenman/srs-web#584); `concurrent_appends_with_equal_keys_merge_cleanly` is the
 same property at the CLI.
+- **Whole-outline replace** ([R8]; Revision 16, the-greenman/srs#1026). A container holds `a`, `b`,
+  `c` and `d` at depth 0, keyed `a0`, `a1`, `a2`, `a3`. Replace the outline with `d`, `a`, `b`, `c`
+  (no entry is named as moved). The operation keeps the longest run already in `(key, instanceId)`
+  order, `a`, `b`, `c`, and writes exactly `d` = `{key: "Zz"}`; nothing else, and not the head.
+  Replacing it with `c`, `b`, `a`, `d` is a tie of three runs of two; the first in the new outline,
+  `c`, `d`, is kept, and it writes exactly `b` = `{key: "a2V"}` then `a` = `{key: "a2l"}`. The keys
+  are the Appendix's *key between* as the reference tool computes it (`arrangement_key::key_between`). The runner cannot drive it yet: no CLI step does a
+  whole-outline replace without a stdin body, so it becomes a scenario once one does.
 
 ## Pending scenarios (RFC-043 Revision 13, decision 7753b32f)
 
