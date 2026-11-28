@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://srs.semanticops.com/schema/2.0/lifecycle.json",
+  "title": "SRS Lifecycle",
+  "description": "A standalone, installable, referenceable lifecycle container. A specialized closed vocabulary of states plus transitions and an initial state.",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "namespace",
+    "name",
+    "states",
+    "transitions",
+    "initialState",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LifecycleState"
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/LifecycleTransition"
+      }
+    },
+    "initialState": {
+      "type": "string",
+      "description": "The key of the state with isInitial: true."
+    },
+    "extendsLifecycleId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "extendsLifecycleVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "LifecycleState": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "namespace",
+        "key"
+      ],
+      "additionalProperties": false,
+      "description": "A state in the lifecycle (VocabularyEntry specialization). RFC-006 Revision 9 [S1]: id, version and namespace are required, as for every substrate entry.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "namespace": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*(\\.[a-z0-9][a-z0-9-]*)*$"
+        },
+        "key": {
+          "type": "string",
+          "description": "Machine-readable state key. Was name pre-RFC-006."
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isInitial": {
+          "type": "boolean"
+        },
+        "isFinal": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "deprecated",
+            "tombstone",
+            "retired"
+          ]
+        },
+        "requiresRelation": {
+          "$ref": "#/$defs/RequiresRelation"
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "RequiresRelation": {
+      "type": "object",
+      "required": [
+        "relationType"
+      ],
+      "additionalProperties": false,
+      "description": "RFC-022 relational state: a record may only be in this state if a relation satisfying this obligation exists.",
+      "properties": {
+        "relationType": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "description": "Relation type(s) that satisfy the obligation (any-of). RFC-032 Change F normalized this declaration form from string|string[] to a list (length ≥ 1); the single-string form is removed."
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "incoming",
+            "outgoing"
+          ],
+          "default": "incoming",
+          "description": "incoming: an edge whose target is the record (e.g. successor → predecessor supersedes). outgoing: an edge whose source is the record."
+        },
+        "enforcement": {
+          "type": "string",
+          "enum": [
+            "hard",
+            "advisory"
+          ],
+          "default": "hard",
+          "description": "hard (default): a transition into this state MUST be rejected unless the obligation is satisfied or fulfilled (definitional relational states whose meaning is the relationship, e.g. superseded). advisory: the transition is permitted even when unsatisfied, and an unsatisfied obligation is surfaced as a warning at rest, never a rejection (evidentiary obligations that may be established later)."
+        }
+      }
+    },
+    "LifecycleTransition": {
+      "type": "object",
+      "required": [
+        "name",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false,
+      "description": "A directed edge between lifecycle state keys.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Stable UUID identity for this transition edge."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable display label (e.g. promote, approve). Not renamed to key."
+        },
+        "from": {
+          "type": "string",
+          "description": "Source state key."
+        },
+        "to": {
+          "type": "string",
+          "description": "Target state key."
+        },
+        "description": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

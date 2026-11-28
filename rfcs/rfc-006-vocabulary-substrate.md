@@ -4,7 +4,7 @@
 
 ---
 
-**Status**: Accepted (Revision 8)
+**Status**: Accepted (Revision 9)
 **Affects**: Foundation Group (Core), `Field`, `Type`, `TagDefinition`, `RelationTypeDefinition`, `LifecycleState`, `LifecycleTransition`, `Package`, `RepositoryManifest`, `ext:lifecycle`
 **Author**: design dialogue draft
 **Date**: 2026-06-03
@@ -24,6 +24,7 @@
 | 6 | 2026-06-03 | Consistency pass: stale status header → Rev 6; record status modeled consistently as a `Lifecycle` (flat-vocabulary examples switched to `decision_category`), removing the Vocabulary/Lifecycle clash on `governance/record_status`; resolve V2↔V3 contradiction (no `Field` binds an open vocabulary); disambiguate *effective package set* vs *effective entry set* under Change D; map V10 + Emergent Vocabularies into the spec-amendment table; drop `"lifecycle"` from the `Term.roles` example to avoid colliding with the first-class concept. |
 | 7 | 2026-06-03 | Second review (findings 1–10): V9 requires the initial state to be `active` and exactly one `isInitial` (no inoperable/ambiguous lifecycles); `absent = active` made normative; V10 migration window must declare an explicit end and its pre-flight must flag used-but-non-writable (deprecated/tombstone/retired) keys; V5 enforces `extends*Version` matching; `LifecycleTransition` gains `properties` under the Change H policy; alias-merge defined to consume (remove) the absorbed `Term`; migration declared a single atomic transition (intermediate states are not conformance points); Change A/E disambiguate inline `Package` arrays vs `package.json` path arrays. |
 | 8 | 2026-06-03 | Third review (findings 1–9): `Vocabulary.promotionWindow.until` added as a real schema field (V10 window was previously unstorable); V10 pre-flight re-bins `retired` keys as will-be-invalid (reads do **not** survive) distinct from deprecated/tombstone; V5 rewritten as the single effective-set definition — `retired` excluded *before* uniqueness/resolution (frees keys for reuse; fixes timing), `extends*Version` mismatch is a hard error (no silent state-dropping / degradation), inline `Type.lifecycle` explicitly covered by V5/V9; alias-merge preserves the absorbed `id` via `mergedFrom` redirect (no orphaned id); V2 gains a deterministic open-collision tie-break (key>alias, then lowest `id`). |
+| 9 | 2026-11-14 | **Door 3, executing srs-programme decision 7324ac6f** (ratified by the owner 2026-11-10, srs-programme#539; srs#1025): a `LifecycleState` carries the full `VocabularyEntry` substrate identity, so `id`, `version` and `namespace` become **required**, the same as every other substrate entry; the schema had required only `key`, so a lifecycle was valid to read and invalid to write (the one-rule-per-goal defect). Adds [S1] (the requirement), [S2] (a deterministic migration for bare states, so no agent invents values), [S3] (effective at `dataModelRevision` 12, registry entry `rfc006-lifecycle-state-identity`) and the staged `lifecycle.json`. Two-phase landing as RFC-043, RFC-052 and RFC-051: now, this text and the staged schema; later, after srs-rust ships revision 12, the corpus migration, the schema promotion and the pin advance (srs#1027). No other rule changes. |
 
 ---
 
@@ -229,7 +230,7 @@ A `Lifecycle` is a **specialized container**: a closed vocabulary of states *plu
 }
 ```
 
-`LifecycleState` (substrate specialization — payload is `isInitial`/`isFinal`):
+`LifecycleState` (substrate specialization — payload is `isInitial`/`isFinal`; `id`, `version` and `namespace` are **required** from Revision 9, see [S1]):
 
 ```typescript
 {
@@ -435,7 +436,7 @@ Only **normalize** mutates instances. Coalesce and extend operate on the definit
 |---|---|
 | `docs/schema/2.0/vocabulary.json` | **New.** `Vocabulary` shape, including `extendsVocabularyId`/`Version` and `promotionWindow.until` (V10 grace-window bound). |
 | `docs/schema/2.0/term.json` | **New.** `Term` (substrate head + roles + properties). Replaces `tag-definition.json`. |
-| `docs/schema/2.0/lifecycle.json` | **New / relocated.** `Lifecycle` container; `LifecycleState` gains `id`,`version`,`key`(was `name`),`status`,`properties`; `LifecycleTransition.from`/`to` reference state `key`. |
+| `docs/schema/2.0/lifecycle.json` | **New / relocated.** `Lifecycle` container; `LifecycleState` gains `id`,`version`,`key`(was `name`),`status`,`properties`; `LifecycleTransition.from`/`to` reference state `key`. **Revision 9:** `LifecycleState` requires `id`, `version`, `namespace` and `key` (staged at `docs/schema/staged/rfc-006/lifecycle.json`, [S1]). |
 | `docs/schema/2.0/tag-definition.json` | **Retired**, superseded by `term.json`. |
 | `docs/schema/2.0/field.json` | Add optional `vocabularyRef`; document `selectOptions` as inline-anonymous-vocabulary sugar; add exclusivity constraint. |
 | `docs/schema/2.0/type.json` | Add optional `lifecycleRef`; mark `lifecycle`/`lifecycleRef` mutually exclusive. |
@@ -480,6 +481,29 @@ Only **normalize** mutates instances. Coalesce and extend operate on the definit
 | Cross-vocabulary mapping (`maps-to` between vocabularies) | Federation/ontology concern. |
 
 > Note: lifecycle `transitions` are deliberately *not* modeled as general Relations in this RFC. They are an intra-`Lifecycle` payload. If the general edges-between-entries layer lands later, transitions may be reconciled with it, but they ship now as a scoped construct so lifecycle does not wait on the ontology RFC.
+
+
+### Revision 9: lifecycle states carry full substrate identity
+
+Executes srs-programme decision 7324ac6f: "A lifecycle state carries the full VocabularyEntry substrate identity (id, version and namespace), the same as every other substrate entry." The substrate contract above already says a specialization MUST NOT relax a required substrate field, yet the shipped `lifecycle.json` required only `key`. `repo validate` followed the schema while `lifecycle create` and `lifecycle update` followed the contract, so one lifecycle was valid to read and invalid to write.
+
+> **[S1]** At `dataModelRevision` 12 a `LifecycleState` MUST carry `id`, `version` and `namespace`, in a standalone `Lifecycle` and in an inline `Type.lifecycle` alike. `id` is a UUID, `version` an integer of at least 1, `namespace` a dotted lowercase name. The staged `lifecycle.json` makes all three, with `key`, the `required` list of `$defs.LifecycleState`; nothing else in the shape changes.
+
+> **[S2]** The migration MUST be mechanical and deterministic; it MUST NOT take any value from an agent, a prompt or the clock. For each state, in a standalone `Lifecycle` or an inline `Type.lifecycle`, it fills only the absent fields and leaves a present field as written:
+> - `version` = `1`.
+> - `namespace` = the namespace of the owning container: the `Lifecycle`'s `namespace`, or for an inline lifecycle the owning Type's `namespace`.
+> - `id` = the UUIDv5 whose namespace UUID is the owning container's `id` (the `Lifecycle`'s `id`, or the owning Type's `id`) and whose name is the state's `key`, in its UTF-8 bytes with no normalisation, per RFC 4122 section 4.3.
+>
+> The same input MUST always produce the same bytes, so two checkouts migrated apart converge, and a re-run MUST report `alreadyApplied`. A state of an extending `Lifecycle` is keyed to that `Lifecycle`'s own `id`, not its upstream's. A lifecycle whose states already carry all three fields is untouched.
+
+> **[S3]** `dataModelRevision` 12 MUST mean [S1].
+> - A binary supporting only revision 11 or lower MUST refuse a revision-12 corpus.
+> - A revision-12 binary MUST report a revision-11-or-lower corpus as migration-needed, naming every pending registry entry in order, and MUST refuse other operations.
+> - The migration MUST be the registry entry `rfc006-lifecycle-state-identity`, operating on the raw tree, ordered after `rfc051-container-entries`, and applying [S2]. `.srsj`, `.srs` and bundle forms MUST be migrated to the same outcome by a pre-load transformer. It MUST migrate every first-party corpus to zero validation errors (the release corpus gate, srs-rust#877).
+
+**Staged, not live.** The replacement schema is `docs/schema/staged/rfc-006/lifecycle.json`. Promotion, the spec-corpus migration and the pin advance are the phase 2 PR (srs#1027), after srs-rust releases support (srs-rust#1638). `id` for a given state is stable across that migration and across re-runs; a state that gains `id` by [S2] is addressable as an edge endpoint exactly as one authored with an `id`.
+
+*(Amends the `LifecycleState` shape under Change E and Schema Changes Summary; no Validation rule V1 to V10 changes.)*
 
 ---
 
